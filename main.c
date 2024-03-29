@@ -1,7 +1,17 @@
 #include <stdio.h>
 #include <crtdbg.h> // TODO: remove before release
 #include "def.h"
+#include "Date.h"
+#include "TestsShai.h"
 int main() {
+
+
+	runAllTestsShai();
+
+
+
+
+
 
 
 
