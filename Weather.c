@@ -32,3 +32,25 @@ void printWeather(const Weather* weather) {
 int compareWeatherByTemp(const Weather* weather1, const Weather* weather2) {
 	return (int)(weather1->temp - weather2->temp);
 }
+
+void createWeatherByUser(Weather* weather) {
+	int flag = 0;
+	int condition;
+	float temp;
+	do
+	{
+		if (flag > 0) {
+			printf("Invalid weather try again\n");
+		}
+		printf("Enter weather condition\n");
+		for (int i = 0; i < eNofWeatherTypes; i++) {
+			printf("%d. %s\n", i, WeatherTypeStr[i]);
+		}
+		scanf("%d", &condition);
+		printf("Enter temperature");
+		scanf("%f", &temp);
+		flag++;
+
+	} while (!initWeather(weather, condition, temp));
+}
+

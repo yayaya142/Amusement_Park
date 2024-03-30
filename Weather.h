@@ -22,6 +22,7 @@ int initWeather(Weather* weather, eWeatherType condition, float temp);
 int isValidWeather(eWeatherType condition, float temp);
 void printWeather(const Weather* weather);
 int compareWeatherByTemp(const Weather* weather1, const Weather* weather2);
+void createWeatherByUser(Weather* weather);
 
 
 
