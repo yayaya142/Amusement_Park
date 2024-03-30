@@ -2,17 +2,21 @@
 #include "Date.h"
 #include "Weather.h"
 #include "Time.h"
-//////////////////////////////////////////
+#include "Shop.h"
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // runAllTests
 // Aim:	this function runs all tests, by default all the tests run automatically. manual tests will be marked as "Manual"
 // Input:	none
 // Output:	if failed, the function assert failed will pop up a message, otherwise, a message that all tests passed will be printed
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void runAllTestsShai() {
 	DateTests();
 	WeatherTest();
 	TimeTests();
-
+	ShopTests();
 
 
 
@@ -303,4 +307,108 @@ void compareTimeTest() {
 	initTime(&time2, 12, 0);
 	assert(compareTime(&time1, &time2) > 0);
 }
-// 
+// Shop tests
+void ShopTests() {
+	initShopTest();
+	isValidShopTest();
+	compareShopsByNameTest();
+}
+void initShopTest() {
+	Shop shop;
+	Time openHour;
+	initTime(&openHour, 8, 0);
+	Time closeHour;
+	initTime(&closeHour, 20, 0);
+
+	// Test 1: Valid shop
+	assert(initShop(&shop, "Shop1", eRestaurant, openHour, closeHour, 0) == 1);
+	assert(strcmp(shop.name, "Shop1") == 0 && shop.type == eRestaurant && compareTime(&shop.openHour, &openHour) == 0 && compareTime(&shop.closeHour, &closeHour) == 0);
+	freeShop(&shop);
+	// Test 2: Empty name
+	assert(initShop(&shop, "", eRestaurant, openHour, closeHour, 0) == 0);
+	freeShop(&shop);
+
+	// Test 3: Invalid shop type (low)
+	assert(initShop(&shop, "Shop1", -1, openHour, closeHour, 0) == 0);
+	freeShop(&shop);
+
+	// Test 4: Invalid shop type (high)
+	assert(initShop(&shop, "Shop1", eNofShopTypes, openHour, closeHour, 0) == 0);
+	freeShop(&shop);
+
+	// Test 5: Invalid open hour
+	assert(initShop(&shop, "Shop1", eRestaurant, (Time) { -1, 0 }, closeHour, 0) == 0);
+	freeShop(&shop);
+
+	// Test 6: Invalid close hour
+	assert(initShop(&shop, "Shop1", eRestaurant, openHour, (Time) { 25, 0 }, 0) == 0);
+	freeShop(&shop);
+
+	// Test 7: Open hour after close hour
+	assert(initShop(&shop, "Shop1", eRestaurant, closeHour, openHour, 0) == 0);
+	freeShop(&shop);
+
+	// Test 8: dynamic memory allocation
+	char* name = (char*)malloc(6 * sizeof(char));
+	strcpy(name, "Shop1");
+	assert(initShop(&shop, name, eRestaurant, openHour, closeHour, 1) == 1);
+	freeShop(&shop);
+}
+void isValidShopTest() {
+	// Test 1: Valid shop
+	assert(isValidShop("Shop1", eRestaurant, (Time) { 8, 0 }, (Time) { 20, 0 }) == 1);
+
+	// Test 2: Empty name
+	assert(isValidShop("", eRestaurant, (Time) { 8, 0 }, (Time) { 20, 0 }) == 0);
+
+	// Test 3: Invalid shop type (low)
+	assert(isValidShop("Shop1", -1, (Time) { 8, 0 }, (Time) { 20, 0 }) == 0);
+
+	// Test 4: Invalid shop type (high)
+	assert(isValidShop("Shop1", eNofShopTypes, (Time) { 8, 0 }, (Time) { 20, 0 }) == 0);
+
+	// Test 5: Invalid open hour
+	assert(isValidShop("Shop1", eRestaurant, (Time) { -1, 0 }, (Time) { 20, 0 }) == 0);
+
+	// Test 6: Invalid close hour
+	assert(isValidShop("Shop1", eRestaurant, (Time) { 8, 0 }, (Time) { 25, 0 }) == 0);
+
+	// Test 7: Open hour after close hour
+	assert(isValidShop("Shop1", eRestaurant, (Time) { 20, 0 }, (Time) { 8, 0 }) == 0);
+
+}
+void compareShopsByNameTest() {
+	Shop shop1, shop2;
+
+	// Test 1: Equal names
+	initShop(&shop1, "ShopA", eCoffeeShop, (Time) { 9, 0 }, (Time) { 18, 0 }, 0);
+	initShop(&shop2, "ShopA", eRestaurant, (Time) { 9, 0 }, (Time) { 18, 0 }, 0);
+	assert(compareShopsByName(&shop1, &shop2) == 0);
+
+	// Test 2: shop1's name comes before shop2's name in alphabetical order
+	initShop(&shop1, "ShopA", eCoffeeShop, (Time) { 19, 0 }, (Time) { 20, 0 }, 0);
+	initShop(&shop2, "ShopB", eCoffeeShop, (Time) { 9, 0 }, (Time) { 18, 0 }, 0);
+	assert(compareShopsByName(&shop1, &shop2) < 0);
+
+	// Test 3: shop1's name comes after shop2's name in alphabetical order
+	initShop(&shop1, "ShopB", eCoffeeShop, (Time) { 9, 0 }, (Time) { 18, 0 }, 0);
+	initShop(&shop2, "ShopA", eBar, (Time) { 9, 0 }, (Time) { 18, 0 }, 0);
+	assert(compareShopsByName(&shop1, &shop2) > 0);
+
+	// Test 4: shop1's name is a substring of shop2's name
+	initShop(&shop1, "Shop", eBar, (Time) { 9, 0 }, (Time) { 18, 0 }, 0);
+	initShop(&shop2, "ShopA", eRestaurant, (Time) { 9, 0 }, (Time) { 18, 0 }, 0);
+	assert(compareShopsByName(&shop1, &shop2) < 0);
+
+	// Test 5: shop1's name is uppercase, shop2's name is lowercase
+	initShop(&shop1, "RESTAURANT", eRestaurant, (Time) { 9, 0 }, (Time) { 18, 0 }, 0);
+	initShop(&shop2, "restaurant", eRestaurant, (Time) { 9, 0 }, (Time) { 18, 0 }, 0);
+	assert(compareShopsByName(&shop1, &shop2) < 0);
+
+	// Test 7: shop1's name is a prefix of shop2's name
+	initShop(&shop1, "Rest", eRestaurant, (Time) { 9, 0 }, (Time) { 18, 0 }, 0);
+	initShop(&shop2, "Restaurant", eRestaurant, (Time) { 9, 0 }, (Time) { 18, 0 }, 0);
+	assert(compareShopsByName(&shop1, &shop2) < 0);
+
+}
+//

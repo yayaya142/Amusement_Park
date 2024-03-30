@@ -4,6 +4,8 @@
 #include <crtdbg.h> // TODO: remove before release
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 
 
@@ -24,6 +26,11 @@ void TimeTests();
 void initTimeTest();
 void isValidTimeTest();
 void compareTimeTest();
-// 
+// Shop tests
+void ShopTests();
+void initShopTest();
+void isValidShopTest();
+void compareShopsByNameTest();
+//
 
 #endif 
