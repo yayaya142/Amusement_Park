@@ -3,7 +3,7 @@
 #include "Weather.h"
 #include "Time.h"
 #include "Shop.h"
-
+#include "Ticket.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,6 +17,7 @@ void runAllTestsShai() {
 	WeatherTest();
 	TimeTests();
 	ShopTests();
+	TicketTests();
 
 
 
@@ -411,4 +412,164 @@ void compareShopsByNameTest() {
 	assert(compareShopsByName(&shop1, &shop2) < 0);
 
 }
-//
+// Ticket tests
+void TicketTests() {
+	initTicketTest();
+	isValidTicketTest();
+	compareTicketsByIDTest();
+	compareTicketsByDateTest();
+	compareTicketsByGuestTypeTest();
+}
+
+void initTicketTest() {
+	Ticket ticket;
+	Date validDate, invalidDate;
+	initDate(&validDate, 1, 1, 2025);
+	initDate(&invalidDate, 32, 1, 2025);
+
+	// Test 1: Valid guest type and date
+	assert(initTicket(&ticket, eAdult, validDate) == 1);
+	assert(ticket.guestType == eAdult);
+	assert(compareDates(ticket.dateOfVisit, validDate) == 0);
+
+	// Test 2: Invalid guest type, valid date
+	assert(initTicket(&ticket, eNofTicketTypes, validDate) == 0);
+
+	// Test 3: Valid guest type, invalid date
+	assert(initTicket(&ticket, eAdult, invalidDate) == 0);
+
+	// Test 4: Invalid guest type and date
+	assert(initTicket(&ticket, eNofTicketTypes, invalidDate) == 0);
+
+	// Test 5: Valid guest type and date at the end of the year
+	Date endOfYear;
+	initDate(&endOfYear, 31, 12, 2025);
+	assert(initTicket(&ticket, eChild, endOfYear) == 1);
+	assert(ticket.guestType == eChild);
+	assert(compareDates(ticket.dateOfVisit, endOfYear) == 0);
+
+	// Test 6: Valid guest type and date at the start of the year
+	Date startOfYear;
+	initDate(&startOfYear, 1, 1, 2025);
+	assert(initTicket(&ticket, eSoldier, startOfYear) == 1);
+	assert(ticket.guestType == eSoldier);
+	assert(compareDates(ticket.dateOfVisit, startOfYear) == 0);
+
+	// Test 7: Invalid guest type and valid date at the start of the year
+	assert(initTicket(&ticket, eNofTicketTypes, startOfYear) == 0);
+}
+void isValidTicketTest() {
+	Date validDate;
+	initDate(&validDate, 1, 1, 2025);
+
+	Date invalidDate;
+	initDate(&invalidDate, 32, 1, 2025);
+
+	// Test 1: Valid guest type and date
+	assert(isValidTicket(eAdult, validDate) == 1);
+
+	// Test 2: Invalid guest type, valid date
+	assert(isValidTicket(eNofTicketTypes, validDate) == 0);
+
+	// Test 3: Valid guest type, invalid date
+	assert(isValidTicket(eAdult, invalidDate) == 0);
+
+	// Test 4: Invalid guest type and date
+	assert(isValidTicket(eNofTicketTypes, invalidDate) == 0);
+
+	// Test 5: Check with minimum valid date and valid guest type
+	Date minValidDate;
+	initDate(&minValidDate, 1, 1, 2024);
+	assert(isValidTicket(eChild, minValidDate) == 1);
+
+	// Test 6: Check with maximum valid date and valid guest type
+	Date maxValidDate;
+	initDate(&maxValidDate, 31, 12, 2025);
+	assert(isValidTicket(eSoldier, maxValidDate) == 1);
+}
+void compareTicketsByIDTest() {
+	Ticket ticket1, ticket2;
+
+	// Test 1: Equal IDs
+	initTicket(&ticket1, eAdult, (Date) { 1, 1, 2025 });
+	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	strcpy(ticket1.id, "T2754FC32SW");
+	strcpy(ticket2.id, "T2754FC32SW");
+	assert(compareTicketsByID(&ticket1, &ticket2) == 0);
+
+	// Test 2: ticket1's ID is less than ticket2's ID
+	strcpy(ticket1.id, "T2754FC32SA");
+	strcpy(ticket2.id, "T2754FC32SB");
+	assert(compareTicketsByID(&ticket1, &ticket2) < 0);
+
+	// Test 3: ticket1's ID is greater than ticket2's ID
+	strcpy(ticket1.id, "T2754FC32SC");
+	strcpy(ticket2.id, "T2754FC32SB");
+	assert(compareTicketsByID(&ticket1, &ticket2) > 0);
+
+	// Test 4: ticket1's ID and ticket2's ID only differ by case
+	strcpy(ticket1.id, "T2754FC32SC");
+	strcpy(ticket2.id, "t2754FC32SC");
+	assert(compareTicketsByID(&ticket1, &ticket2) != 0);
+}
+void compareTicketsByDateTest() {
+	Ticket ticket1, ticket2;
+
+	// Test 1: Equal dates
+	initTicket(&ticket1, eAdult, (Date) { 1, 1, 2025 });
+	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	assert(compareTicketsByDate(&ticket1, &ticket2) == 0);
+
+	// Test 2: ticket1's date is earlier than ticket2's date
+	initTicket(&ticket1, eAdult, (Date) { 1, 1, 2025 });
+	initTicket(&ticket2, eAdult, (Date) { 2, 1, 2025 });
+	assert(compareTicketsByDate(&ticket1, &ticket2) < 0);
+
+	// Test 3: ticket1's date is later than ticket2's date
+	initTicket(&ticket1, eAdult, (Date) { 2, 1, 2025 });
+	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	assert(compareTicketsByDate(&ticket1, &ticket2) > 0);
+
+	// Test 4: ticket1's date is in a different month than ticket2's date
+	initTicket(&ticket1, eAdult, (Date) { 1, 2, 2025 });
+	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	assert(compareTicketsByDate(&ticket1, &ticket2) > 0);
+
+	// Test 5: ticket1's date is in a different year than ticket2's date
+	initTicket(&ticket1, eAdult, (Date) { 1, 1, 2026 });
+	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	assert(compareTicketsByDate(&ticket1, &ticket2) > 0);
+}
+void compareTicketsByGuestTypeTest() {
+	Ticket ticket1, ticket2;
+
+	// Test 1: Equal guest types
+	initTicket(&ticket1, eAdult, (Date) { 1, 1, 2025 });
+	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	assert(compareTicketsByGuestType(&ticket1, &ticket2) == 0);
+
+	// Test 2: ticket1's guest type is less than ticket2's guest type
+	initTicket(&ticket1, eChild, (Date) { 1, 1, 2025 });
+	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	assert(compareTicketsByGuestType(&ticket1, &ticket2) < 0);
+
+	// Test 3: ticket1's guest type is greater than ticket2's guest type
+	initTicket(&ticket1, eStudent, (Date) { 1, 1, 2025 });
+	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	assert(compareTicketsByGuestType(&ticket1, &ticket2) > 0);
+
+	// Test 4: ticket1's guest type is less than ticket2's guest type
+	initTicket(&ticket1, eChild, (Date) { 1, 1, 2025 });
+	initTicket(&ticket2, eSoldier, (Date) { 1, 1, 2025 });
+	assert(compareTicketsByGuestType(&ticket1, &ticket2) < 0);
+
+	// Test 5: ticket1's guest type is greater than ticket2's guest type
+	initTicket(&ticket1, eSoldier, (Date) { 1, 1, 2025 });
+	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	assert(compareTicketsByGuestType(&ticket1, &ticket2) > 0);
+
+	// Test 6: Equal guest types
+	initTicket(&ticket1, eSoldier, (Date) { 1, 1, 2025 });
+	initTicket(&ticket2, eSoldier, (Date) { 1, 1, 2025 });
+	assert(compareTicketsByGuestType(&ticket1, &ticket2) == 0);
+}

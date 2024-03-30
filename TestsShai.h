@@ -31,6 +31,13 @@ void ShopTests();
 void initShopTest();
 void isValidShopTest();
 void compareShopsByNameTest();
-//
+// Ticket tests
+void TicketTests();
+void initTicketTest();
+void isValidTicketTest();
+void compareTicketsByIDTest();
+void compareTicketsByDateTest();
+void compareTicketsByGuestTypeTest();
+
 
 #endif 
