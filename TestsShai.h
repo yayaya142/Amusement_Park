@@ -43,4 +43,7 @@ void TicketMasterTests();
 void initTicketMasterTest();
 void addTicketTest();
 void calcDailyTest();
+void sortTicketsByIDTest();
+void sortTicketsByDateTest();
+void sortTicketsByGuestTypeTest();
 #endif 

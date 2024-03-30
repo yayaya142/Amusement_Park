@@ -4,6 +4,7 @@
 void initTicketMaster(TicketMaster* ticketMaster) {
 	ticketMaster->tickets = NULL;
 	ticketMaster->numOfTickets = 0;
+	ticketMaster->sortType = eNotSorted;
 }
 
 int addTicket(TicketMaster* ticketMaster, Ticket* ticket) {
@@ -65,4 +66,34 @@ void printDailyIncome(const TicketMaster* ticketMaster, Date* date) {
 	double daily = calcDaily(ticketMaster, date);
 	printf("Daily income on %d/%d/%d: %.1lf%s\n", date->day, date->month, date->year, daily, CURRENCY_SYMBOL);
 
+}
+
+void sortTicketsByID(TicketMaster* ticketMaster) {
+	if (ticketMaster == NULL || ticketMaster->tickets == NULL) {
+		return;
+	}
+
+	qsort(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket), compareTicketsByID);
+	ticketMaster->sortType = eSortedByID;
+}
+
+void sortTicketsByDate(TicketMaster* ticketMaster) {
+	if (ticketMaster == NULL || ticketMaster->tickets == NULL) {
+		return;
+	}
+
+	qsort(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket), compareTicketsByDate);
+	ticketMaster->sortType = eSortedByDate;
+}
+
+void sortTicketsByGuestType(TicketMaster* ticketMaster) {
+	if (ticketMaster == NULL || ticketMaster->tickets == NULL) {
+		return;
+	}
+
+	qsort(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket), compareTicketsByGuestType);
+	ticketMaster->sortType = eSortedByGuestType;
+}
+void sortTicketsUser(TicketMaster* ticketMaster) {
+	// TODO NEED TO IMPLEMENT
 }

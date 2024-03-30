@@ -34,9 +34,9 @@ int initTicket(Ticket* ticket, eGuestType guestType, Date dateOfVisit);
 void generateID(char* id);
 int isValidTicket(eGuestType guestType, Date dateOfVisit);
 void printTicket(const Ticket* ticket);
-int compareTicketsByID(const Ticket* ticket1, const Ticket* ticket2);
-int compareTicketsByDate(const Ticket* ticket1, const Ticket* ticket2);
-int compareTicketsByGuestType(const Ticket* ticket1, const Ticket* ticket2);
+int compareTicketsByID(const void* ticket1, const void* ticket2);
+int compareTicketsByDate(const void* ticket1, const void* ticket2);
+int compareTicketsByGuestType(const void* ticket1, const void* ticket2);
 
 
 

@@ -578,6 +578,9 @@ void TicketMasterTests() {
 	initTicketMasterTest();
 	addTicketTest();
 	calcDailyTest();
+	sortTicketsByIDTest();
+	sortTicketsByDateTest();
+	sortTicketsByGuestTypeTest();
 }
 void initTicketMasterTest() {
 	TicketMaster ticketMaster;
@@ -678,6 +681,104 @@ void calcDailyTest() {
 	// Calculate daily total for date2
 	double total2 = calcDaily(&ticketMaster, &date2);
 	assert(total2 == (BASE_TICKET_PRICE * Discount[eChild] + BASE_TICKET_PRICE * Discount[eAdult]));
+
+	freeTicketMaster(&ticketMaster);
+}
+void sortTicketsByIDTest() {
+	TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+
+	// Create some tickets
+	Ticket ticket1, ticket2, ticket3;
+	Date date;
+	initDate(&date, 1, 1, 2025);
+
+	// Initialize tickets with different IDs
+	initTicket(&ticket1, eChild, date);
+	initTicket(&ticket2, eAdult, date);
+	initTicket(&ticket3, eStudent, date);
+
+	// Manually set IDs to ensure they are different
+	strcpy(ticket1.id, "AAAAAAAAAAA3");
+	strcpy(ticket2.id, "AAAAAAAAAAA1");
+	strcpy(ticket3.id, "AAAAAAAAAAA2");
+
+
+	// Add tickets to the ticket master
+	assert(addTicket(&ticketMaster, &ticket1) == 1);
+	assert(addTicket(&ticketMaster, &ticket2) == 1);
+	assert(addTicket(&ticketMaster, &ticket3) == 1);
+
+	// Sort tickets by ID
+	sortTicketsByID(&ticketMaster);
+
+	// Check that the tickets are sorted in ascending order by ID
+	assert(strcmp(ticketMaster.tickets[0].id, "AAAAAAAAAAA1") == 0);
+	assert(strcmp(ticketMaster.tickets[1].id, "AAAAAAAAAAA2") == 0);
+	assert(strcmp(ticketMaster.tickets[2].id, "AAAAAAAAAAA3") == 0);
+
+	freeTicketMaster(&ticketMaster);
+}
+void sortTicketsByDateTest() {
+	TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+
+	// Create some tickets
+	Ticket ticket1, ticket2, ticket3;
+	Date date1, date2, date3;
+	initDate(&date1, 1, 1, 2025);
+	initDate(&date2, 2, 1, 2025);
+	initDate(&date3, 3, 1, 2025);
+
+	// Initialize tickets with different dates
+	initTicket(&ticket1, eChild, date3);
+	initTicket(&ticket2, eAdult, date1);
+	initTicket(&ticket3, eStudent, date2);
+
+	// Add tickets to the ticket master
+	assert(addTicket(&ticketMaster, &ticket1) == 1);
+	assert(addTicket(&ticketMaster, &ticket2) == 1);
+	assert(addTicket(&ticketMaster, &ticket3) == 1);
+
+	// Sort tickets by date
+	sortTicketsByDate(&ticketMaster);
+
+	// Check that the tickets are sorted in ascending order by date
+	assert(compareDates(ticketMaster.tickets[0].dateOfVisit, date1) == 0);
+	assert(compareDates(ticketMaster.tickets[1].dateOfVisit, date2) == 0);
+	assert(compareDates(ticketMaster.tickets[2].dateOfVisit, date3) == 0);
+
+	freeTicketMaster(&ticketMaster);
+}
+
+
+
+void sortTicketsByGuestTypeTest() {
+	TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+
+	// Create some tickets
+	Ticket ticket1, ticket2, ticket3;
+	Date date;
+	initDate(&date, 1, 1, 2025);
+
+	// Initialize tickets with different guest types
+	initTicket(&ticket3, eStudent, date);
+	initTicket(&ticket2, eAdult, date);
+	initTicket(&ticket1, eChild, date);
+
+	// Add tickets to the ticket master
+	assert(addTicket(&ticketMaster, &ticket3) == 1);
+	assert(addTicket(&ticketMaster, &ticket2) == 1);
+	assert(addTicket(&ticketMaster, &ticket1) == 1);
+
+	// Sort tickets by guest type
+	sortTicketsByGuestType(&ticketMaster);
+
+	// Check that the tickets are sorted in ascending order by guest type
+	assert(ticketMaster.tickets[0].guestType == eChild);
+	assert(ticketMaster.tickets[1].guestType == eAdult);
+	assert(ticketMaster.tickets[2].guestType == eStudent);
 
 	freeTicketMaster(&ticketMaster);
 }
