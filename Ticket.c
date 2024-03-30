@@ -10,13 +10,27 @@ int initTicket(Ticket* ticket, eGuestType guestType, Date dateOfVisit) {
 	ticket->dateOfVisit = dateOfVisit;
 	ticket->price = BASE_TICKET_PRICE * Discount[guestType];
 	ticket->isUsed = 0;
-	strcpy(ticket->id, generateID());
+	generateID(ticket->id);
 	return 1;
 }
-char* generateID() {
-	// TODO FIX THIS to generate a random ID
-	return "T2754FC32SW";
+
+void generateID(char* id) {
+	// Generate a random ID of 12 characters. so it can generate 36^12 different IDs
+	for (int i = 0; i < ID_TICKET_LEN; i++) {
+		int random = randomNum(0, 1);
+		if (random == 0) {
+			// Generate a random number (49-57 in ASCII table ---> 1-9 )
+			id[i] = (char)randomNum(49, 57);
+		}
+		else {
+			// Generate a random uppercase letter (65-90 in ASCII table ---> A-Z )
+			id[i] = (char)randomNum(65, 90);
+		}
+	}
+	id[ID_TICKET_LEN] = '\0'; // Null-terminate the string
 }
+
+
 int isValidTicket(eGuestType guestType, Date dateOfVisit) {
 	if (!isDateValid(dateOfVisit.day, dateOfVisit.month, dateOfVisit.year)) {
 		return 0;

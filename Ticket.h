@@ -5,9 +5,11 @@
 #include <stdio.h>
 #include <string.h>
 #include "Date.h"
+#include "General.h"
 
 #define ID_TICKET_LEN 12
 #define BASE_TICKET_PRICE 100.0
+
 
 typedef enum {
 	eChild, eAdult, eStudent, eSoldier, eNofTicketTypes
@@ -28,7 +30,7 @@ typedef struct {
 
 
 int initTicket(Ticket* ticket, eGuestType guestType, Date dateOfVisit);
-char* generateID();
+void generateID(char* id);
 int isValidTicket(eGuestType guestType, Date dateOfVisit);
 void printTicket(const Ticket* ticket);
 int compareTicketsByID(const Ticket* ticket1, const Ticket* ticket2);

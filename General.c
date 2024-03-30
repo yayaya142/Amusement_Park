@@ -10,7 +10,9 @@ char* getStrExactName(const char* msg)
 {
 	char* str;
 	char temp[MAX_STR_LEN];
-	printf("%s\t", msg);
+	if (msg != NULL) {
+		printf("%s", msg);
+	}
 	myGets(temp, MAX_STR_LEN);
 
 	str = getDynStr(temp);
@@ -86,4 +88,9 @@ void generalArrayFunction(void* arr, int size, size_t typeSize, void* (*func)(vo
 		// use the function on each element of the array
 		func((char*)(arr)+i * typeSize);
 	}
+}
+
+
+int randomNum(int min, int max) {
+	return rand() % (max - min + 1) + min;
 }
