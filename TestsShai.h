@@ -19,5 +19,11 @@ void WeatherTest();
 void initWeatherTest();
 void isValidWeatherTest();
 void compareWeatherByTempTest();
+// Time tests
+void TimeTests();
+void initTimeTest();
+void isValidTimeTest();
+void compareTimeTest();
+// 
 
 #endif 

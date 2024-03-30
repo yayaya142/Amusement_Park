@@ -1,7 +1,7 @@
 #include "TestsShai.h"
 #include "Date.h"
 #include "Weather.h"
-
+#include "Time.h"
 //////////////////////////////////////////
 // runAllTests
 // Aim:	this function runs all tests, by default all the tests run automatically. manual tests will be marked as "Manual"
@@ -11,10 +11,7 @@
 void runAllTestsShai() {
 	DateTests();
 	WeatherTest();
-
-
-
-
+	TimeTests();
 
 
 
@@ -216,3 +213,94 @@ void compareWeatherByTempTest() {
 	initWeather(&weather2, eRainy, 0.0);
 	assert(compareWeatherByTemp(&weather1, &weather2) == 0);
 }
+// Time tests
+void TimeTests() {
+	initTimeTest();
+	isValidTimeTest();
+	compareTimeTest();
+}
+void initTimeTest() {
+	Time time;
+
+	// Test 1: Valid time
+	assert(initTime(&time, 0, 0) == 1);
+	assert(time.hour == 0 && time.minute == 0);
+
+	// Test 2: Hour out of range (low)
+	assert(initTime(&time, -1, 0) == 0);
+
+	// Test 3: Hour out of range (high)
+	assert(initTime(&time, 24, 0) == 0);
+
+	// Test 4: Minute out of range (low)
+	assert(initTime(&time, 0, -1) == 0);
+
+	// Test 5: Minute out of range (high)
+	assert(initTime(&time, 0, 60) == 0);
+
+	// Test 6: Valid time with maximum hour
+	assert(initTime(&time, 23, 0) == 1);
+	assert(time.hour == 23 && time.minute == 0);
+
+	// Test 7: Valid time with maximum minute
+	assert(initTime(&time, 0, 59) == 1);
+	assert(time.hour == 0 && time.minute == 59);
+
+	// Test 8: Valid time with maximum hour and minute
+	assert(initTime(&time, 23, 59) == 1);
+	assert(time.hour == 23 && time.minute == 59);
+}
+void isValidTimeTest() {
+	// Test 1: Valid time
+	assert(isValidTime(0, 0) == 1);
+
+	// Test 2: Hour out of range (low)
+	assert(isValidTime(-1, 0) == 0);
+
+	// Test 3: Hour out of range (high)
+	assert(isValidTime(24, 0) == 0);
+
+	// Test 4: Minute out of range (low)
+	assert(isValidTime(0, -1) == 0);
+
+	// Test 5: Minute out of range (high)
+	assert(isValidTime(0, 60) == 0);
+
+	// Test 6: Valid time with maximum hour
+	assert(isValidTime(23, 0) == 1);
+
+	// Test 7: Valid time with maximum minute
+	assert(isValidTime(0, 59) == 1);
+
+	// Test 8: Valid time with maximum hour and minute
+	assert(isValidTime(23, 59) == 1);
+}
+void compareTimeTest() {
+	Time time1, time2;
+
+	// Test 1: Equal times
+	initTime(&time1, 12, 0);
+	initTime(&time2, 12, 0);
+	assert(compareTime(&time1, &time2) == 0);
+
+	// Test 2: time1 has earlier hour
+	initTime(&time1, 11, 0);
+	initTime(&time2, 12, 0);
+	assert(compareTime(&time1, &time2) < 0);
+
+	// Test 3: time1 has later hour
+	initTime(&time1, 13, 0);
+	initTime(&time2, 12, 0);
+	assert(compareTime(&time1, &time2) > 0);
+
+	// Test 4: Same hour, time1 has earlier minute
+	initTime(&time1, 12, 0);
+	initTime(&time2, 12, 30);
+	assert(compareTime(&time1, &time2) < 0);
+
+	// Test 5: Same hour, time1 has later minute
+	initTime(&time1, 12, 30);
+	initTime(&time2, 12, 0);
+	assert(compareTime(&time1, &time2) > 0);
+}
+// 
