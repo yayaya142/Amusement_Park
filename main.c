@@ -2,17 +2,19 @@
 #include <crtdbg.h> // TODO: remove before release
 #include "def.h"
 #include "Date.h"
+#include "Weather.h"
 #include "TestsShai.h"
 int main() {
 
+	Weather weather;
+	initWeather(&weather, 3, 25);
+	printWeather(&weather);
+
+
+
+
 
 	runAllTestsShai();
-
-
-
-
-
-
 
 
 	// Debug memory leaks

@@ -9,11 +9,15 @@
 
 void runAllTestsShai();
 
-
+// Date tests
 void DateTests();
 void initDateTest();
 void isDateValidTest();
 void compareDatesTest();
-
+// Weather Tests
+void WeatherTest();
+void initWeatherTest();
+void isValidWeatherTest();
+void compareWeatherByTempTest();
 
 #endif 
