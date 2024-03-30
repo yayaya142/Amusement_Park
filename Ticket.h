@@ -9,7 +9,7 @@
 
 #define ID_TICKET_LEN 12
 #define BASE_TICKET_PRICE 100.0
-#define CURRENCY_SYMBOL "$" // because ¤ dosent work in the terminal ): 
+#define CURRENCY_SYMBOL "$" // because ¤ doesn't work in the terminal ): 
 
 
 typedef enum {

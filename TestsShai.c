@@ -750,9 +750,6 @@ void sortTicketsByDateTest() {
 
 	freeTicketMaster(&ticketMaster);
 }
-
-
-
 void sortTicketsByGuestTypeTest() {
 	TicketMaster ticketMaster;
 	initTicketMaster(&ticketMaster);
