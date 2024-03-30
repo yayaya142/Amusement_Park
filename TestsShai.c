@@ -4,7 +4,7 @@
 #include "Time.h"
 #include "Shop.h"
 #include "Ticket.h"
-
+#include "TicketMaster.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // runAllTests
@@ -18,6 +18,7 @@ void runAllTestsShai() {
 	TimeTests();
 	ShopTests();
 	TicketTests();
+	TicketMasterTests();
 
 
 
@@ -420,7 +421,6 @@ void TicketTests() {
 	compareTicketsByDateTest();
 	compareTicketsByGuestTypeTest();
 }
-
 void initTicketTest() {
 	Ticket ticket;
 	Date validDate, invalidDate;
@@ -572,4 +572,112 @@ void compareTicketsByGuestTypeTest() {
 	initTicket(&ticket1, eSoldier, (Date) { 1, 1, 2025 });
 	initTicket(&ticket2, eSoldier, (Date) { 1, 1, 2025 });
 	assert(compareTicketsByGuestType(&ticket1, &ticket2) == 0);
+}
+// TicketMaster tests
+void TicketMasterTests() {
+	initTicketMasterTest();
+	addTicketTest();
+	calcDailyTest();
+}
+void initTicketMasterTest() {
+	TicketMaster ticketMaster;
+	// Test
+	initTicketMaster(&ticketMaster);
+	assert(ticketMaster.tickets == NULL && ticketMaster.numOfTickets == 0);
+}
+void addTicketTest() {
+	TicketMaster ticketMaster;
+	Ticket ticket;
+	Date validDate;
+	initDate(&validDate, 1, 1, 2025);
+	initTicket(&ticket, eAdult, validDate);
+	initTicketMaster(&ticketMaster);
+
+	// Test 1: Add a ticket to an empty ticket master
+	assert(addTicket(&ticketMaster, &ticket) == 1);
+	assert(ticketMaster.numOfTickets == 1);
+	assert(compareTicketsByID(&ticketMaster.tickets[0], &ticket) == 0);
+
+	// Test 2: Add a ticket to a ticket master with one ticket
+	Ticket ticket2;
+	initTicket(&ticket2, eChild, validDate);
+	assert(addTicket(&ticketMaster, &ticket2) == 1);
+	assert(ticketMaster.numOfTickets == 2);
+	assert(compareTicketsByID(&ticketMaster.tickets[0], &ticket) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[1], &ticket2) == 0);
+
+	// Test 3: Add a ticket to a ticket master with multiple tickets
+	Ticket ticket3;
+	initTicket(&ticket3, eStudent, validDate);
+	assert(addTicket(&ticketMaster, &ticket3) == 1);
+	assert(ticketMaster.numOfTickets == 3);
+	assert(compareTicketsByID(&ticketMaster.tickets[0], &ticket) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[1], &ticket2) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[2], &ticket3) == 0);
+
+	// Test 4: Add a ticket with an invalid date
+	Date invalidDate;
+	Ticket ticket4;
+	initDate(&invalidDate, 32, 1, 2025);
+	initTicket(&ticket4, eAdult, invalidDate);
+	assert(addTicket(&ticketMaster, &ticket4) == 0);
+	assert(ticketMaster.numOfTickets == 3);
+
+	// Test 5: Add a ticket with an invalid guest type
+	Ticket ticket5;
+	initTicket(&ticket5, eNofTicketTypes, validDate);
+	assert(addTicket(&ticketMaster, &ticket5) == 0);
+	assert(ticketMaster.numOfTickets == 3);
+
+	// Test 6: Add a ticket with a NULL pointer
+	assert(addTicket(&ticketMaster, NULL) == 0);
+	assert(ticketMaster.numOfTickets == 3);
+
+	// Test 7 : valid ticket
+	Ticket ticket6;
+	initTicket(&ticket6, eAdult, validDate);
+	assert(addTicket(&ticketMaster, &ticket6) == 1);
+	assert(ticketMaster.numOfTickets == 4);
+	assert(compareTicketsByID(&ticketMaster.tickets[0], &ticket) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[1], &ticket2) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[2], &ticket3) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[3], &ticket6) == 0);
+
+	// Free TicketMaster
+	freeTicketMaster(&ticketMaster);
+}
+void calcDailyTest() {
+	TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+
+	// Create some tickets
+	Ticket ticket1, ticket2, ticket3, ticket4, ticket5, ticket6;
+	Date date1, date2;
+	initDate(&date1, 1, 1, 2025);
+	initDate(&date2, 2, 1, 2025);
+
+	// Initialize tickets with different guest types and dates
+	initTicket(&ticket1, eChild, date1);
+	initTicket(&ticket2, eAdult, date1);
+	initTicket(&ticket3, eStudent, date1);
+	initTicket(&ticket4, eSoldier, date1);
+	initTicket(&ticket5, eChild, date2);
+	initTicket(&ticket6, eAdult, date2);
+
+	// Add tickets to the ticket master
+	assert(addTicket(&ticketMaster, &ticket1) == 1);
+	assert(addTicket(&ticketMaster, &ticket2) == 1);
+	assert(addTicket(&ticketMaster, &ticket3) == 1);
+	assert(addTicket(&ticketMaster, &ticket4) == 1);
+	assert(addTicket(&ticketMaster, &ticket5) == 1);
+	assert(addTicket(&ticketMaster, &ticket6) == 1);
+
+	// Calculate daily total for date1
+	double total1 = calcDaily(&ticketMaster, &date1);
+	assert(total1 == (BASE_TICKET_PRICE * Discount[eChild] + BASE_TICKET_PRICE * Discount[eAdult] + BASE_TICKET_PRICE * Discount[eStudent] + BASE_TICKET_PRICE * Discount[eSoldier]));
+	// Calculate daily total for date2
+	double total2 = calcDaily(&ticketMaster, &date2);
+	assert(total2 == (BASE_TICKET_PRICE * Discount[eChild] + BASE_TICKET_PRICE * Discount[eAdult]));
+
+	freeTicketMaster(&ticketMaster);
 }

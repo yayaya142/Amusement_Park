@@ -38,6 +38,9 @@ void isValidTicketTest();
 void compareTicketsByIDTest();
 void compareTicketsByDateTest();
 void compareTicketsByGuestTypeTest();
-
-
+// TicketMaster tests
+void TicketMasterTests();
+void initTicketMasterTest();
+void addTicketTest();
+void calcDailyTest();
 #endif 

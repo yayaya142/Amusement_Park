@@ -47,7 +47,7 @@ void printTicket(const Ticket* ticket) {
 	}
 	printf("Ticket ID: %s\n", ticket->id);
 	printf("Guest Type: %s\n", TicketTypeStr[ticket->guestType]);
-	printf("Price: %.1lf\n", ticket->price);
+	printf("Price: %.2lf%s\n", ticket->price, CURRENCY_SYMBOL);
 	printf("Date of Visit: ");
 	printDate(&ticket->dateOfVisit);
 	printf("\n");

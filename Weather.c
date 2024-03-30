@@ -30,5 +30,5 @@ void printWeather(const Weather* weather) {
 	printf("Weather condition: %s, Temperature: %.2f\n", WeatherTypeStr[weather->condition], weather->temp);
 }
 int compareWeatherByTemp(const Weather* weather1, const Weather* weather2) {
-	return weather1->temp - weather2->temp;
+	return (int)(weather1->temp - weather2->temp);
 }
