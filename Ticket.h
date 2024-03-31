@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "Date.h"
+#include "Ticket.h"
 #include "General.h"
 
 #define ID_TICKET_LEN 12

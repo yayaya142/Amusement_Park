@@ -1,23 +1,26 @@
 #include "Worker.h"
 
-int initWorker(Worker* w, int workerId, Department dep) {
-    if (!initPerson(&w->person, "worker name",170, 21, 1212)) {
-        freePerson(&w->person);
-        free(w);
-        return 0;
-	}
-	if(!isValidInfoWorker(workerId, dep)) {
+int initWorker(Worker* w,Person* p, Department dep) { 
+	if(!isValidInfoWorker(dep)) {
 		return 0;
 	}
-    w->WorkerId = workerId;
+	w->person = p;
+    w->WorkerId = generateWorkerID();
 	w->department = dep;
     return 1;
 }
-int isValidInfoWorker(int WorkerId, Department department) {
-	if (WorkerId < 0) {
-		return 0;
+int generateWorkerID() {
+	int id_temp = randomNum(65, 90);
+	// Generate a random ID of 10 characters. so it can generate 36^10 different IDs
+	for (int i = 0; i < WORK_ID; i++) {
+			// Generate a random uppercase letter (65-90 in ASCII table ---> A-Z )
+			id_temp= id_temp*10 + randomNum(65, 90);
 	}
-	if (department < 0 || department >= NofTypes) {
+	return id_temp;
+}
+
+int isValidInfoWorker(Department department) {
+	if (department < 0 || department >= eNofTypes) {
 		return 0;
 	}
 	return 1;
@@ -31,13 +34,13 @@ int compareWorkerById(Worker* w1, Worker* w2) {
 }
 
 void printWorker(Worker* w) {
-	printPerson(&w->person);
+	printPerson(w->person);
 	printf("Worker ID: %d\n", w->WorkerId);
 	printf("Department: %s\n", typeTilte[w->department]);
 }
 
 void freeWorker(Worker* w) {
-	//freePerson(&(w->person)); TODO: remove when user interaction is done
+	freePerson((w->person));
 	if (w != NULL) {
 		free(w);
 	}
