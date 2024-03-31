@@ -16,6 +16,7 @@ typedef struct facility {
 } Facility;
 
 int initFacility(Facility* pFacility,char* name, int minAge, int maxAge, Category category);
+void initFacilityByUser(Facility* pFacility);
 int compareFacilities(const Facility* pFacility1, const Facility* pFacility2);
 void printFacility(const Facility* pFacility);
 void freeFacility(Facility* pFacility);
