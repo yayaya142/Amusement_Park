@@ -12,7 +12,7 @@ typedef enum {
 static const char* sortTypeStr[] = { "None", "ID", "Date", "Guest Type" };
 
 typedef struct {
-	Ticket* tickets;
+	Ticket** tickets;
 	int numOfTickets;
 	eSortType sortType;
 } TicketMaster;

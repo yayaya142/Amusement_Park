@@ -15,12 +15,12 @@ int addTicket(TicketMaster* ticketMaster, Ticket* ticket) {
 		return 0;
 	}
 
-	ticketMaster->tickets = (Ticket*)realloc(ticketMaster->tickets, (ticketMaster->numOfTickets + 1) * sizeof(Ticket));
+	ticketMaster->tickets = (Ticket**)realloc(ticketMaster->tickets, (ticketMaster->numOfTickets + 1) * sizeof(Ticket*));
 	if (ticketMaster->tickets == NULL) {
 		return 0;
 	}
 
-	ticketMaster->tickets[ticketMaster->numOfTickets] = *ticket;
+	ticketMaster->tickets[ticketMaster->numOfTickets] = ticket;
 	ticketMaster->numOfTickets++;
 	return 1;
 }
@@ -31,15 +31,19 @@ void printTicketMaster(const TicketMaster* ticketMaster) {
 		return;
 	}
 	for (int i = 0; i < ticketMaster->numOfTickets; i++) {
-		printTicket(&ticketMaster->tickets[i]);
+		printTicket(ticketMaster->tickets[i]);
 	}
 }
 
 
 void freeTicketMaster(TicketMaster* ticketMaster) {
-	if (ticketMaster->tickets != NULL) {
-		free(ticketMaster->tickets);
+	if (ticketMaster == NULL) {
+		return;
 	}
+	for (int i = 0; i < ticketMaster->numOfTickets; i++) {
+		free(ticketMaster->tickets[i]);
+	}
+	free(ticketMaster->tickets);
 	ticketMaster->numOfTickets = 0;
 	ticketMaster->tickets = NULL;
 }
@@ -51,8 +55,8 @@ double calcDaily(const TicketMaster* ticketMaster, Date* date) {
 	}
 	double sum = 0;
 	for (int i = 0; i < ticketMaster->numOfTickets; i++) {
-		if (compareDates(ticketMaster->tickets[i].dateOfVisit, *date) == 0) {
-			sum += ticketMaster->tickets[i].price;
+		if (compareDates(ticketMaster->tickets[i]->dateOfVisit, *date) == 0) {
+			sum += ticketMaster->tickets[i]->price;
 		}
 	}
 	return sum;
@@ -73,7 +77,7 @@ void sortTicketsByID(TicketMaster* ticketMaster) {
 		return;
 	}
 
-	qsort(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket), compareTicketsByID);
+	qsort(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket*), compareTicketsByID);
 	ticketMaster->sortType = eSortedByID;
 }
 
@@ -82,7 +86,7 @@ void sortTicketsByDate(TicketMaster* ticketMaster) {
 		return;
 	}
 
-	qsort(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket), compareTicketsByDate);
+	qsort(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket*), compareTicketsByDate);
 	ticketMaster->sortType = eSortedByDate;
 }
 
@@ -91,7 +95,7 @@ void sortTicketsByGuestType(TicketMaster* ticketMaster) {
 		return;
 	}
 
-	qsort(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket), compareTicketsByGuestType);
+	qsort(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket*), compareTicketsByGuestType);
 	ticketMaster->sortType = eSortedByGuestType;
 }
 void sortTicketsUser(TicketMaster* ticketMaster) {

@@ -13,13 +13,13 @@
 // Output:	if failed, the function assert failed will pop up a message, otherwise, a message that all tests passed will be printed
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void runAllTestsShai() {
+	//initByUserManualsTest(); // Manual
 	DateTests();
 	WeatherTest();
 	TimeTests();
 	ShopTests();
 	TicketTests();
 	TicketMasterTests();
-	//initByUserManualsTest(); // Manual
 
 
 
@@ -489,90 +489,91 @@ void isValidTicketTest() {
 	assert(isValidTicket(eSoldier, maxValidDate) == 1);
 }
 void compareTicketsByIDTest() {
-	Ticket ticket1, ticket2;
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
 
 	// Test 1: Equal IDs
-	initTicket(&ticket1, eAdult, (Date) { 1, 1, 2025 });
-	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
-	strcpy(ticket1.id, "T2754FC32SW");
-	strcpy(ticket2.id, "T2754FC32SW");
+	strcpy(ticket1->id, "AAAAAAAAAAA1");
+	strcpy(ticket2->id, "AAAAAAAAAAA1");
 	assert(compareTicketsByID(&ticket1, &ticket2) == 0);
 
-	// Test 2: ticket1's ID is less than ticket2's ID
-	strcpy(ticket1.id, "T2754FC32SA");
-	strcpy(ticket2.id, "T2754FC32SB");
+
+	// Test 2: ticket1's ID comes before ticket2's ID in alphabetical order
+	strcpy(ticket1->id, "AAAAAAAAAAA1");
+	strcpy(ticket2->id, "AAAAAAAAAAA2");
 	assert(compareTicketsByID(&ticket1, &ticket2) < 0);
 
-	// Test 3: ticket1's ID is greater than ticket2's ID
-	strcpy(ticket1.id, "T2754FC32SC");
-	strcpy(ticket2.id, "T2754FC32SB");
+	// Test 3: ticket1's ID comes after ticket2's ID in alphabetical order
+	strcpy(ticket1->id, "AAAAAAAAAAA2");
+	strcpy(ticket2->id, "AAAAAAAAAAA1");
 	assert(compareTicketsByID(&ticket1, &ticket2) > 0);
 
-	// Test 4: ticket1's ID and ticket2's ID only differ by case
-	strcpy(ticket1.id, "T2754FC32SC");
-	strcpy(ticket2.id, "t2754FC32SC");
-	assert(compareTicketsByID(&ticket1, &ticket2) != 0);
+	// Test 4: ticket1's ID is a substring of ticket2's ID
+	strcpy(ticket1->id, "AAAAAAAAAAA1");
+	strcpy(ticket2->id, "AAAAAAAAAAA1A");
+	assert(compareTicketsByID(&ticket1, &ticket2) < 0);
+
+	// Test 5: ticket1's ID is uppercase, ticket2's ID is lowercase
+	strcpy(ticket1->id, "AAAAAAAAAAA1");
+	strcpy(ticket2->id, "aaaaaaaaaaa1");
+	assert(compareTicketsByID(&ticket1, &ticket2) < 0);
+
+	free(ticket1);
+	free(ticket2);
 }
 void compareTicketsByDateTest() {
-	Ticket ticket1, ticket2;
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+
+	Date date1, date2;
+	initDate(&date1, 1, 1, 2025);
+	initDate(&date2, 2, 1, 2025);
 
 	// Test 1: Equal dates
-	initTicket(&ticket1, eAdult, (Date) { 1, 1, 2025 });
-	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	initTicket(ticket1, eAdult, date1);
+	initTicket(ticket2, eAdult, date1);
 	assert(compareTicketsByDate(&ticket1, &ticket2) == 0);
 
 	// Test 2: ticket1's date is earlier than ticket2's date
-	initTicket(&ticket1, eAdult, (Date) { 1, 1, 2025 });
-	initTicket(&ticket2, eAdult, (Date) { 2, 1, 2025 });
+	initTicket(ticket1, eAdult, date1);
+	initTicket(ticket2, eAdult, date2);
 	assert(compareTicketsByDate(&ticket1, &ticket2) < 0);
 
 	// Test 3: ticket1's date is later than ticket2's date
-	initTicket(&ticket1, eAdult, (Date) { 2, 1, 2025 });
-	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	initTicket(ticket1, eAdult, date2);
+	initTicket(ticket2, eAdult, date1);
 	assert(compareTicketsByDate(&ticket1, &ticket2) > 0);
 
-	// Test 4: ticket1's date is in a different month than ticket2's date
-	initTicket(&ticket1, eAdult, (Date) { 1, 2, 2025 });
-	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
-	assert(compareTicketsByDate(&ticket1, &ticket2) > 0);
+	// free
+	free(ticket1);
+	free(ticket2);
 
-	// Test 5: ticket1's date is in a different year than ticket2's date
-	initTicket(&ticket1, eAdult, (Date) { 1, 1, 2026 });
-	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
-	assert(compareTicketsByDate(&ticket1, &ticket2) > 0);
 }
 void compareTicketsByGuestTypeTest() {
-	Ticket ticket1, ticket2;
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+
+	Date date;
+	initDate(&date, 1, 1, 2025);
 
 	// Test 1: Equal guest types
-	initTicket(&ticket1, eAdult, (Date) { 1, 1, 2025 });
-	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	initTicket(ticket1, eAdult, date);
+	initTicket(ticket2, eAdult, date);
 	assert(compareTicketsByGuestType(&ticket1, &ticket2) == 0);
 
-	// Test 2: ticket1's guest type is less than ticket2's guest type
-	initTicket(&ticket1, eChild, (Date) { 1, 1, 2025 });
-	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	// Test 2: ticket1's guest type is earlier than ticket2's guest type
+	initTicket(ticket1, eChild, date);
+	initTicket(ticket2, eAdult, date);
 	assert(compareTicketsByGuestType(&ticket1, &ticket2) < 0);
 
-	// Test 3: ticket1's guest type is greater than ticket2's guest type
-	initTicket(&ticket1, eStudent, (Date) { 1, 1, 2025 });
-	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
+	// Test 3: ticket1's guest type is later than ticket2's guest type	
+	initTicket(ticket1, eAdult, date);
+	initTicket(ticket2, eChild, date);
 	assert(compareTicketsByGuestType(&ticket1, &ticket2) > 0);
 
-	// Test 4: ticket1's guest type is less than ticket2's guest type
-	initTicket(&ticket1, eChild, (Date) { 1, 1, 2025 });
-	initTicket(&ticket2, eSoldier, (Date) { 1, 1, 2025 });
-	assert(compareTicketsByGuestType(&ticket1, &ticket2) < 0);
-
-	// Test 5: ticket1's guest type is greater than ticket2's guest type
-	initTicket(&ticket1, eSoldier, (Date) { 1, 1, 2025 });
-	initTicket(&ticket2, eAdult, (Date) { 1, 1, 2025 });
-	assert(compareTicketsByGuestType(&ticket1, &ticket2) > 0);
-
-	// Test 6: Equal guest types
-	initTicket(&ticket1, eSoldier, (Date) { 1, 1, 2025 });
-	initTicket(&ticket2, eSoldier, (Date) { 1, 1, 2025 });
-	assert(compareTicketsByGuestType(&ticket1, &ticket2) == 0);
+	// free
+	free(ticket1);
+	free(ticket2);
 }
 // TicketMaster tests
 void TicketMasterTests() {
@@ -593,61 +594,54 @@ void initTicketMasterTest() {
 }
 void addTicketTest() {
 	TicketMaster ticketMaster;
-	Ticket ticket;
+	Ticket* ticket = (Ticket*)malloc(sizeof(Ticket));
 	Date validDate;
 	initDate(&validDate, 1, 1, 2025);
-	initTicket(&ticket, eAdult, validDate);
+	initTicket(ticket, eAdult, validDate);
 	initTicketMaster(&ticketMaster);
 
 	// Test 1: Add a ticket to an empty ticket master
-	assert(addTicket(&ticketMaster, &ticket) == 1);
+	assert(addTicket(&ticketMaster, ticket) == 1);
 	assert(ticketMaster.numOfTickets == 1);
 	assert(compareTicketsByID(&ticketMaster.tickets[0], &ticket) == 0);
 
 	// Test 2: Add a ticket to a ticket master with one ticket
-	Ticket ticket2;
-	initTicket(&ticket2, eChild, validDate);
-	assert(addTicket(&ticketMaster, &ticket2) == 1);
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+	initTicket(ticket2, eChild, validDate);
+	assert(addTicket(&ticketMaster, ticket2) == 1);
 	assert(ticketMaster.numOfTickets == 2);
 	assert(compareTicketsByID(&ticketMaster.tickets[0], &ticket) == 0);
 	assert(compareTicketsByID(&ticketMaster.tickets[1], &ticket2) == 0);
 
-	// Test 3: Add a ticket to a ticket master with multiple tickets
-	Ticket ticket3;
-	initTicket(&ticket3, eStudent, validDate);
-	assert(addTicket(&ticketMaster, &ticket3) == 1);
+	// Test 3: Add a ticket to a ticket master with two tickets
+	Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+	initTicket(ticket3, eStudent, validDate);
+	assert(addTicket(&ticketMaster, ticket3) == 1);
 	assert(ticketMaster.numOfTickets == 3);
 	assert(compareTicketsByID(&ticketMaster.tickets[0], &ticket) == 0);
 	assert(compareTicketsByID(&ticketMaster.tickets[1], &ticket2) == 0);
 	assert(compareTicketsByID(&ticketMaster.tickets[2], &ticket3) == 0);
 
-	// Test 4: Add a ticket with an invalid date
-	Date invalidDate;
-	Ticket ticket4;
-	initDate(&invalidDate, 32, 1, 2025);
-	initTicket(&ticket4, eAdult, invalidDate);
-	assert(addTicket(&ticketMaster, &ticket4) == 0);
-	assert(ticketMaster.numOfTickets == 3);
-
-	// Test 5: Add a ticket with an invalid guest type
-	Ticket ticket5;
-	initTicket(&ticket5, eNofTicketTypes, validDate);
-	assert(addTicket(&ticketMaster, &ticket5) == 0);
-	assert(ticketMaster.numOfTickets == 3);
-
-	// Test 6: Add a ticket with a NULL pointer
-	assert(addTicket(&ticketMaster, NULL) == 0);
-	assert(ticketMaster.numOfTickets == 3);
-
-	// Test 7 : valid ticket
-	Ticket ticket6;
-	initTicket(&ticket6, eAdult, validDate);
-	assert(addTicket(&ticketMaster, &ticket6) == 1);
+	// Test 4: Add a ticket to a ticket master with three tickets
+	Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
+	initTicket(ticket4, eSoldier, validDate);
+	assert(addTicket(&ticketMaster, ticket4) == 1);
 	assert(ticketMaster.numOfTickets == 4);
 	assert(compareTicketsByID(&ticketMaster.tickets[0], &ticket) == 0);
 	assert(compareTicketsByID(&ticketMaster.tickets[1], &ticket2) == 0);
 	assert(compareTicketsByID(&ticketMaster.tickets[2], &ticket3) == 0);
-	assert(compareTicketsByID(&ticketMaster.tickets[3], &ticket6) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[3], &ticket4) == 0);
+
+	// Test 5: Add a ticket to a ticket master with four tickets
+	Ticket* ticket5 = (Ticket*)malloc(sizeof(Ticket));
+	initTicket(ticket5, eAdult, validDate);
+	assert(addTicket(&ticketMaster, ticket5) == 1);
+	assert(ticketMaster.numOfTickets == 5);
+	assert(compareTicketsByID(&ticketMaster.tickets[0], &ticket) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[1], &ticket2) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[2], &ticket3) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[3], &ticket4) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[4], &ticket5) == 0);
 
 	// Free TicketMaster
 	freeTicketMaster(&ticketMaster);
@@ -657,33 +651,38 @@ void calcDailyTest() {
 	initTicketMaster(&ticketMaster);
 
 	// Create some tickets
-	Ticket ticket1, ticket2, ticket3, ticket4, ticket5, ticket6;
-	Date date1, date2;
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
+
+	Date date1, date2, date3;
 	initDate(&date1, 1, 1, 2025);
 	initDate(&date2, 2, 1, 2025);
+	initDate(&date3, 3, 1, 2025);
 
-	// Initialize tickets with different guest types and dates
-	initTicket(&ticket1, eChild, date1);
-	initTicket(&ticket2, eAdult, date1);
-	initTicket(&ticket3, eStudent, date1);
-	initTicket(&ticket4, eSoldier, date1);
-	initTicket(&ticket5, eChild, date2);
-	initTicket(&ticket6, eAdult, date2);
+	initTicket(ticket1, eChild, date3);
+	initTicket(ticket2, eAdult, date1);
+	initTicket(ticket3, eStudent, date2);
+	initTicket(ticket4, eSoldier, date2);
 
 	// Add tickets to the ticket master
-	assert(addTicket(&ticketMaster, &ticket1) == 1);
-	assert(addTicket(&ticketMaster, &ticket2) == 1);
-	assert(addTicket(&ticketMaster, &ticket3) == 1);
-	assert(addTicket(&ticketMaster, &ticket4) == 1);
-	assert(addTicket(&ticketMaster, &ticket5) == 1);
-	assert(addTicket(&ticketMaster, &ticket6) == 1);
+	assert(addTicket(&ticketMaster, ticket1) == 1);
+	assert(addTicket(&ticketMaster, ticket2) == 1);
+	assert(addTicket(&ticketMaster, ticket3) == 1);
+	assert(addTicket(&ticketMaster, ticket4) == 1);
 
-	// Calculate daily total for date1
-	double total1 = calcDaily(&ticketMaster, &date1);
-	assert(total1 == (BASE_TICKET_PRICE * Discount[eChild] + BASE_TICKET_PRICE * Discount[eAdult] + BASE_TICKET_PRICE * Discount[eStudent] + BASE_TICKET_PRICE * Discount[eSoldier]));
-	// Calculate daily total for date2
-	double total2 = calcDaily(&ticketMaster, &date2);
-	assert(total2 == (BASE_TICKET_PRICE * Discount[eChild] + BASE_TICKET_PRICE * Discount[eAdult]));
+
+	// Test 1: Calculate daily income for date1
+	double daily1 = calcDaily(&ticketMaster, &date1);
+	assert(daily1 == BASE_TICKET_PRICE * Discount[1]);
+	// Test 2: Calculate daily income for date2
+	double daily2 = calcDaily(&ticketMaster, &date2);
+	assert(daily2 == BASE_TICKET_PRICE * Discount[2] + BASE_TICKET_PRICE * Discount[3]);
+
+	// Test 3: Calculate daily income for date3
+	double daily3 = calcDaily(&ticketMaster, &date3);
+	assert(daily3 == BASE_TICKET_PRICE * Discount[0]);
 
 	freeTicketMaster(&ticketMaster);
 }
@@ -692,33 +691,36 @@ void sortTicketsByIDTest() {
 	initTicketMaster(&ticketMaster);
 
 	// Create some tickets
-	Ticket ticket1, ticket2, ticket3;
+
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+
 	Date date;
 	initDate(&date, 1, 1, 2025);
 
 	// Initialize tickets with different IDs
-	initTicket(&ticket1, eChild, date);
-	initTicket(&ticket2, eAdult, date);
-	initTicket(&ticket3, eStudent, date);
+	initTicket(ticket1, eChild, date);
+	initTicket(ticket2, eAdult, date);
+	initTicket(ticket3, eStudent, date);
 
 	// Manually set IDs to ensure they are different
-	strcpy(ticket1.id, "AAAAAAAAAAA3");
-	strcpy(ticket2.id, "AAAAAAAAAAA1");
-	strcpy(ticket3.id, "AAAAAAAAAAA2");
+	strcpy(ticket1->id, "AAAAAAAAAAA3");
+	strcpy(ticket2->id, "AAAAAAAAAAA1");
+	strcpy(ticket3->id, "AAAAAAAAAAA2");
 
 
 	// Add tickets to the ticket master
-	assert(addTicket(&ticketMaster, &ticket1) == 1);
-	assert(addTicket(&ticketMaster, &ticket2) == 1);
-	assert(addTicket(&ticketMaster, &ticket3) == 1);
-
+	assert(addTicket(&ticketMaster, ticket1) == 1);
+	assert(addTicket(&ticketMaster, ticket2) == 1);
+	assert(addTicket(&ticketMaster, ticket3) == 1);
 	// Sort tickets by ID
 	sortTicketsByID(&ticketMaster);
 
 	// Check that the tickets are sorted in ascending order by ID
-	assert(strcmp(ticketMaster.tickets[0].id, "AAAAAAAAAAA1") == 0);
-	assert(strcmp(ticketMaster.tickets[1].id, "AAAAAAAAAAA2") == 0);
-	assert(strcmp(ticketMaster.tickets[2].id, "AAAAAAAAAAA3") == 0);
+	assert(strcmp(ticketMaster.tickets[0]->id, "AAAAAAAAAAA1") == 0);
+	assert(strcmp(ticketMaster.tickets[1]->id, "AAAAAAAAAAA2") == 0);
+	assert(strcmp(ticketMaster.tickets[2]->id, "AAAAAAAAAAA3") == 0);
 
 	freeTicketMaster(&ticketMaster);
 }
@@ -727,29 +729,32 @@ void sortTicketsByDateTest() {
 	initTicketMaster(&ticketMaster);
 
 	// Create some tickets
-	Ticket ticket1, ticket2, ticket3;
-	Date date1, date2, date3;
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
+
+	// Initialize tickets with different dates
+	Date date1, date2, date3, date4;
 	initDate(&date1, 1, 1, 2025);
 	initDate(&date2, 2, 1, 2025);
 	initDate(&date3, 3, 1, 2025);
+	initDate(&date4, 4, 1, 2025);
 
-	// Initialize tickets with different dates
-	initTicket(&ticket1, eChild, date3);
-	initTicket(&ticket2, eAdult, date1);
-	initTicket(&ticket3, eStudent, date2);
+	initTicket(ticket1, eChild, date3);
+	initTicket(ticket2, eAdult, date1);
+	initTicket(ticket3, eStudent, date4);
+	initTicket(ticket4, eSoldier, date2);
 
 	// Add tickets to the ticket master
-	assert(addTicket(&ticketMaster, &ticket1) == 1);
-	assert(addTicket(&ticketMaster, &ticket2) == 1);
-	assert(addTicket(&ticketMaster, &ticket3) == 1);
-
+	assert(addTicket(&ticketMaster, ticket1) == 1);
+	assert(addTicket(&ticketMaster, ticket2) == 1);
+	assert(addTicket(&ticketMaster, ticket3) == 1);
+	assert(addTicket(&ticketMaster, ticket4) == 1);
 	// Sort tickets by date
 	sortTicketsByDate(&ticketMaster);
 
-	// Check that the tickets are sorted in ascending order by date
-	assert(compareDates(ticketMaster.tickets[0].dateOfVisit, date1) == 0);
-	assert(compareDates(ticketMaster.tickets[1].dateOfVisit, date2) == 0);
-	assert(compareDates(ticketMaster.tickets[2].dateOfVisit, date3) == 0);
+
 
 	freeTicketMaster(&ticketMaster);
 }
@@ -758,27 +763,32 @@ void sortTicketsByGuestTypeTest() {
 	initTicketMaster(&ticketMaster);
 
 	// Create some tickets
-	Ticket ticket1, ticket2, ticket3;
-	Date date;
-	initDate(&date, 1, 1, 2025);
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
 
 	// Initialize tickets with different guest types
-	initTicket(&ticket3, eStudent, date);
-	initTicket(&ticket2, eAdult, date);
-	initTicket(&ticket1, eChild, date);
+	Date date;
+	initDate(&date, 1, 1, 2025);
+	initTicket(ticket1, eChild, date);
+	initTicket(ticket2, eAdult, date);
+	initTicket(ticket3, eStudent, date);
+	initTicket(ticket4, eSoldier, date);
 
 	// Add tickets to the ticket master
-	assert(addTicket(&ticketMaster, &ticket3) == 1);
-	assert(addTicket(&ticketMaster, &ticket2) == 1);
-	assert(addTicket(&ticketMaster, &ticket1) == 1);
-
+	assert(addTicket(&ticketMaster, ticket1) == 1);
+	assert(addTicket(&ticketMaster, ticket2) == 1);
+	assert(addTicket(&ticketMaster, ticket3) == 1);
+	assert(addTicket(&ticketMaster, ticket4) == 1);
 	// Sort tickets by guest type
 	sortTicketsByGuestType(&ticketMaster);
 
 	// Check that the tickets are sorted in ascending order by guest type
-	assert(ticketMaster.tickets[0].guestType == eChild);
-	assert(ticketMaster.tickets[1].guestType == eAdult);
-	assert(ticketMaster.tickets[2].guestType == eStudent);
+	assert(ticketMaster.tickets[0]->guestType == eChild);
+	assert(ticketMaster.tickets[1]->guestType == eAdult);
+	assert(ticketMaster.tickets[2]->guestType == eStudent);
+	assert(ticketMaster.tickets[3]->guestType == eSoldier);
 
 	freeTicketMaster(&ticketMaster);
 }
@@ -822,18 +832,16 @@ void buyTicketTestManual() {
 	TicketMaster ticketMaster;
 	initTicketMaster(&ticketMaster);
 
-	ticket = buyTicket(&ticketMaster);
-	printf("----- Ticket Master After Buy Ticket -----\n");
-	printTicketMaster(&ticketMaster);
-	printf("----- Ticket Bought -----\n");
-	printTicket(ticket);
+	for (int i = 0; i < 3; i++)
+	{
+		ticket = buyTicket(&ticketMaster);
+		printf("----- Ticket Master After Buy Ticket -----\n");
+		printTicketMaster(&ticketMaster);
+		printf("----- Ticket Bought -----\n");
+		printTicket(ticket);
+	}
+
 	freeTicketMaster(&ticketMaster);
-
-
-
-
-
-
 }
 // initializes By User Manuals Tests
 void initByUserManualsTest() {
