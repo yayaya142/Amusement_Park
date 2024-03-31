@@ -16,6 +16,7 @@ typedef struct {
 } Worker;
 
 int initWorker(Worker* w, Person* p , Department dep);
+void initWorkerByUser(Worker* w);
 int isValidInfoWorker(Department department);
 void printWorker(const Worker* worker);
 void freeWorker(Worker* worker);

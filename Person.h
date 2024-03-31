@@ -12,6 +12,7 @@ typedef struct {
 } Person;
 
 int initPerson(Person* p, char* name, int height, int age);
+void initPersonByUser(Person* p);
 int isValidInfo(char* name, int height, int age);
 int comparePersonByHeight(Person* p1, Person* p2);
 void printPerson(const Person* p);

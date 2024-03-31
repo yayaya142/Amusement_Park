@@ -9,6 +9,29 @@ int initWorker(Worker* w,Person* p, Department dep) {
 	w->department = dep;
     return 1;
 }
+void initWorkerByUser(Worker* w) {
+	Person* p = malloc(sizeof(Person));
+	if (!p) {
+		printf("Memory allocation failed\n");
+		return 0;
+	}
+	initPersonByUser(p);
+	int flag = 0;
+	int dep;
+	do {
+		if (flag > 0) {
+			printf("Please try again\n");
+		}
+		printf("Enter department:\n");
+		for (int i = 0; i < eNofTypes; i++) {
+			printf("%d. %s\n", i, typeTilte[i]);
+		}
+		scanf("%d", &dep);
+		flag++;
+	} while (!initWorker(w, p, dep));
+}
+
+
 int generateWorkerID() {
 	int id_temp = randomNum(65, 90);
 	// Generate a random ID of 10 characters. so it can generate 36^10 different IDs
