@@ -46,4 +46,16 @@ void calcDailyTest();
 void sortTicketsByIDTest();
 void sortTicketsByDateTest();
 void sortTicketsByGuestTypeTest();
+void sortTicketsUserTestManual();
+void buyTicketTestManual();
+// initializes By User Manuals Tests
+void initByUserManualsTest();
+void initDateByUserManualsTest();
+void initWeatherByUserManualsTest();
+void initTimeByUserManualsTest();
+void initShopByUserManualsTest();
+void initTicketByUserManualsTest();
+
+
+
 #endif 

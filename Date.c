@@ -46,7 +46,7 @@ int isDayValid(int day, int month) {
 
 void printDate(const Date* pDate)
 {
-	printf("%d%c%d%c%d", pDate->year, DATE_DELIMITER, pDate->month, DATE_DELIMITER, pDate->day);
+	printf("%d%c%d%c%d", pDate->day, DATE_DELIMITER, pDate->month, DATE_DELIMITER, pDate->year);
 }
 
 
@@ -84,4 +84,19 @@ Date readDateFromBinFile(FILE* file) {
 	}
 
 	return date;
+}
+
+void initDateByUser(Date* pDate) {
+	int flag = 0;
+	int day, month, year;
+	do
+	{
+		if (flag > 0) {
+			printf("Invalid date, Please try again\n");
+		}
+		printf("Enter date (day month year)\n");
+		scanf("%d %d %d", &day, &month, &year);
+
+		flag = 1;
+	} while (!initDate(pDate, day, month, year));
 }

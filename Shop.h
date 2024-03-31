@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "Time.h"
+#include "General.h"
 
 typedef enum {
 	eRestaurant, eCoffeeShop, eBar, eNofShopTypes
@@ -26,6 +27,7 @@ int isValidShop(char* name, eShopType type, Time openHour, Time closeHour);
 void printShop(const Shop* shop);
 int compareShopsByName(const Shop* shop1, const Shop* shop2);
 void freeShop(Shop* shop);
-
+void printShopTypes();
+void initShopByUser(Shop* shop);
 
 #endif 

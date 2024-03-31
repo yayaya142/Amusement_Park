@@ -95,5 +95,89 @@ void sortTicketsByGuestType(TicketMaster* ticketMaster) {
 	ticketMaster->sortType = eSortedByGuestType;
 }
 void sortTicketsUser(TicketMaster* ticketMaster) {
-	// TODO NEED TO IMPLEMENT
+	printf("Please choose sorting type:\n");
+	for (int i = 1; i < eNofSortTypes; i++)
+	{
+		printf("%d. Sort By %s\n", i, sortTypeStr[i]);
+	}
+	int choice;
+	scanf("%d", &choice);
+	switch (choice)
+	{
+	case 1:
+		sortTicketsByID(ticketMaster);
+		break;
+	case 2:
+		sortTicketsByDate(ticketMaster);
+		break;
+	case 3:
+		sortTicketsByGuestType(ticketMaster);
+		break;
+	}
+}
+
+
+Ticket* findTicketByUser(const TicketMaster* ticketMaster) {
+	if (ticketMaster == NULL || ticketMaster->numOfTickets == 0) {
+		printf("No ticket added yet\n");
+		return NULL;
+	}
+
+	if (ticketMaster->sortType == eNotSorted) {
+		printf("Please sort the tickets first\n");
+		return NULL;
+	}
+
+	Ticket* toSearch = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* found = NULL;
+
+	if (toSearch == NULL) {
+		printf("Memory allocation failed\n");
+		return NULL;
+	}
+
+	switch (ticketMaster->sortType) {
+	case eSortedByID:
+		printf("Please enter the ID of the ticket you want to search\n");
+		scanf("%s", toSearch->id);
+		found = (Ticket*)bsearch(toSearch, ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket), compareTicketsByID);
+		break;
+	}
+
+	if (found == NULL) {
+		printf("Ticket not found\n");
+		free(toSearch);
+		return NULL;
+	}
+
+	printf("Ticket found:\n");
+	printf("Ticket ID: %s\n", found->id);
+	printf("Price: %.2f$\n", found->price);
+	printDate(&found->dateOfVisit);
+	printf("Is Used: %s\n", found->isUsed ? "Yes" : "No");
+
+	free(toSearch);
+	return found;
+}
+
+
+Ticket* buyTicket(TicketMaster* ticketMaster) {
+
+	Ticket* ticket = (Ticket*)malloc(sizeof(Ticket));
+	if (ticket == NULL) {
+		printf("Memory allocation failed\n");
+		return NULL;
+	}
+	printf("Please provide the following information:\n");
+	initTicketByUser(ticket);
+
+	if (!addTicket(ticketMaster, ticket)) {
+		printf("Invalid ticket\n");
+		free(ticket);
+		return NULL;
+	}
+
+
+	return ticket;
+
 }

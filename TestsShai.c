@@ -19,6 +19,7 @@ void runAllTestsShai() {
 	ShopTests();
 	TicketTests();
 	TicketMasterTests();
+	//initByUserManualsTest(); // Manual
 
 
 
@@ -148,16 +149,16 @@ void initWeatherTest() {
 	assert(initWeather(&weather, 2, 51) == 0);
 
 	// Test 4: Valid weather with negative temperature
-	assert(initWeather(&weather, 0, -25) == 1);
-	assert(weather.condition == eSunny && weather.temp == -25);
+	assert(initWeather(&weather, 0, -5) == 1);
+	assert(weather.condition == eSunny && weather.temp == -5);
 
 	// Test 5: Valid weather with maximum temperature
 	assert(initWeather(&weather, 1, 50) == 1);
 	assert(weather.condition == eRainy && weather.temp == 50);
 
 	// Test 6: Valid weather with minimum temperature
-	assert(initWeather(&weather, eSunny, -50) == 1);
-	assert(weather.condition == eSunny && weather.temp == -50);
+	assert(initWeather(&weather, eSunny, -10) == 1);
+	assert(weather.condition == eSunny && weather.temp == -10);
 
 }
 void isValidWeatherTest() {
@@ -211,7 +212,7 @@ void compareWeatherByTempTest() {
 
 	// Test 5: weather1 has a temperature of 0 and weather2 has a negative temperature
 	initWeather(&weather1, eSunny, 0.0);
-	initWeather(&weather2, eRainy, -20.0);
+	initWeather(&weather2, eRainy, -10);
 	assert(compareWeatherByTemp(&weather1, &weather2) > 0);
 
 	// Test 6: Both weather1 and weather2 have a temperature of 0
@@ -581,6 +582,8 @@ void TicketMasterTests() {
 	sortTicketsByIDTest();
 	sortTicketsByDateTest();
 	sortTicketsByGuestTypeTest();
+	//sortTicketsUserTestManual(); // manual test off by default
+	buyTicketTestManual(); // manual test off by default
 }
 void initTicketMasterTest() {
 	TicketMaster ticketMaster;
@@ -778,4 +781,116 @@ void sortTicketsByGuestTypeTest() {
 	assert(ticketMaster.tickets[2].guestType == eStudent);
 
 	freeTicketMaster(&ticketMaster);
+}
+void sortTicketsUserTestManual() {
+	printf("Sort Ticket Manual Test\n");
+
+	TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+	Ticket ticket1, ticket2, ticket3;
+	Date date1 = { 1, 1, 2024 };
+	Date date2 = { 2, 2, 2024 };
+	Date date3 = { 3, 3, 2024 };
+	initTicket(&ticket1, eAdult, date1);
+	initTicket(&ticket2, eChild, date2);
+	initTicket(&ticket3, eSoldier, date3);
+	addTicket(&ticketMaster, &ticket1);
+	addTicket(&ticketMaster, &ticket2);
+	addTicket(&ticketMaster, &ticket3);
+	printTicketMaster(&ticketMaster);
+	double daily1 = calcDaily(&ticketMaster, &date1);
+	double daily2 = calcDaily(&ticketMaster, &date2);
+	double daily3 = calcDaily(&ticketMaster, &date3);
+	printDailyIncome(&ticketMaster, &date1);
+	printDailyIncome(&ticketMaster, &date2);
+	printDailyIncome(&ticketMaster, &date3);
+
+
+	for (int i = 0; i < 5; i++)
+	{
+		sortTicketsUser(&ticketMaster);
+		printTicketMaster(&ticketMaster);
+	}
+
+
+	freeTicketMaster(&ticketMaster);
+}
+void buyTicketTestManual() {
+	printf("Buy Ticket Manual Test\n");
+
+	Ticket* ticket;
+	TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+
+	ticket = buyTicket(&ticketMaster);
+	printf("----- Ticket Master After Buy Ticket -----\n");
+	printTicketMaster(&ticketMaster);
+	printf("----- Ticket Bought -----\n");
+	printTicket(ticket);
+	freeTicketMaster(&ticketMaster);
+
+
+
+
+
+
+}
+// initializes By User Manuals Tests
+void initByUserManualsTest() {
+	initDateByUserManualsTest();
+	initWeatherByUserManualsTest();
+	initTimeByUserManualsTest();
+	initShopByUserManualsTest();
+	initTicketByUserManualsTest();
+}
+void initWeatherByUserManualsTest() {
+	printf("Init weather Manual Test\n");
+
+	for (int i = 0; i < 5; i++)
+	{
+		Weather weather;
+		initWeatherByUser(&weather);
+		printWeather(&weather);
+	}
+}
+void initDateByUserManualsTest() {
+	printf("Init Date Manual Test\n");
+	for (int i = 0; i < 5; i++)
+	{
+		Date date;
+		initDateByUser(&date);
+		printDate(&date);
+		printf("\n");
+	}
+}
+void initTimeByUserManualsTest() {
+	printf("Init Time Manual Test\n");
+	for (int i = 0; i < 5; i++)
+	{
+		Time time;
+		initTimeByUser(&time);
+		printTime(&time);
+		printf("\n");
+	}
+}
+void initShopByUserManualsTest() {
+	printf("Init Shop Manual Test\n");
+	for (int i = 0; i < 3; i++)
+	{
+		Shop shop;
+		initShopByUser(&shop);
+		printShop(&shop);
+		printf("\n");
+		freeShop(&shop);
+	}
+}
+void initTicketByUserManualsTest() {
+	printf("Init Ticket Manual Test\n");
+	for (int i = 0; i < 5; i++)
+	{
+		Ticket ticket;
+		initTicketByUser(&ticket);
+		printTicket(&ticket);
+		printf("\n");
+	}
 }

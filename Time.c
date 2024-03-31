@@ -48,5 +48,17 @@ int compareTime(const Time* time1, const Time* time2) {
 }
 
 
-
-
+void initTimeByUser(Time* time) {
+	int flag = 0;
+	int hour, minute;
+	do {
+		if (flag > 0) {
+			printf("Invalid time, Please try again\n");
+		}
+		printf("Please enter Hour: ");
+		scanf("%d", &hour);
+		printf("Please enter Minute: ");
+		scanf("%d", &minute);
+		flag = 1;
+	} while (!initTime(time, hour, minute));
+}

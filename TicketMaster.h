@@ -6,7 +6,7 @@
 #include "Ticket.h"
 
 typedef enum {
-	eNotSorted, eSortedByID, eSortedByDate, eSortedByGuestType
+	eNotSorted, eSortedByID, eSortedByDate, eSortedByGuestType, eNofSortTypes
 } eSortType;
 
 static const char* sortTypeStr[] = { "None", "ID", "Date", "Guest Type" };
@@ -28,5 +28,6 @@ void sortTicketsByID(TicketMaster* ticketMaster);
 void sortTicketsByDate(TicketMaster* ticketMaster);
 void sortTicketsByGuestType(TicketMaster* ticketMaster);
 void sortTicketsUser(TicketMaster* ticketMaster);
-
+Ticket* findTicketByUser(const TicketMaster* ticketMaster);
+Ticket* buyTicket(TicketMaster* ticketMaster);
 #endif 

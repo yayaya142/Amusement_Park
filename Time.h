@@ -18,6 +18,7 @@ int initTime(Time* time, int hour, int minute);
 int isValidTime(int hour, int minute);
 void printTime(const Time* time);
 int compareTime(const Time* time1, const Time* time2);
+void initTimeByUser(Time* time);
 
 
 

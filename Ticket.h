@@ -37,7 +37,8 @@ void printTicket(const Ticket* ticket);
 int compareTicketsByID(const void* ticket1, const void* ticket2);
 int compareTicketsByDate(const void* ticket1, const void* ticket2);
 int compareTicketsByGuestType(const void* ticket1, const void* ticket2);
-
+void printGuestType();
+void initTicketByUser(Ticket* ticket);
 
 
 #endif 

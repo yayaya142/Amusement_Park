@@ -27,13 +27,13 @@ void printWeather(const Weather* weather) {
 		printf("Invalid weather\n");
 		return;
 	}
-	printf("Weather condition: %s, Temperature: %.2f\n", WeatherTypeStr[weather->condition], weather->temp);
+	printf("Weather condition: %s, Temperature: %.2f%s\n", WeatherTypeStr[weather->condition], weather->temp, DEFUALT_WEATHER_SYMBOL);
 }
 int compareWeatherByTemp(const Weather* weather1, const Weather* weather2) {
 	return (int)(weather1->temp - weather2->temp);
 }
 
-void createWeatherByUser(Weather* weather) {
+void initWeatherByUser(Weather* weather) {
 	int flag = 0;
 	int condition;
 	float temp;
@@ -44,13 +44,12 @@ void createWeatherByUser(Weather* weather) {
 		}
 		printf("Enter weather condition\n");
 		for (int i = 0; i < eNofWeatherTypes; i++) {
-			printf("%d. %s\n", i, WeatherTypeStr[i]);
+			printf("%d. %s\n", i + 1, WeatherTypeStr[i]);
 		}
 		scanf("%d", &condition);
 		printf("Enter temperature");
 		scanf("%f", &temp);
-		flag++;
-
-	} while (!initWeather(weather, condition, temp));
+		flag = 1;
+	} while (!initWeather(weather, condition - 1, temp));
 }
 
