@@ -10,16 +10,11 @@
 void runAllTestsDaniel();
 
 void runPersonTests();
-
-void testInitPersonValidInput();
-void testInitPersonInvalidName();
-void testInitPersonInvalidHeight();
-void testInitPersonInvalidAge();
-void testInitPersonInvalidId();
+void  testInitPerson();
+void  freePersonTest();
 
 void workerTests();
 void initWorkerTest();
-void printWorkerTest();
 void freeWorkerTest();
 
 #endif
