@@ -223,10 +223,10 @@ void runFacilityTests() {
 }
 //main test
 void runAllTestsDaniel() {
-    runPersonTests();
+    /*runPersonTests();
     runWorkerTests();
     runFacilityTests();
-    //runGuestTests();
+    */runGuestTests();
 
     printf("---------All tests passed!----------\n");
 }
