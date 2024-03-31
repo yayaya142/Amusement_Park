@@ -9,7 +9,7 @@ int initGuest(Guest* guest, Person *p, eGuestType guestType, Date dateOfVisit ) 
 	return 1;
 }
 
-void initguestByUser(Guest* guest, TicketMaster* tMaster) {
+void initguestByUser(Guest* guest) {//, TicketMaster* tMaster
 	Person* p = malloc(sizeof(Person));
 	if (!p) {
 		printf("Memory allocation failed\n");
@@ -18,7 +18,7 @@ void initguestByUser(Guest* guest, TicketMaster* tMaster) {
 	initPersonByUser(p);
 	guest->person = p;
 	//Buy ticket
-	guest->ticket=buyTicket(tMaster);
+	//guest->ticket=buyTicket(tMaster);
 }
 
 void printGuest(const Guest* guest) {
