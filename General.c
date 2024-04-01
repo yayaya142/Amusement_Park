@@ -94,3 +94,15 @@ void generalArrayFunction(void* arr, int size, size_t typeSize, void* (*func)(vo
 int randomNum(int min, int max) {
 	return rand() % (max - min + 1) + min;
 }
+
+int validName(char* name) {
+	if(name == NULL || strlen(name) == 0) {
+		return 0;
+	}
+	for (int i = 0; i < strlen(name); i++) {
+		if (((name[i] < 'A' || name[i] > 'Z') && (name[i] < 'a' || name[i] > 'z')) && name[i] != ' ') {
+			return 0;
+		}
+	}
+	return 1;
+}

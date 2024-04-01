@@ -106,4 +106,3 @@ void initDateByUser(Date* pDate) {
 	} while (!initDate(pDate, day, month, year));
 }
 
-
