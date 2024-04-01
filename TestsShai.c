@@ -584,7 +584,8 @@ void TicketMasterTests() {
 	sortTicketsByDateTest();
 	sortTicketsByGuestTypeTest();
 	//sortTicketsUserTestManual(); // manual test off by default
-	buyTicketTestManual(); // manual test off by default
+	//buyTicketTestManual(); // manual test off by default
+	//findTicketByUserTestManual(); // manual test off by default
 }
 void initTicketMasterTest() {
 	TicketMaster ticketMaster;
@@ -842,6 +843,59 @@ void buyTicketTestManual() {
 	}
 
 	freeTicketMaster(&ticketMaster);
+}
+void findTicketByUserTestManual() {
+	printf("Find Ticket By User Manual Test\n");
+
+	TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket5 = (Ticket*)malloc(sizeof(Ticket));
+
+	Date date1, date2, date3, date4, date5;
+	initDate(&date1, 1, 1, 2025);
+	initDate(&date2, 2, 1, 2025);
+	initDate(&date3, 3, 1, 2025);
+	initDate(&date4, 4, 1, 2025);
+	initDate(&date5, 5, 1, 2025);
+
+	initTicket(ticket1, eChild, date1);
+	initTicket(ticket2, eAdult, date2);
+	initTicket(ticket3, eStudent, date3);
+	initTicket(ticket4, eStudent, date4);
+	initTicket(ticket5, eAdult, date5);
+
+	addTicket(&ticketMaster, ticket1);
+	addTicket(&ticketMaster, ticket2);
+	addTicket(&ticketMaster, ticket3);
+	addTicket(&ticketMaster, ticket4);
+	addTicket(&ticketMaster, ticket5);
+
+	printTicketMaster(&ticketMaster);
+	// Find tickets by user
+	for (int i = 0; i < 4; i++)
+	{
+		sortTicketsUser(&ticketMaster);
+		printTicketMaster(&ticketMaster);
+		Ticket* foundTicket1 = findTicketByUser(&ticketMaster);
+
+		if (foundTicket1 != NULL)
+		{
+			printf("----- Ticket Found return pointer tests -----\n");
+			printTicket(foundTicket1);
+		}
+		else
+		{
+			printf("----- Ticket Not Found -----\n");
+		}
+	}
+
+	freeTicketMaster(&ticketMaster);
+
 }
 // initializes By User Manuals Tests
 void initByUserManualsTest() {

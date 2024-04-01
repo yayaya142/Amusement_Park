@@ -56,20 +56,21 @@ void printTicket(const Ticket* ticket) {
 
 
 int compareTicketsByID(const void* ticket1, const void* ticket2) {
-	Ticket* t1 = *(Ticket**)ticket1;
-	Ticket* t2 = *(Ticket**)ticket2;
+	const Ticket* t1 = *(Ticket**)ticket1;
+	const Ticket* t2 = *(Ticket**)ticket2;
+
 	return strcmp(t1->id, t2->id);
 }
 
 int compareTicketsByDate(const void* ticket1, const void* ticket2) {
-	Ticket* t1 = *(Ticket**)ticket1;
-	Ticket* t2 = *(Ticket**)ticket2;
+	const Ticket* t1 = *(Ticket**)ticket1;
+	const Ticket* t2 = *(Ticket**)ticket2;
 	return compareDates(t1->dateOfVisit, t2->dateOfVisit);
 }
 
 int compareTicketsByGuestType(const void* ticket1, const void* ticket2) {
-	Ticket* t1 = *(Ticket**)ticket1;
-	Ticket* t2 = *(Ticket**)ticket2;
+	const Ticket* t1 = *(Ticket**)ticket1;
+	const Ticket* t2 = *(Ticket**)ticket2;
 	return t1->guestType - t2->guestType;
 }
 

@@ -3,6 +3,7 @@
 
 #include <crtdbg.h> // TODO: remove before release
 #include <stdio.h>
+#include <stdlib.h>
 #include "Ticket.h"
 
 typedef enum {
@@ -28,6 +29,7 @@ void sortTicketsByID(TicketMaster* ticketMaster);
 void sortTicketsByDate(TicketMaster* ticketMaster);
 void sortTicketsByGuestType(TicketMaster* ticketMaster);
 void sortTicketsUser(TicketMaster* ticketMaster);
-Ticket* findTicketByUser(const TicketMaster* ticketMaster);
 Ticket* buyTicket(TicketMaster* ticketMaster);
+Ticket* findTicketByUser(const TicketMaster* ticketMaster);
+
 #endif 

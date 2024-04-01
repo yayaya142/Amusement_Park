@@ -62,6 +62,8 @@ double calcDaily(const TicketMaster* ticketMaster, Date* date) {
 	return sum;
 }
 
+
+
 void printDailyIncome(const TicketMaster* ticketMaster, Date* date) {
 	if (ticketMaster == NULL || ticketMaster->tickets == NULL || date == NULL) {
 		printf("No ticket added yet\n");
@@ -72,6 +74,8 @@ void printDailyIncome(const TicketMaster* ticketMaster, Date* date) {
 
 }
 
+
+
 void sortTicketsByID(TicketMaster* ticketMaster) {
 	if (ticketMaster == NULL || ticketMaster->tickets == NULL) {
 		return;
@@ -80,6 +84,8 @@ void sortTicketsByID(TicketMaster* ticketMaster) {
 	qsort(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket*), compareTicketsByID);
 	ticketMaster->sortType = eSortedByID;
 }
+
+
 
 void sortTicketsByDate(TicketMaster* ticketMaster) {
 	if (ticketMaster == NULL || ticketMaster->tickets == NULL) {
@@ -90,6 +96,9 @@ void sortTicketsByDate(TicketMaster* ticketMaster) {
 	ticketMaster->sortType = eSortedByDate;
 }
 
+
+
+
 void sortTicketsByGuestType(TicketMaster* ticketMaster) {
 	if (ticketMaster == NULL || ticketMaster->tickets == NULL) {
 		return;
@@ -98,6 +107,10 @@ void sortTicketsByGuestType(TicketMaster* ticketMaster) {
 	qsort(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket*), compareTicketsByGuestType);
 	ticketMaster->sortType = eSortedByGuestType;
 }
+
+
+
+
 void sortTicketsUser(TicketMaster* ticketMaster) {
 	printf("Please choose sorting type:\n");
 	for (int i = 1; i < eNofSortTypes; i++)
@@ -121,8 +134,11 @@ void sortTicketsUser(TicketMaster* ticketMaster) {
 }
 
 
+
+
+
 Ticket* findTicketByUser(const TicketMaster* ticketMaster) {
-	if (ticketMaster == NULL || ticketMaster->numOfTickets == 0) {
+	if (ticketMaster == NULL || ticketMaster->tickets == NULL || ticketMaster->numOfTickets == 0) {
 		printf("No ticket added yet\n");
 		return NULL;
 	}
@@ -132,7 +148,9 @@ Ticket* findTicketByUser(const TicketMaster* ticketMaster) {
 		return NULL;
 	}
 
+	// Allocate memory for the ticket to search
 	Ticket* toSearch = (Ticket*)malloc(sizeof(Ticket));
+	Ticket** foundPtr = NULL;
 	Ticket* found = NULL;
 
 	if (toSearch == NULL) {
@@ -140,25 +158,39 @@ Ticket* findTicketByUser(const TicketMaster* ticketMaster) {
 		return NULL;
 	}
 
-	switch (ticketMaster->sortType) {
+
+	// Search by the sorted type 
+	switch (ticketMaster->sortType)
+	{
 	case eSortedByID:
-		printf("Please enter the ID of the ticket you want to search\n");
+		printf("Please enter the ticket ID you are looking for:\n");
 		scanf("%s", toSearch->id);
-		found = (Ticket*)bsearch(toSearch, ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket), compareTicketsByID);
+		foundPtr = (Ticket**)bsearch(&toSearch, ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket*), compareTicketsByID);
+		break;
+	case eSortedByDate:
+		printf("Please enter the date you are looking for:\n");
+		initDateByUser(&toSearch->dateOfVisit);
+		foundPtr = (Ticket**)bsearch(&toSearch, ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket*), compareTicketsByDate);
+		break;
+	case eSortedByGuestType:
+		printf("Please enter the guest type you are looking for:\n");
+		printGuestType();
+		int guestType;
+		scanf("%d", &guestType);
+		toSearch->guestType = guestType - 1;
+		foundPtr = (Ticket**)bsearch(&toSearch, ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket*), compareTicketsByGuestType);
 		break;
 	}
 
-	if (found == NULL) {
-		printf("Ticket not found\n");
-		free(toSearch);
-		return NULL;
+	// If foundPtr is not NULL, the ticket was found
+	if (foundPtr != NULL) {
+		found = *foundPtr;
+		printf("---- Ticket Found ----\n");
+		printTicket(found);
 	}
-
-	printf("Ticket found:\n");
-	printf("Ticket ID: %s\n", found->id);
-	printf("Price: %.2f$\n", found->price);
-	printDate(&found->dateOfVisit);
-	printf("Is Used: %s\n", found->isUsed ? "Yes" : "No");
+	else {
+		printf("Ticket not found\n");
+	}
 
 	free(toSearch);
 	return found;

@@ -48,6 +48,7 @@ void sortTicketsByDateTest();
 void sortTicketsByGuestTypeTest();
 void sortTicketsUserTestManual();
 void buyTicketTestManual();
+void findTicketByUserTestManual();
 // initializes By User Manuals Tests
 void initByUserManualsTest();
 void initDateByUserManualsTest();
