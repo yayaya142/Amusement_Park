@@ -86,8 +86,8 @@ void initWorkerTest() {
     assert(initPerson(p, name, 170, 30) == 1);// Initialize the person
     assert(initWorker(w, p, eCoffeeShop) == 1); // Check that initWorker returns 1 when valid inputs are given
     assert(initWorker(w, p, eNofTypes) == 0); // Check that initWorker returns 0 when invalid department is given
-    
     freeWorker(w);
+    free(p);
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

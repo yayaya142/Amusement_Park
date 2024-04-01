@@ -8,11 +8,7 @@ int initFacility(Facility* pFacility,char* name, int minHeight, int maxHeight, C
 	if (!validFacility(name, minHeight, maxHeight, category)) { //check if name is valid (only letters)
 		return 0;
 	}
-	pFacility->name = (char*)malloc(strlen(name) + 1);
-	if (!pFacility->name) {
-		return 0;
-	}
-	strcpy(pFacility->name, name);
+	pFacility->name = name;
 	pFacility->minHeight = minHeight;
 	pFacility->maxHeight = maxHeight;
 	pFacility->category = category;

@@ -96,6 +96,9 @@ int randomNum(int min, int max) {
 }
 
 int validName(char* name) {
+	if(name == NULL || strlen(name) == 0) {
+		return 0;
+	}
 	for (int i = 0; i < strlen(name); i++) {
 		if (((name[i] < 'A' || name[i] > 'Z') && (name[i] < 'a' || name[i] > 'z')) && name[i] != ' ') {
 			return 0;
