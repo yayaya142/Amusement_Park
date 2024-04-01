@@ -11,10 +11,10 @@ typedef struct {
 	float height;
 } Person;
 
-int initPerson(Person* p, char* name, int height, int age);
+int initPerson(Person* p, char* name, float height, int age);
 void initPersonByUser(Person* p);
-int isValidInfo(char* name, int height, int age);
-int comparePersonByHeight(Person* p1, Person* p2);
+int isValidInfo(char* name, float height, int age);
+int comparePersonByHeight(const Person* p1,const Person* p2);
 void printPerson(const Person* p);
 void freePerson(Person* p);
 #endif

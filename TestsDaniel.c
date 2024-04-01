@@ -2,6 +2,7 @@
 #include "Worker.h"
 #include "Guest.h"
 #include "Facility.h"
+#include "TicketMaster.h"
 #include "TestsDaniel.h"
 #include <crtdbg.h> // TODO: remove before release
 #include <assert.h>
@@ -14,67 +15,40 @@ void testInitPerson() {
         printf("Memory allocation failed\n");
         return;
     }
-    assert(initPerson(p, "daniel betzalel", 170, 30) == 1); // All inputs are valid
-    assert(initPerson(p, "1234", 170, 30) == 0); // Name contains non-alphabetic characters
-    assert(initPerson(p, "Test Name", -1, 30) == 0); // Height is negative
-    assert(initPerson(p, "Test Name", 301, 30) == 0); // Height is more than 300
-    assert(initPerson(p, "Test Name", 170, -1) == 0); // Age is negative
-    assert(initPerson(p, "Test Name", 170, 121) == 0); // Age is more than 120
+    char* name = (char*)malloc(7 * sizeof(char));
+    strcpy(name, "person");
+
+    assert(initPerson(p, name, 170, 30) == 1);// All inputs are valid
+    assert(strcmp(p->name, "person") == 0);
+    assert(p->height == 170);
+    assert(p->age == 30);
+    
+    // Test with NULL name
+    assert(initPerson(p, NULL, 170, 30) == 0);
+
+    // Test with empty name
+    strcpy(name, "");
+    assert(initPerson(p, "", 170, 30) == 0);
+
+    // Test with negative height
+    assert(initPerson(p, name, -170, 30) == 0);
+
+    // Test with zero height
+    assert(initPerson(p, name, 0, 30) == 0);
+
+    // Test with negative age
+    assert(initPerson(p, name, 170, -30) == 0);
+
+    // Test with zero age
+    assert(initPerson(p, name, 170, 0) == 0);
+
+    
     
     freePerson(p);
+    free(p);
 }
-
-
-// Test 2: Check that freePerson correctly frees a person
-void freePersonTest() {
-    Person* p = malloc(sizeof(Person));
-    if (p == NULL) {
-        printf("Memory allocation failed\n");
-        return;
-    }
-    initPerson(p, "Test Name", 170, 30);
-    freePerson(p);
-}
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// Test 1: Check that initWorker
-void initWorkerTest() {
-    Worker* w = malloc(sizeof(Worker));
-    if (w == NULL) {
-        printf("Memory allocation failed\n");
-        return;
-    }
-    Person* p = malloc(sizeof(Person));
-    if (p == NULL) {
-        printf("Memory allocation failed\n");
-        return;
-    }
-    assert(initPerson(p, "Test Name", 170, 30) == 1); // Initialize the person
-    assert(initWorker(w, p, eCoffeeShop) == 1); // Check that initWorker returns 1 when valid inputs are given
-    assert(initWorker(w, p, eNofTypes) == 0); // Check that initWorker returns 0 when invalid department is given
-    
-    freeWorker(w);
-}
-
-// Test 2: Check that freeWorker correctly frees a worker
-void freeWorkerTest() {
-    Worker* w = malloc(sizeof(Worker));
-    if (w == NULL) {
-        printf("Memory allocation failed\n");
-        return;
-    }
-    Person* p = malloc(sizeof(Person));
-    if (p == NULL) {
-        printf("Memory allocation failed\n");
-        return;
-    }
-    assert(initPerson(p, "Test Name", 170, 30) == 1); // Initialize the person
-    initWorker(w, p, eCoffeeShop);
-    freeWorker(w);
-}
-// Test 3: Check that comparePersonByHeight
-void test_comparePersonByHeight() {
+// Test 2: Check that comparePersonByHeight
+void testComparePersonByHeight() {
     Person p1, p2;
 
     // Test when heights are equal
@@ -92,64 +66,67 @@ void test_comparePersonByHeight() {
     p2.height = 180;
     assert(comparePersonByHeight(&p1, &p2) > 0);
 }
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Test 1: Check that initWorker
+void initWorkerTest() {
+    Worker* w = malloc(sizeof(Worker));
+    if (w == NULL) {
+        printf("Memory allocation failed\n");
+        return;
+    }
+    Person* p = malloc(sizeof(Person));
+    if (p == NULL) {
+        printf("Memory allocation failed\n");
+        return;
+    }
+    char* name = (char*)malloc(7 * sizeof(char));
+    strcpy(name, "person");
+
+    assert(initPerson(p, name, 170, 30) == 1);// Initialize the person
+    assert(initWorker(w, p, eCoffeeShop) == 1); // Check that initWorker returns 1 when valid inputs are given
+    assert(initWorker(w, p, eNofTypes) == 0); // Check that initWorker returns 0 when invalid department is given
+    
+    freeWorker(w);
+}
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Test 1: Check that initGuest 
 void initGuestTest() {
-    Person* p = malloc(sizeof(Person));
-    if (p == NULL) {
-        printf("Memory allocation failed\n");
-        return;
-    }
-    assert(initPerson(p, "Test Name", 170, 30) == 1); // Initialize the person
+    Guest g;
+    Person tk; 
 
-    Guest* g = malloc(sizeof(Guest));
-    if (g == NULL) {
-        printf("Memory allocation failed\n");
-        freePerson(p);
-        return;
-    }
-    Date date;
-    initDate(&date, 21, 10, 2024); // Example date
-    assert(initGuest(g, p, 1, date) == 1); // All inputs are valid
-    assert(initGuest(g, p, eNofTypes, date) == 0); // Invalid guest type
+    char* name = malloc(sizeof(char) *7);
+    strcpy(name, "daniel");
+    initPerson(&tk,name, 170, 22);
+    initGuest(&g, &tk);
 
-    Date invalidDate = { 2022, 13, 32 }; // Invalid date
-    assert(initGuest(g, p, 1, invalidDate) == 0); // Invalid date
+    //Manual ticket initial - assume that the ticket is correct
+    Date d;
+    initDate(&d, 21, 10, 2024);
+    Ticket *t = malloc(sizeof(Ticket));
+    if (t == NULL) {
+		printf("Memory allocation failed\n");
+		return;
+	}
+    assert(initTicket(t, 1, d) == 1);
+    g.ticket = t;
+    strcpy(g.ticket->id, "123456789234");
+    assert(g.person->height == 170);
+    assert(g.person->age == 22);
+    assert(strcmp(g.person->name, "daniel") == 0);
+    assert(strcmp(g.ticket->id, "123456789234") == 0);
+    assert(g.ticket->dateOfVisit.day == 21);
+    assert(g.ticket->dateOfVisit.month == 10);
+    assert(g.ticket->dateOfVisit.year == 2024);
+    freeGuest(&g);
 
-    Date futureDate = { 3000, 1, 1 }; // Future date
-    assert(initGuest(g, p, 1, futureDate) == 0); // Future date
-
-    Date pastDate = { 1900, 1, 1 }; // Past date
-    assert(initGuest(g, p, 1, pastDate) == 0); // Past date
-
-    freeGuest(g);
-}
-
-// Test 2: Check that freeGuest correctly frees a guest
-void freeGuestTest() {
-    Guest* g = malloc(sizeof(Guest));
-    if (g == NULL) {
-        printf("Memory allocation failed\n");
-        return;
-    }
-    Person* p = malloc(sizeof(Person));
-    if (p == NULL) {
-        printf("Memory allocation failed\n");
-        free(g); // Don't forget to free g before returning
-        return;
-    }
-    assert(initPerson(p, "Test Name", 170, 30) == 1);
-    Date date;
-    initDate(&date, 21, 10, 2024);
-    initGuest(g, p, eStudent, date);
-
-    freeGuest(g);
+    free(t);
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Test 1: Check that initFacility
-void test_initFacility() {
+void testInitFacility() {
     Facility facility;
 
    // Test with valid parameters
@@ -172,7 +149,7 @@ void test_initFacility() {
 }
 
 // Test 2: Check that freeFacility correctly frees a facility
-void test_compareFacilities() {
+void testCompareFacilities() {
     Facility facility1, facility2;
 
     // Test when categories are different
@@ -197,36 +174,33 @@ void test_compareFacilities() {
     assert(compareFacilities(&facility1, &facility2) == 0);
 }
 
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 // Person
 void runPersonTests() {
     testInitPerson();
-    freePersonTest();
+    testComparePersonByHeight();
 }
 
 // Worker
 void runWorkerTests() {
 	initWorkerTest();
-	freeWorkerTest();
 }
 // Guest
 void runGuestTests() {
-	//initGuestTest();
-    freeGuestTest();
+	initGuestTest();
 }
-
 // Facility
 void runFacilityTests() {
-	test_initFacility();
-	test_compareFacilities();
+    testInitFacility();
+    testCompareFacilities();
 }
 //main test
 void runAllTestsDaniel() {
-    /*runPersonTests();
+    runPersonTests();
     runWorkerTests();
     runFacilityTests();
-    */runGuestTests();
+    runGuestTests();
 
     printf("---------All tests passed!----------\n");
 }

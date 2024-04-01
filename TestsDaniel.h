@@ -10,11 +10,13 @@
 void runAllTestsDaniel();
 
 void runPersonTests();
-void  testInitPerson();
-void  freePersonTest();
+void testComparePersonByHeight();
+void testInitPerson();
 
-void workerTests();
+void runWorkerTests();
 void initWorkerTest();
-void freeWorkerTest();
 
+void runFacilityTests();
+void testInitFacility();
+void testCompareFacilities();
 #endif

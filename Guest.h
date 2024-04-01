@@ -3,6 +3,7 @@
 
 #include "Ticket.h"
 #include "Person.h"
+#include "TicketMaster.h"
 #include <crtdbg.h> // TODO: remove before release
 
 typedef struct {
@@ -10,8 +11,9 @@ typedef struct {
 	Ticket* ticket;
 } Guest;
 
-int initGuest(Guest* w,Person* p, eGuestType guestType, Date dateOfVisit);
-void printGuest(const Guest* worker);
+int initGuest(Guest* w,Person* p);
+void initGuestByUser(Guest* guest, TicketMaster* tMaster);
+void printGuest(const Guest* guest);
 void freeGuest(Guest* guest);
 
 #endif

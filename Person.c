@@ -3,12 +3,11 @@
 #define MAX_HEIGHT 300
 #define MAX_AGE 120
 
-int initPerson(Person *p, char* name, int height, int age) {
+int initPerson(Person *p, char* name, float height, int age) {
 	if(!isValidInfo(name , height, age)){
 		return 0;
 	}
-	p->name = (char*)malloc(strlen(name) + 1);
-	strcpy(p->name, name);
+	p->name = name;
 	p->height = height;
 	p->age = age;
 	return 1;
@@ -17,18 +16,16 @@ int initPerson(Person *p, char* name, int height, int age) {
 
 void initPersonByUser(Person *p) {
 	int flag = 0;
-	char name[MAX_STR_LEN];
+	char* name = NULL;
 	int age;
 	float height;
 	do {
 		if (flag > 0) {
 			printf("Please try again\n");
+			free(name);
 		}
-		//printf("Enter name:\n");
-		char* new_name = getStrExactName("Enter name :\n");
-		strcpy(name, new_name);
-		free(new_name);
-
+		name = getStrExactName("Enter name :\n");
+		
 		printf("Enter age:\n");
 		scanf("%d", &age);
 
@@ -39,7 +36,7 @@ void initPersonByUser(Person *p) {
 
 }
 
-int isValidInfo(char* name, int height, int age) { //TODO: finish user interaction function
+int isValidInfo(char* name, float height, int age) { //TODO: finish user interaction function
 	if (!validName(name)) {
 		printf("Invalid name\n");
 		return 0;
@@ -59,7 +56,7 @@ int comparePersonByHeight(const Person* p1, const Person* p2) {
 	if (p1->height == p2->height) {
 		return 0;
 	}
-	return p1->height - p2->height;
+	return (int)(p1->height - p2->height);
 }
 
 
@@ -78,8 +75,5 @@ void printPerson(const Person* p) {
 void freePerson(Person* p) {
 	if (p->name != NULL) {
 		free(p->name);
-	}
-	if (p != NULL) {
-		free(p);
 	}
 }

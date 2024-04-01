@@ -13,7 +13,7 @@ void initWorkerByUser(Worker* w) {
 	Person* p = malloc(sizeof(Person));
 	if (!p) {
 		printf("Memory allocation failed\n");
-		return 0;
+		return ;
 	}
 	initPersonByUser(p);
 	int flag = 0;
@@ -56,7 +56,7 @@ int compareWorkerById(Worker* w1, Worker* w2) {
 	return w1->WorkerId - w2->WorkerId;
 }
 
-void printWorker(Worker* w) {
+void printWorker(const Worker* w) {
 	printPerson(w->person);
 	printf("Worker ID: %d\n", w->WorkerId);
 	printf("Department: %s\n", typeTilte[w->department]);

@@ -1,5 +1,6 @@
 #include <crtdbg.h> // TODO: remove before release
 #include "General.h"
+#include "string.h"
 
 
 
