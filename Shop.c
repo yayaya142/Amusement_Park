@@ -77,8 +77,7 @@ void initShopByUser(Shop* shop) {
 			printf("Invalid shop values, Please try again\n");
 			free(name);
 		}
-		printf("Please enter shop name: ");
-		name = getStrExactName(NULL);
+		name = getStrExactName("Please enter shop name: ");
 
 		printf("Please enter shop type:\n");
 		printShopTypes();

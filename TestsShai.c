@@ -12,6 +12,7 @@
 // Input:	none
 // Output:	if failed, the function assert failed will pop up a message, otherwise, a message that all tests passed will be printed
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void runAllTestsShai() {
 	//initByUserManualsTest(); // Manual
 	DateTests();
@@ -899,11 +900,11 @@ void findTicketByUserTestManual() {
 }
 // initializes By User Manuals Tests
 void initByUserManualsTest() {
-	initDateByUserManualsTest();
-	initWeatherByUserManualsTest();
-	initTimeByUserManualsTest();
-	initShopByUserManualsTest();
-	initTicketByUserManualsTest();
+	//initDateByUserManualsTest();
+	//initWeatherByUserManualsTest();
+	//initTimeByUserManualsTest();
+	//initShopByUserManualsTest();
+	//initTicketByUserManualsTest();
 }
 void initWeatherByUserManualsTest() {
 	printf("Init weather Manual Test\n");

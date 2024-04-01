@@ -94,9 +94,16 @@ void initDateByUser(Date* pDate) {
 		if (flag > 0) {
 			printf("Invalid date, Please try again\n");
 		}
-		printf("Enter date (day month year)\n");
-		scanf("%d %d %d", &day, &month, &year);
+		printf("Enter date\n");
+		printf("Enter day: ");
+		scanf("%d", &day);
+		printf("Enter month: ");
+		scanf("%d", &month);
+		printf("Enter year: ");
+		scanf("%d", &year);
 
 		flag = 1;
 	} while (!initDate(pDate, day, month, year));
 }
+
+
