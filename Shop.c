@@ -1,7 +1,5 @@
 #include "Shop.h"
 
-
-
 int initShop(Shop* shop, char* name, eShopType type, Time openHour, Time closeHour, int isNameDynamic) {
 	if (!isValidShop(name, type, openHour, closeHour)) {
 		return 0;
@@ -34,7 +32,10 @@ int isValidShop(char* name, eShopType type, Time openHour, Time closeHour) {
 
 	return 1;
 }
-void printShop(const Shop* shop) {
+void printShop(const void* pShop) {
+	const Shop* shop = (Shop*)pShop;
+
+
 	if (!isValidShop(shop->name, shop->type, shop->openHour, shop->closeHour)) {
 		printf("Invalid shop\n");
 		return;
@@ -51,8 +52,9 @@ int compareShopsByName(const Shop* shop1, const Shop* shop2) {
 	return strcmp(shop1->name, shop2->name);
 }
 
+void freeShop(void* pShop) {
+	Shop* shop = (Shop*)pShop;
 
-void freeShop(Shop* shop) {
 	if (shop->isNameDynamic) {
 		free(shop->name);
 	}
