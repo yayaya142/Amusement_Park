@@ -15,10 +15,12 @@ int addTicket(TicketMaster* ticketMaster, Ticket* ticket) {
 		return 0;
 	}
 
-	ticketMaster->tickets = (Ticket**)realloc(ticketMaster->tickets, (ticketMaster->numOfTickets + 1) * sizeof(Ticket*));
-	if (ticketMaster->tickets == NULL) {
+	Ticket** temp = (Ticket**)realloc(ticketMaster->tickets, (ticketMaster->numOfTickets + 1) * sizeof(Ticket*));
+	if (temp == NULL) {
 		return 0;
 	}
+	ticketMaster->tickets = temp;
+
 
 	ticketMaster->tickets[ticketMaster->numOfTickets] = ticket;
 	ticketMaster->numOfTickets++;

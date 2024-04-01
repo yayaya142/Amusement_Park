@@ -65,9 +65,10 @@ char** splitCharsToWords(char* str, int* pCount, int* pTotalLength)
 	word = strtok(temp, delimiters);
 	while (word != NULL)
 	{
-		wordsArray = (char**)realloc(wordsArray, (count + 1) * sizeof(char*));
-		if (!wordsArray)
-			return 0;
+		char** temp = (char**)realloc(wordsArray, (count + 1) * sizeof(char*));
+		if (!temp)
+			return NULL;
+		wordsArray = temp;
 		wordsArray[count] = getDynStr(word);
 		count++;
 		*pTotalLength += (int)strlen(word);
@@ -76,6 +77,9 @@ char** splitCharsToWords(char* str, int* pCount, int* pTotalLength)
 	*pCount = count;
 	return wordsArray;
 }
+
+
+
 
 
 // general function to activate a function on each element of an array

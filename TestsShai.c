@@ -14,6 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void runAllTestsShai() {
+	printf("---- Running Shai's tests....----\n");
 	//initByUserManualsTest(); // Manual
 	DateTests();
 	WeatherTest();
@@ -21,10 +22,8 @@ void runAllTestsShai() {
 	ShopTests();
 	TicketTests();
 	TicketMasterTests();
-
-
-
-	printf("All tests passed\n");
+	generalLibaryTests();
+	printf("---- All Shai's tests passed ----\n");
 }
 // Date tests
 void DateTests() {
@@ -957,3 +956,17 @@ void initTicketByUserManualsTest() {
 		printf("\n");
 	}
 }
+// General library Tests
+void generalLibaryTests() {
+	//generalArrayFunctionTest();
+}
+void printIntArray(const void* element) {
+	const int temp = *(int*)element;
+	printf("[%d], ", temp);
+}
+void generalArrayFunctionTest() {
+	int arr[] = { 1, 2, 3, 4, 5 };
+	int size = sizeof(arr) / sizeof(arr[0]);
+	generalArrayFunction((void*)arr, size, sizeof(int), (void*)printIntArray);
+}
+

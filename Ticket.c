@@ -15,6 +15,7 @@ int initTicket(Ticket* ticket, eGuestType guestType, Date dateOfVisit) {
 }
 
 void generateID(char* id) {
+	// get the ticket ID and set it to the ticket loop
 	// Generate a random ID of 12 characters. so it can generate 36^12 different IDs
 	for (int i = 0; i < ID_TICKET_LEN; i++) {
 		int random = randomNum(0, 1);

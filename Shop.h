@@ -24,9 +24,9 @@ typedef struct {
 
 int initShop(Shop* shop, char* name, eShopType type, Time openHour, Time closeHour, int isNameDynamic);
 int isValidShop(char* name, eShopType type, Time openHour, Time closeHour);
-void printShop(const Shop* shop);
+void printShop(const void* shop);
 int compareShopsByName(const Shop* shop1, const Shop* shop2);
-void freeShop(Shop* shop);
+void freeShop(void* shop);
 void printShopTypes();
 void initShopByUser(Shop* shop);
 

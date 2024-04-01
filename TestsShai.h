@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include "General.h"
 
 
 void runAllTestsShai();
@@ -56,7 +56,13 @@ void initWeatherByUserManualsTest();
 void initTimeByUserManualsTest();
 void initShopByUserManualsTest();
 void initTicketByUserManualsTest();
+// Tests general functions
+void generalLibaryTests();
+void printIntArray(const void* element);
+void generalArrayFunctionTest();
+
 
 
 
 #endif 
+
