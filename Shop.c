@@ -57,3 +57,42 @@ void freeShop(Shop* shop) {
 		free(shop->name);
 	}
 }
+
+
+void printShopTypes() {
+	for (int i = 0; i < eNofShopTypes; i++) {
+		printf("%d - %s\n", i + 1, ShopTypeStr[i]);
+	}
+}
+
+void initShopByUser(Shop* shop) {
+	int flag = 0;
+	eShopType type = -1;
+	Time openHour = { -1, 0 };
+	Time closeHour = { -1, 0 };
+	char* name = NULL;
+	do
+	{
+		if (flag > 0) {
+			printf("Invalid shop values, Please try again\n");
+			free(name);
+		}
+		name = getStrExactName("Please enter shop name: ");
+
+		printf("Please enter shop type:\n");
+		printShopTypes();
+		scanf("%d", &type);
+
+		printf("Please enter shop open time\n");
+
+		initTimeByUser(&openHour);
+
+		printf("Please enter shop close time\n");
+		initTimeByUser(&closeHour);
+
+
+		flag = 1;
+
+	} while (!initShop(shop, name, type - 1, openHour, closeHour, 1));
+
+}

@@ -56,19 +56,49 @@ void printTicket(const Ticket* ticket) {
 
 
 int compareTicketsByID(const void* ticket1, const void* ticket2) {
-	Ticket* t1 = (Ticket*)ticket1;
-	Ticket* t2 = (Ticket*)ticket2;
+	const Ticket* t1 = *(Ticket**)ticket1;
+	const Ticket* t2 = *(Ticket**)ticket2;
+
 	return strcmp(t1->id, t2->id);
 }
 
 int compareTicketsByDate(const void* ticket1, const void* ticket2) {
-	Ticket* t1 = (Ticket*)ticket1;
-	Ticket* t2 = (Ticket*)ticket2;
+	const Ticket* t1 = *(Ticket**)ticket1;
+	const Ticket* t2 = *(Ticket**)ticket2;
 	return compareDates(t1->dateOfVisit, t2->dateOfVisit);
 }
 
 int compareTicketsByGuestType(const void* ticket1, const void* ticket2) {
-	Ticket* t1 = (Ticket*)ticket1;
-	Ticket* t2 = (Ticket*)ticket2;
+	const Ticket* t1 = *(Ticket**)ticket1;
+	const Ticket* t2 = *(Ticket**)ticket2;
 	return t1->guestType - t2->guestType;
+}
+
+void printGuestType() {
+	for (int i = 0; i < eNofTicketTypes; i++)
+	{
+		printf("%d. %s\n", i + 1, TicketTypeStr[i]);
+	}
+}
+
+void initTicketByUser(Ticket* ticket) {
+	int flag = 0;
+	int guestType = -1;
+	Date date = { 0,0,0 };
+	do
+	{
+		if (flag > 0) {
+			printf("Invalid input, please try again\n");
+		}
+
+		printf("Enter the guest type:\n");
+		printGuestType();
+		scanf("%d", &guestType);
+
+		printf("Enter the date of visit:\n");
+		initDateByUser(&date);
+
+		flag = 1;
+
+	} while (!initTicket(ticket, guestType - 1, date));
 }

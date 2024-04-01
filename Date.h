@@ -18,4 +18,6 @@ void printDate(const Date* pDate);
 int compareDates(const Date Date1, const Date Date2);
 int saveDateToBinFile(FILE* file, Date* pDate);
 Date readDateFromBinFile(FILE* file);
+void initDateByUser(Date* pDate);
+
 #endif

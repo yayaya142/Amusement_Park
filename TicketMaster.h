@@ -3,16 +3,17 @@
 
 #include <crtdbg.h> // TODO: remove before release
 #include <stdio.h>
+#include <stdlib.h>
 #include "Ticket.h"
 
 typedef enum {
-	eNotSorted, eSortedByID, eSortedByDate, eSortedByGuestType
+	eNotSorted, eSortedByID, eSortedByDate, eSortedByGuestType, eNofSortTypes
 } eSortType;
 
 static const char* sortTypeStr[] = { "None", "ID", "Date", "Guest Type" };
 
 typedef struct {
-	Ticket* tickets;
+	Ticket** tickets;
 	int numOfTickets;
 	eSortType sortType;
 } TicketMaster;
@@ -28,5 +29,7 @@ void sortTicketsByID(TicketMaster* ticketMaster);
 void sortTicketsByDate(TicketMaster* ticketMaster);
 void sortTicketsByGuestType(TicketMaster* ticketMaster);
 void sortTicketsUser(TicketMaster* ticketMaster);
+Ticket* buyTicket(TicketMaster* ticketMaster);
+Ticket* findTicketByUser(const TicketMaster* ticketMaster);
 
 #endif 
