@@ -36,16 +36,16 @@ void initPersonByUser(Person *p) {
 
 }
 
-int isValidInfo(char* name, float height, int age) { //TODO: finish user interaction function
+int isValidInfo(char* name, float height, int age) { 
 	if (!validName(name)) {
 		printf("Invalid name\n");
 		return 0;
 	}
-	if (height < 0 || height >MAX_HEIGHT) {
+	if (height <= 0 || height >MAX_HEIGHT) {
 		printf("Height valid only between 0 and %d\n", MAX_HEIGHT);
 		return 0;
 	}
-	if (age < 0 || age > MAX_AGE) {
+	if (age <= 0 || age > MAX_AGE) {
 		printf("Age valid only between 0 and %d\n", MAX_AGE);
 		return 0;
 	}

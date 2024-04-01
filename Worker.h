@@ -1,8 +1,9 @@
 #ifndef __WORKER_H__
 #define __WORKER_H__
-#define WORK_ID 10
+#define WORK_ID 8
 
 #include "Person.h"
+#include "General.h"
 #include <crtdbg.h> // TODO: remove before release
 
 
@@ -18,7 +19,8 @@ typedef struct {
 int initWorker(Worker* w, Person* p , Department dep);
 void initWorkerByUser(Worker* w);
 int isValidInfoWorker(Department department);
-void printWorker(const Worker* worker);
+int generateWorkerID();
+void printWorker(const void* worker);
 void freeWorker(Worker* worker);
 
 #endif

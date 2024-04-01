@@ -29,7 +29,7 @@ void testInitPerson() {
     // Test with empty name
     strcpy(name, "");
     assert(initPerson(p, "", 170, 30) == 0);
-
+    strcpy(name, "person");
     // Test with negative height
     assert(initPerson(p, name, -170, 30) == 0);
 
@@ -87,7 +87,8 @@ void initWorkerTest() {
     assert(initWorker(w, p, eCoffeeShop) == 1); // Check that initWorker returns 1 when valid inputs are given
     assert(initWorker(w, p, eNofTypes) == 0); // Check that initWorker returns 0 when invalid department is given
     freeWorker(w);
-    free(p);
+    free(w);
+    
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -197,6 +198,7 @@ void runFacilityTests() {
 }
 //main test
 void runAllTestsDaniel() {
+    printf("------Running Daniel tests...--------\n");
     runPersonTests();
     runWorkerTests();
     runFacilityTests();

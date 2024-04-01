@@ -1,5 +1,6 @@
-#include "facility.h"
+﻿#include "facility.h"
 #include "General.h"
+#include <stdio.h>
 
 int initFacility(Facility* pFacility,char* name, int minHeight, int maxHeight, Category category) {
 	if (minHeight < 0 || maxHeight < 0 || minHeight > maxHeight || category < 0 || category >= eNofTypesFacility) {
@@ -17,8 +18,9 @@ int initFacility(Facility* pFacility,char* name, int minHeight, int maxHeight, C
 
 void initFacilityByUser(Facility* pFacility) {
 	char name[MAX_STR_LEN];
-	int minHeight, maxHeight;
-	Category category;
+	int minHeight = 0;
+	int maxHeight = 0;
+	Category category = 0;
 	int flag = 0;
 	do {
 		if (flag > 0) {

@@ -1,4 +1,4 @@
-#include "Worker.h"
+﻿#include "Worker.h"
 
 int initWorker(Worker* w,Person* p, Department dep) { 
 	if(!isValidInfoWorker(dep)) {
@@ -33,11 +33,9 @@ void initWorkerByUser(Worker* w) {
 
 
 int generateWorkerID() {
-	int id_temp = randomNum(65, 90);
-	// Generate a random ID of 10 characters. so it can generate 36^10 different IDs
+	int id_temp = randomNum(1, 9);
 	for (int i = 0; i < WORK_ID; i++) {
-			// Generate a random uppercase letter (65-90 in ASCII table ---> A-Z )
-			id_temp= id_temp*10 + randomNum(65, 90);
+			id_temp= id_temp*10 + randomNum(1, 9);
 	}
 	return id_temp;
 }
@@ -56,7 +54,9 @@ int compareWorkerById(Worker* w1, Worker* w2) {
 	return w1->WorkerId - w2->WorkerId;
 }
 
-void printWorker(const Worker* w) {
+void printWorker(const void* pWorker) {
+	const Worker* w = (const Worker*)pWorker;
+
 	printPerson(w->person);
 	printf("Worker ID: %d\n", w->WorkerId);
 	printf("Department: %s\n", typeTilte[w->department]);
@@ -64,7 +64,5 @@ void printWorker(const Worker* w) {
 
 void freeWorker(Worker* w) {
 	freePerson((w->person));
-	if (w != NULL) {
-		free(w);
-	}
+	free(w->person);
 }
