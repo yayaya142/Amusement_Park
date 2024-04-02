@@ -41,7 +41,9 @@ int isValidTicket(eGuestType guestType, Date dateOfVisit) {
 	}
 	return 1;
 }
-void printTicket(const Ticket* ticket) {
+void printTicket(const void* pTicket) {
+	const Ticket* ticket = (Ticket*)pTicket;
+	// check if ticket is valid
 	if (!ticket || !isValidTicket(ticket->guestType, ticket->dateOfVisit)) {
 		printf("Invalid Ticket\n");
 		return;
@@ -53,6 +55,11 @@ void printTicket(const Ticket* ticket) {
 	printDate(&ticket->dateOfVisit);
 	printf("\n");
 	printf("Is Used: %s\n", ticket->isUsed ? "Yes" : "No");
+}
+
+void printTicketWrapper(const void* pTicket) {
+	const Ticket* ticket = *(const Ticket**)pTicket;
+	printTicket(ticket);
 }
 
 

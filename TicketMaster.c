@@ -32,9 +32,8 @@ void printTicketMaster(const TicketMaster* ticketMaster) {
 		printf("No ticket added yet\n");
 		return;
 	}
-	for (int i = 0; i < ticketMaster->numOfTickets; i++) {
-		printTicket(ticketMaster->tickets[i]);
-	}
+
+	generalArrayFunction(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket*), (void*)printTicketWrapper);
 }
 
 

@@ -33,7 +33,8 @@ typedef struct {
 int initTicket(Ticket* ticket, eGuestType guestType, Date dateOfVisit);
 void generateID(char* id);
 int isValidTicket(eGuestType guestType, Date dateOfVisit);
-void printTicket(const Ticket* ticket);
+void printTicket(const void* ticket);
+void printTicketWrapper(const void* ticket);
 int compareTicketsByID(const void* ticket1, const void* ticket2);
 int compareTicketsByDate(const void* ticket1, const void* ticket2);
 int compareTicketsByGuestType(const void* ticket1, const void* ticket2);
