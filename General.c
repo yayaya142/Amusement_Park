@@ -10,7 +10,9 @@ char* getStrExactName(const char* msg)
 {
 	char* str;
 	char temp[MAX_STR_LEN];
-	printf("%s\t", msg);
+	if (msg != NULL) {
+		printf("%s", msg);
+	}
 	myGets(temp, MAX_STR_LEN);
 
 	str = getDynStr(temp);
@@ -63,9 +65,10 @@ char** splitCharsToWords(char* str, int* pCount, int* pTotalLength)
 	word = strtok(temp, delimiters);
 	while (word != NULL)
 	{
-		wordsArray = (char**)realloc(wordsArray, (count + 1) * sizeof(char*));
-		if (!wordsArray)
-			return 0;
+		char** temp = (char**)realloc(wordsArray, (count + 1) * sizeof(char*));
+		if (!temp)
+			return NULL;
+		wordsArray = temp;
 		wordsArray[count] = getDynStr(word);
 		count++;
 		*pTotalLength += (int)strlen(word);
@@ -74,6 +77,9 @@ char** splitCharsToWords(char* str, int* pCount, int* pTotalLength)
 	*pCount = count;
 	return wordsArray;
 }
+
+
+
 
 
 // general function to activate a function on each element of an array
@@ -86,4 +92,21 @@ void generalArrayFunction(void* arr, int size, size_t typeSize, void* (*func)(vo
 		// use the function on each element of the array
 		func((char*)(arr)+i * typeSize);
 	}
+}
+
+
+int randomNum(int min, int max) {
+	return rand() % (max - min + 1) + min;
+}
+
+int validName(char* name) {
+	if(name == NULL || strlen(name) == 0) {
+		return 0;
+	}
+	for (int i = 0; i < strlen(name); i++) {
+		if (((name[i] < 'A' || name[i] > 'Z') && (name[i] < 'a' || name[i] > 'z')) && name[i] != ' ') {
+			return 0;
+		}
+	}
+	return 1;
 }
