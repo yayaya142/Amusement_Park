@@ -24,6 +24,7 @@ void runAllTestsShai() {
 	TicketTests();
 	TicketMasterTests();
 	generalLibaryTests();
+	SaveAndLoadTests();
 	printf("---- All Shai's tests passed ----\n");
 }
 // Date tests
@@ -164,13 +165,13 @@ void initWeatherTest() {
 }
 void isValidWeatherTest() {
 	// Test 1: Valid weather
-	assert(isValidWeather(eSunny, 20.0) == 1);
+	assert(isValidWeather(eSunny, 20) == 1);
 
 	// Test 2: Invalid weather condition (low)
-	assert(isValidWeather(-1, 20.0) == 0);
+	assert(isValidWeather(-1, 20) == 0);
 
 	// Test 3: Invalid weather condition (high)
-	assert(isValidWeather(eNofWeatherTypes, 20.0) == 0);
+	assert(isValidWeather(eNofWeatherTypes, 20) == 0);
 
 	// Test 4: Temperature out of range (low)
 	assert(isValidWeather(eRainy, MIN_TEMP - 1) == 0);
@@ -185,40 +186,40 @@ void isValidWeatherTest() {
 	assert(isValidWeather(eRainy, MAX_TEMP) == 1);
 
 	// Test 8: Valid weather with negative temperature
-	assert(isValidWeather(eCloudy, -10.0) == 1);
+	assert(isValidWeather(eCloudy, -10) == 1);
 
 }
 void compareWeatherByTempTest() {
 	Weather weather1, weather2;
 
 	// Test 1: Equal temperatures
-	initWeather(&weather1, eSunny, 20.0);
-	initWeather(&weather2, eRainy, 20.0);
+	initWeather(&weather1, eSunny, 20);
+	initWeather(&weather2, eRainy, 20);
 	assert(compareWeatherByTemp(&weather1, &weather2) == 0);
 
 	// Test 2: weather1 has lower temperature
-	initWeather(&weather1, eSunny, 15.0);
-	initWeather(&weather2, eRainy, 20.0);
+	initWeather(&weather1, eSunny, 15);
+	initWeather(&weather2, eRainy, 20);
 	assert(compareWeatherByTemp(&weather1, &weather2) < 0);
 
 	// Test 3: weather1 has higher temperature
-	initWeather(&weather1, eSunny, 25.0);
-	initWeather(&weather2, eRainy, 20.0);
+	initWeather(&weather1, eSunny, 25);
+	initWeather(&weather2, eRainy, 20);
 	assert(compareWeatherByTemp(&weather1, &weather2) > 0);
 
 	// Test 4: weather1 has a temperature of 0 and weather2 has a positive temperature
-	initWeather(&weather1, eSunny, 0.0);
-	initWeather(&weather2, eRainy, 20.0);
+	initWeather(&weather1, eSunny, 0);
+	initWeather(&weather2, eRainy, 20);
 	assert(compareWeatherByTemp(&weather1, &weather2) < 0);
 
 	// Test 5: weather1 has a temperature of 0 and weather2 has a negative temperature
-	initWeather(&weather1, eSunny, 0.0);
+	initWeather(&weather1, eSunny, 0);
 	initWeather(&weather2, eRainy, -10);
 	assert(compareWeatherByTemp(&weather1, &weather2) > 0);
 
 	// Test 6: Both weather1 and weather2 have a temperature of 0
-	initWeather(&weather1, eSunny, 0.0);
-	initWeather(&weather2, eRainy, 0.0);
+	initWeather(&weather1, eSunny, 0);
+	initWeather(&weather2, eRainy, 0);
 	assert(compareWeatherByTemp(&weather1, &weather2) == 0);
 }
 // Time tests
@@ -970,4 +971,195 @@ void generalArrayFunctionTest() {
 	int size = sizeof(arr) / sizeof(arr[0]);
 	generalArrayFunction((void*)arr, size, sizeof(int), (void*)printIntArray);
 }
+// Save and Load tests
+void SaveAndLoadTests() {
+	WeatherSaveAndLoadTextTest();
+	WeatherSaveAndLoadBinTest();
+	TimeSaveAndLoadTextTest();
+	TimeSaveAndLoadBinTest();
+	ShopSaveAndLoadTextTest();
+	ShopSaveAndLoadBinTest();
+}
+void WeatherSaveAndLoadTextTest() {
+	const char* fileName = "AAAWeatherTest.txt";
+	Weather weather1;
 
+	// Test 1: Save and load a valid weather
+	initWeather(&weather1, eSunny, 20);
+	FILE* file = fopen(fileName, "w");
+
+	assert(saveWeatherToTextFile(&weather1, file) == 1);
+	fclose(file);
+
+	// Load the weather from the file
+	Weather weather2;
+	file = fopen(fileName, "r");
+	assert(loadWeatherFromTextFile(&weather2, file) == 1);
+	fclose(file);
+
+	// Check that the loaded weather is the same as the saved weather
+	assert(compareWeatherByTemp(&weather1, &weather2) == 0);
+
+}
+void WeatherSaveAndLoadBinTest() {
+	const char* fileName = "AAAWeatherTest.bin";
+	Weather weather1;
+
+	// Test 1: Save and load a valid weather
+	initWeather(&weather1, eSunny, 20);
+	FILE* file = fopen(fileName, "wb");
+
+	assert(saveWeatherToBinFile(&weather1, file) == 1);
+	fclose(file);
+
+	// Load the weather from the file
+	Weather weather2;
+	file = fopen(fileName, "rb");
+	assert(loadWeatherFromBinFile(&weather2, file) == 1);
+	fclose(file);
+
+	// Check that the loaded weather is the same as the saved weather
+	assert(compareWeatherByTemp(&weather1, &weather2) == 0);
+
+}
+void TimeSaveAndLoadTextTest() {
+	Time time1;
+	const char* fileName = "AAATimeTest.txt";
+
+	// Test 1: Save and load a valid time
+	initTime(&time1, 8, 0);
+	FILE* file = fopen(fileName, "w");
+
+	assert(saveTimeToTextFile(&time1, file) == 1);
+	fclose(file);
+
+	// Load the time from the file
+	Time time2;
+	file = fopen(fileName, "r");
+	assert(loadTimeFromTextFile(&time2, file) == 1);
+	fclose(file);
+
+	// Check that the loaded time is the same as the saved time
+	assert(compareTime(&time1, &time2) == 0);
+}
+void TimeSaveAndLoadBinTest() {
+	Time time1;
+	const char* fileName = "AAATimeTest.bin";
+
+	// Test 1: Save and load a valid time
+	initTime(&time1, 8, 0);
+	FILE* file = fopen(fileName, "wb");
+
+	assert(saveTimeToBinFile(&time1, file) == 1);
+	fclose(file);
+
+	// Load the time from the file
+	Time time2;
+	file = fopen(fileName, "rb");
+	assert(loadTimeFromBinFile(&time2, file) == 1);
+	fclose(file);
+
+	// Check that the loaded time is the same as the saved time
+	assert(compareTime(&time1, &time2) == 0);
+}
+void ShopSaveAndLoadTextTest() {
+	Shop shop1;
+	const char* fileName = "AAAShopTest.txt";
+
+	// Test 1: Save and load a valid shop
+	Time openHour;
+	initTime(&openHour, 8, 0);
+	Time closeHour;
+	initTime(&closeHour, 20, 0);
+	initShop(&shop1, "Shop1", eRestaurant, openHour, closeHour, 0);
+	FILE* file = fopen(fileName, "w");
+
+	assert(saveShopToTextFile(&shop1, file) == 1);
+
+	fclose(file);
+
+	// Load the shop from the file
+	Shop shop2;
+	file = fopen(fileName, "r");
+	assert(loadShopFromTextFile(&shop2, file) == 1);
+	fclose(file);
+
+	assert(strcmp(shop1.name, shop2.name) == 0);
+	assert(shop1.type == shop2.type);
+	assert(compareTime(&shop1.openHour, &shop2.openHour) == 0);
+	assert(compareTime(&shop1.closeHour, &shop2.closeHour) == 0);
+	freeShop(&shop1);
+	freeShop(&shop2);
+	// save dynamic memory allocation
+	Shop shop3;
+	char* name = (char*)malloc(6 * sizeof(char));
+	strcpy(name, "Shop3");
+	initShop(&shop3, name, eRestaurant, openHour, closeHour, 1);
+	file = fopen(fileName, "w");
+	assert(saveShopToTextFile(&shop3, file) == 1);
+	fclose(file);
+
+	// Load the shop from the file
+	Shop shop4;
+	file = fopen(fileName, "r");
+	assert(loadShopFromTextFile(&shop4, file) == 1);
+	fclose(file);
+
+	assert(strcmp(shop3.name, shop4.name) == 0);
+	assert(shop3.type == shop4.type);
+	assert(compareTime(&shop3.openHour, &shop4.openHour) == 0);
+	assert(compareTime(&shop3.closeHour, &shop4.closeHour) == 0);
+
+	freeShop(&shop3);
+	freeShop(&shop4);
+}
+void ShopSaveAndLoadBinTest() {
+	Shop shop1;
+	const char* fileName = "AAAShopTest.bin";
+
+	// Test 1: Save and load a valid shop
+	Time openHour;
+	initTime(&openHour, 8, 0);
+	Time closeHour;
+	initTime(&closeHour, 20, 0);
+	initShop(&shop1, "Shop1", eRestaurant, openHour, closeHour, 0);
+	FILE* file = fopen(fileName, "wb");
+
+	assert(saveShopToBinFile(&shop1, file) == 1);
+
+	fclose(file);
+
+	// Load the shop from the file
+	Shop shop2;
+	file = fopen(fileName, "rb");
+	assert(loadShopFromBinFile(&shop2, file) == 1);
+	fclose(file);
+
+	assert(strcmp(shop1.name, shop2.name) == 0);
+	assert(shop1.type == shop2.type);
+	assert(compareTime(&shop1.openHour, &shop2.openHour) == 0);
+	assert(compareTime(&shop1.closeHour, &shop2.closeHour) == 0);
+	freeShop(&shop1);
+	freeShop(&shop2);
+	// save dynamic memory allocation
+	Shop shop3;
+	char* name = (char*)malloc(6 * sizeof(char));
+	strcpy(name, "Shop3");
+	initShop(&shop3, name, eRestaurant, openHour, closeHour, 1);
+	file = fopen(fileName, "wb");
+	assert(saveShopToBinFile(&shop3, file) == 1);
+	fclose(file);
+
+	// Load the shop from the file
+	Shop shop4;
+	file = fopen(fileName, "rb");
+	assert(loadShopFromBinFile(&shop4, file) == 1);
+	fclose(file);
+
+	assert(strcmp(shop3.name, shop4.name) == 0);
+	assert(shop3.type == shop4.type);
+	assert(compareTime(&shop3.openHour, &shop4.openHour) == 0);
+	assert(compareTime(&shop3.closeHour, &shop4.closeHour) == 0);
+	freeShop(&shop3);
+	freeShop(&shop4);
+}

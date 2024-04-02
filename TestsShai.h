@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "General.h"
+#include "fileHelper.h"
 
 
 void runAllTestsShai();
@@ -60,8 +61,14 @@ void initTicketByUserManualsTest();
 void generalLibaryTests();
 void printIntArray(const void* element);
 void generalArrayFunctionTest();
-
-
+// Save and Load tests
+void SaveAndLoadTests();
+void WeatherSaveAndLoadTextTest();
+void WeatherSaveAndLoadBinTest();
+void TimeSaveAndLoadTextTest();
+void TimeSaveAndLoadBinTest();
+void ShopSaveAndLoadTextTest();
+void ShopSaveAndLoadBinTest();
 
 
 #endif 

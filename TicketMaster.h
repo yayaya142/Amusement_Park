@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "Ticket.h"
 #include "General.h"
+#include "fileHelper.h"
 
 typedef enum {
 	eNotSorted, eSortedByID, eSortedByDate, eSortedByGuestType, eNofSortTypes

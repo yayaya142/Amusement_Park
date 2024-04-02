@@ -1,4 +1,4 @@
-#include "fileHelperShai.h"
+#include "fileHelper.h"
 
 
 
@@ -57,10 +57,9 @@ int writeStringTobinFile(FILE* file, const char* str) {
 // readStringFromTextFile
 // Aim: To read string from text file
 // Input: file pointer
-// Output: dynamic allocated string read from file
+// Output: string read from file loaded in buffer
 /////////////////////////////////////////////////////////////////
 char* readStringFromTextFile(FILE* file, char* buffer, int size) {
-	// allocate dynamic memory for the string make sure to use cautiously! 
 	char* ok;
 	if (buffer != NULL && size > 0)
 	{

@@ -6,6 +6,7 @@
 #include <string.h>
 #include "Date.h"
 #include "General.h"
+#include "fileHelper.h"
 
 #define ID_TICKET_LEN 12
 #define BASE_TICKET_PRICE 100.0

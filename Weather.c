@@ -2,7 +2,7 @@
 
 
 
-int initWeather(Weather* weather, eWeatherType condition, float temp) {
+int initWeather(Weather* weather, eWeatherType condition, int temp) {
 	if (!isValidWeather(condition, temp)) {
 		return 0;
 	}
@@ -11,7 +11,7 @@ int initWeather(Weather* weather, eWeatherType condition, float temp) {
 	return 1;
 }
 
-int isValidWeather(eWeatherType condition, float temp) {
+int isValidWeather(eWeatherType condition, int temp) {
 	if (temp < MIN_TEMP || temp > MAX_TEMP) {
 		return 0;
 	}
@@ -27,16 +27,16 @@ void printWeather(const Weather* weather) {
 		printf("Invalid weather\n");
 		return;
 	}
-	printf("Weather condition: %s, Temperature: %.2f%s\n", WeatherTypeStr[weather->condition], weather->temp, DEFUALT_WEATHER_SYMBOL);
+	printf("Weather condition: %s, Temperature: %d%s\n", WeatherTypeStr[weather->condition], weather->temp, DEFUALT_WEATHER_SYMBOL);
 }
 int compareWeatherByTemp(const Weather* weather1, const Weather* weather2) {
-	return (int)(weather1->temp - weather2->temp);
+	return (weather1->temp - weather2->temp);
 }
 
 void initWeatherByUser(Weather* weather) {
 	int flag = 0;
 	int condition;
-	float temp;
+	int temp;
 	do
 	{
 		if (flag > 0) {
@@ -48,8 +48,85 @@ void initWeatherByUser(Weather* weather) {
 		}
 		scanf("%d", &condition);
 		printf("Enter temperature");
-		scanf("%f", &temp);
+		scanf("%d", &temp);
 		flag = 1;
 	} while (!initWeather(weather, condition - 1, temp));
 }
 
+//eWeatherType condition;
+//float temp;
+
+
+// ---- save functions ----
+int saveWeatherToTextFile(const Weather* weather, FILE* fp) {
+	if (fp == NULL) {
+		return 0;
+	}
+
+	if (weather == NULL || isValidWeather(weather->condition, weather->temp) == 0) {
+		return 0;
+	}
+
+	if (writeIntToTextFile(fp, weather->condition) == 0) {
+		return 0;
+	}
+
+	if (writeIntToTextFile(fp, weather->temp) == 0) {
+		return 0;
+	}
+
+	return 1;
+}
+
+int loadWeatherFromTextFile(Weather* weather, FILE* fp) {
+	if (fp == NULL) {
+		return 0;
+	}
+
+	int condition;
+	int temp;
+
+	if (readIntFromTextFile(fp, &condition) == 0) {
+		return 0;
+	}
+
+	if (readIntFromTextFile(fp, &temp) == 0) {
+		return 0;
+	}
+
+	if (initWeather(weather, condition, temp) == 0) {
+		return 0;
+	}
+
+	return 1;
+}
+int saveWeatherToBinFile(const Weather* weather, FILE* fp) {
+	if (fp == NULL) {
+		return 0;
+	}
+
+	if (weather == NULL || isValidWeather(weather->condition, weather->temp) == 0) {
+		return 0;
+	}
+
+	if (writeGeneralToBinFile(fp, weather, sizeof(Weather)) == 0) {
+		return 0;
+	}
+
+	return 1;
+
+}
+int loadWeatherFromBinFile(Weather* weather, FILE* fp) {
+	if (fp == NULL) {
+		return 0;
+	}
+
+	if (readGeneralFromBinFile(fp, weather, sizeof(Weather)) == 0) {
+		return 0;
+	}
+
+	return 1;
+
+
+
+}

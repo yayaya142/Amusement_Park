@@ -6,6 +6,7 @@
 #include <string.h>
 #include "Time.h"
 #include "General.h"
+#include "fileHelper.h"
 
 typedef enum {
 	eRestaurant, eCoffeeShop, eBar, eNofShopTypes
@@ -29,5 +30,10 @@ int compareShopsByName(const Shop* shop1, const Shop* shop2);
 void freeShop(void* shop);
 void printShopTypes();
 void initShopByUser(Shop* shop);
+// save and load functions
+int saveShopToTextFile(const Shop* shop, FILE* fp);
+int loadShopFromTextFile(Shop* shop, FILE* fp);
+int saveShopToBinFile(const Shop* shop, FILE* fp);
+int loadShopFromBinFile(Shop* shop, FILE* fp);
 
 #endif 

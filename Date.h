@@ -1,6 +1,8 @@
 #ifndef __MYDATE__
 #define __MYDATE__
 #include <crtdbg.h> // TODO: remove before release
+#include "fileHelper.h"
+
 #define MIN_YEAR 2024
 
 typedef struct

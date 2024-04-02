@@ -62,3 +62,84 @@ void initTimeByUser(Time* time) {
 		flag = 1;
 	} while (!initTime(time, hour, minute));
 }
+
+// save and load functions
+int saveTimeToTextFile(const Time* pTime, FILE* fp) {
+	if (fp == NULL) { /// NEED TO BE MACRO
+		return 0;
+	}
+
+	if (writeIntToTextFile(fp, pTime->hour) == 0) {
+		return 0;
+	}
+
+	if (writeIntToTextFile(fp, pTime->minute) == 0) {
+		return 0;
+	}
+
+	return 1;
+}
+
+
+int loadTimeFromTextFile(Time* pTime, FILE* fp) {
+	if (fp == NULL) { /// NEED TO BE MACRO
+		return 0;
+	}
+	int tempHour, tempMinute;
+
+	if (readIntFromTextFile(fp, &tempHour) == 0) {
+		return 0;
+	}
+
+	if (readIntFromTextFile(fp, &tempMinute) == 0) {
+		return 0;
+	}
+
+	// init the time
+	if (!initTime(pTime, tempHour, tempMinute)) {
+		return 0;
+	}
+
+	return 1;
+}
+
+int saveTimeToBinFile(const Time* pTime, FILE* fp) {
+	if (fp == NULL) { /// NEED TO BE MACRO
+		return 0;
+	}
+
+	/*if (writeGeneralToBinFile(fp, &(pTime->hour), sizeof(int)) == 0) {
+		return 0;
+	}
+
+	if (writeGeneralToBinFile(fp, &(pTime->minute), sizeof(int)) == 0) {
+		return 0;
+	}*/
+
+	if (writeGeneralToBinFile(fp, pTime, sizeof(Time)) == 0) {
+		return 0;
+	}
+
+	return 1;
+
+}
+
+int loadTimeFromBinFile(Time* pTime, FILE* fp) {
+	if (fp == NULL) { /// NEED TO BE MACRO
+		return 0;
+	}
+	int tempHour, tempMinute;
+	if (readGeneralFromBinFile(fp, &tempHour, sizeof(int)) == 0) {
+		return 0;
+	}
+
+	if (readGeneralFromBinFile(fp, &tempMinute, sizeof(int)) == 0) {
+		return 0;
+	}
+
+	if (!initTime(pTime, tempHour, tempMinute)) {
+		return 0;
+	}
+
+	return 1;
+}
