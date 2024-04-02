@@ -23,4 +23,8 @@ void testCompareFacilities();
 void runGuestTests();
 void initGuestTests();
 
+//------Test---------
+void runAllSaveAndLoadTests();
+void FacilitySaveAndLoadText();
+void FacilitySaveAndLoadBin();
 #endif

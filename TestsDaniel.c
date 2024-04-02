@@ -217,24 +217,82 @@ void testCompareFacilities() {
     // Test when categories are different
     facility1.category = eChildrenFacility;
     facility2.category = eAdultFacility;
-    assert(compareFacilities(&facility1, &facility2) < 0);
+    assert(compareFacilitiesByCategory(&facility1, &facility2) < 0);
 
-    // Test when minHeight is different
-    facility1.category = facility2.category = eAdultFacility;
-    facility1.minHeight = 100;
-    facility2.minHeight = 200;
-    assert(compareFacilities(&facility1, &facility2) < 0);
+            
+    // Test when categories are the same
+    facility1.category = eChildrenFacility;
+    facility2.category = eChildrenFacility;
+    assert(compareFacilitiesByCategory(&facility1, &facility2) == 0);
 
-    // Test when maxHeight is different
-    facility1.minHeight = facility2.minHeight = 200;
-    facility1.maxHeight = 300;
-    facility2.maxHeight = 400;
-    assert(compareFacilities(&facility1, &facility2) < 0);
+    // Test when one categorie bigger from the other 
+    facility1.category = eSuper_ExtremesFacility;
+    facility2.category = eAdultFacility;
+    assert(compareFacilitiesByCategory(&facility1, &facility2) > 0);
 
-    // Test when facilities are equal
-    facility1.maxHeight = facility2.maxHeight = 400;
-    assert(compareFacilities(&facility1, &facility2) == 0);
+
+    // Test when one categorie smaller from the other
+    facility1.category = eChildrenFacility;
+    facility2.category = eExtremeFacility;
+    assert(compareFacilitiesByCategory(&facility1, &facility2) < 0);
+
+ 
 }
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+void FacilitySaveAndLoadText() {
+    const char* fileName = "AAAfacilityTest.txt";
+    Facility facility1;
+    char* tempName = (char*)malloc(10 * sizeof(char));
+    strcpy(tempName, "Facility");
+    initFacility(&facility1, tempName, 100, 200, eChildrenFacility);
+    printFacility(&facility1);
+    FILE* file = fopen(fileName, "w");
+    assert(saveFacilityToTextFile(&facility1, file) == 1);
+    fclose(file);
+
+    Facility facility2;
+    file = fopen(fileName, "r");
+    assert(loadFacilityFromTextFile(&facility2, file) == 1);
+    fclose(file);
+    
+    assert(strcmp(facility1.name, facility2.name) == 0);
+    assert(facility1.minHeight == facility2.minHeight);
+    assert(facility1.maxHeight == facility2.maxHeight);
+    assert(facility1.category == facility2.category);
+
+    freeFacility(&facility1);
+    freeFacility(&facility2);
+
+}
+void FacilitySaveAndLoadBin() {
+    const char* fileName = "AAAfacilityTest.bin";
+	Facility facility1;
+	char* tempName = (char*)malloc(10 * sizeof(char));
+	strcpy(tempName, "Facilite");
+
+	initFacility(&facility1, tempName, 100, 200, eChildrenFacility);
+	printFacility(&facility1);
+	FILE* file = fopen(fileName, "wb");
+	assert(saveFacilityToBinFile(&facility1, file) == 1);
+	fclose(file);
+
+	Facility facility2;
+	file = fopen(fileName, "rb");
+	assert(loadFacilityFromBinFile(&facility2, file) == 1);
+	fclose(file);
+	
+    assert(strcmp(facility1.name, facility2.name) == 0);
+    assert(facility1.minHeight == facility2.minHeight);
+    assert(facility1.maxHeight == facility2.maxHeight);
+    assert(facility1.category == facility2.category);
+
+	freeFacility(&facility1);
+	freeFacility(&facility2);
+
+}
+
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -257,6 +315,14 @@ void runFacilityTests() {
     testInitFacility();
     testCompareFacilities();
 }
+
+
+//Tests for load & save from file (text\bin)
+void runAllSaveAndLoadTests() {
+     FacilitySaveAndLoadText();
+     FacilitySaveAndLoadBin();
+}
+
 //main test
 void runAllTestsDaniel() {
     printf("------Running Daniel tests...--------\n");
@@ -264,6 +330,6 @@ void runAllTestsDaniel() {
     runWorkerTests();
     runFacilityTests();
     runGuestTests();
-
+    runAllSaveAndLoadTests();
     printf("---------All tests passed!----------\n");
 }
