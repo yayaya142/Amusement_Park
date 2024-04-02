@@ -1,4 +1,4 @@
-#include "fileHelper.h"
+#include "fileHelperShai.h"
 
 
 
@@ -8,11 +8,25 @@
 // Input: file pointer, string to write
 // Output: 1 if succeeded
 /////////////////////////////////////////////////////////////////
-int writeStringToFile(FILE* file, const char* str) {
+int writeStringToTextFile(FILE* file, const char* str) {
 	if (!file) {
 		return 0;
 	}
 	fprintf(file, "%s\n", str);
+	return 1;
+}
+
+/////////////////////////////////////////////////////////////////
+// writeIntToTextFile
+// Aim: To write int to text file
+// Input: file pointer, int to write
+// Output: 1 if succeeded
+/////////////////////////////////////////////////////////////////
+int writeIntToTextFile(FILE* file, int num) {
+	if (!file) {
+		return 0;
+	}
+	fprintf(file, "%d\n", num);
 	return 1;
 }
 
@@ -23,11 +37,12 @@ int writeStringToFile(FILE* file, const char* str) {
 // Input: file pointer, string to write
 // Output: 1 if succeeded
 /////////////////////////////////////////////////////////////////
+
 int writeStringTobinFile(FILE* file, const char* str) {
 	if (!file) {
 		return 0;
 	}
-	size_t len = (size_t)strlen(str) + 1;
+	size_t len = (size_t)strlen(str) + 1; // +1 for the null terminator
 	// write the length of the string
 	if (fwrite(&len, sizeof(int), 1, file) != 1)
 		return 0;
@@ -67,6 +82,26 @@ char* readStringFromTextFile(FILE* file, char* buffer, int size) {
 
 
 /////////////////////////////////////////////////////////////////
+// readIntFromTextFile
+// Aim: To read int from text file
+// Input: file pointer
+// Output: int read from file
+/////////////////////////////////////////////////////////////////
+
+
+
+int readIntFromTextFile(FILE* file, int* num) {
+	if (!file) {
+		return 0;
+	}
+	if (fscanf(file, "%d", num) != 1) {
+		return 0;
+	}
+	return 1;
+}
+
+
+/////////////////////////////////////////////////////////////////
 // readStringFromBinFile
 // Aim: To read string from binary file
 // Input: file pointer
@@ -81,7 +116,7 @@ char* readStringFromBinFile(FILE* file) {
 	if (fread(&len, sizeof(int), 1, file) != 1) {
 		return NULL;
 	}
-	char* str = (char*)malloc((len + 1) * sizeof(char));
+	char* str = (char*)malloc((len) * sizeof(char)); // TODO it was len+1 before need to make sure it work
 	if (!str) {
 		return NULL;
 	}
@@ -89,7 +124,7 @@ char* readStringFromBinFile(FILE* file) {
 		free(str);
 		return NULL;
 	}
-	str[len] = '\0';
+	//str[len] = '\0'; // TODO need to check if it is needed
 	return str;
 }
 

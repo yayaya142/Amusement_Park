@@ -11,8 +11,10 @@
 
 #define MAX_BUFFER_SIZE 256
 
-int writeStringToFile(FILE* file, const char* str);
+int writeStringToTextFile(FILE* file, const char* str);
+int writeIntToTextFile(FILE* file, int num);
 int writeStringTobinFile(FILE* file, const char* str);
+int readIntFromTextFile(FILE* file, int* num);
 char* readStringFromTextFile(FILE* file, char* buffer, int size);
 char* readStringFromBinFile(FILE* file);
 int writeGeneralToBinFile(FILE* file, void* fileType, size_t sizeOfElement);
