@@ -155,39 +155,37 @@ void initWorkerTest() {
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Test 1: Check that initGuest 
-void initGuestTest() {
-    Guest g;
-    Person tk; 
-
-    char* name = malloc(sizeof(char) *7);
+ //Test 1: Check that initGuest 
+void initGuestTests() {
+    char* name = (char*)malloc(7 * sizeof(char));
     strcpy(name, "daniel");
-   // initPerson(&tk,name, 170, 22);
-    initGuest(&g, &tk);
 
-    //Manual ticket initial - assume that the ticket is correct
-    Date d;
-    initDate(&d, 21, 10, 2024);
-    Ticket *t = malloc(sizeof(Ticket));
-    if (t == NULL) {
-		printf("Memory allocation failed\n");
-		return;
-	}
-    assert(initTicket(t, 1, d) == 1);
-    g.ticket = t;
-    strcpy(g.ticket->id, "123456789234");
-    assert(g.person->height == 170);
-    assert(g.person->age == 22);
-    assert(strcmp(g.person->name, "daniel") == 0);
-    assert(strcmp(g.ticket->id, "123456789234") == 0);
-    assert(g.ticket->dateOfVisit.day == 21);
-    assert(g.ticket->dateOfVisit.month == 10);
-    assert(g.ticket->dateOfVisit.year == 2024);
-    freeGuest(&g);
+    // Test with valid parameters
+    Person* guest = initGuest(name, 170, 22);
+    assert(guest != NULL); // Check if the guest was created
+    Guest* g = guest->pDerived;
+    assert(strcmp(guest->name, "daniel") == 0); // Check if the name was set correctly
+    assert(guest->height == 170); // Check if the height was set correctly
+    assert(guest->age == 22); // Check if the age was set correctly
+    assert(g->ticket == NULL); // Check if the ticket is NULL as expected
+    guest->freePerson(guest);
 
-    free(t);
+    // Test initGuest with a NULL name
+    guest = initGuest(NULL, 170, 22);
+    assert(guest == NULL);
+
+    // Test initGuest with a negative height
+    name = (char*)malloc(7 * sizeof(char));
+    strcpy(name, "daniel");
+    guest = initGuest(name, -170, 22);
+    assert(guest == NULL);
+
+    // Test initGuest with a zero age
+    guest = initGuest(name, 170, 0);
+    assert(guest == NULL);
+
+   free(name);
 }
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Test 1: Check that initFacility
 void testInitFacility() {
@@ -252,7 +250,7 @@ void runWorkerTests() {
 }
 // Guest
 void runGuestTests() {
-	initGuestTest();
+    initGuestTests();
 }
 // Facility
 void runFacilityTests() {
@@ -265,7 +263,7 @@ void runAllTestsDaniel() {
     runPersonTests();
     runWorkerTests();
     runFacilityTests();
-    //runGuestTests();
+    runGuestTests();
 
     printf("---------All tests passed!----------\n");
 }

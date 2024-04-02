@@ -4,16 +4,22 @@
 #include "Ticket.h"
 #include "Person.h"
 #include "TicketMaster.h"
+#include <stdlib.h>
+#include <stdio.h>
 #include <crtdbg.h> // TODO: remove before release
 
-typedef struct {
-	Person*  person;
+typedef struct _Guest Guest;
+
+
+typedef struct _Guest{
+	Person*  personBase;
 	Ticket* ticket;
 } Guest;
 
-int initGuest(Guest* w,Person* p);
-void initGuestByUser(Guest* guest, TicketMaster* tMaster);
-void printGuest(const Guest* guest);
-void freeGuest(Guest* guest);
+Person* initGuest(char* name, float height, int age); // constructor
+void freeGuest(Person* guest); // destructor
+Person* initGuestByUser(TicketMaster* tMaster);
+void printGuest(const Person* guest);
+
 
 #endif

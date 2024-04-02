@@ -5,6 +5,7 @@ Person* initWorker(Department dep, char* name, float height, int age){
 	Person* pBase;
 	pBase = initPerson(name, height, age);
 	if (!pBase) {
+
 		return NULL;
 	}
 	pWorker = (Worker*)malloc(sizeof(Worker));
@@ -17,7 +18,9 @@ Person* initWorker(Department dep, char* name, float height, int age){
 	pBase->pDerived = pWorker;
 	
 	if(!isValidInfoWorker(dep)) {
-		return 0;
+		pBase->freePerson(pBase);
+		free(pWorker);
+		return NULL;
 	}
 	pWorker->WorkerId = generateWorkerID();
 	pWorker->department = dep;
@@ -29,17 +32,16 @@ Person* initWorker(Department dep, char* name, float height, int age){
     return pBase;
 }
 
-Person* initWorkerByUser(Worker* w) {
-	/*Person* p = malloc(sizeof(Person));
-	if (!p) {
-		printf("Memory allocation failed\n");
-		return ;
-	}
-	initPersonByUser(p);
+Person* initWorkerByUser() {
+	//make person and then make worker
+	Person* tempPerson= initPersonByUser();
+	Person* worker = NULL;
+	int size = (int)strlen(tempPerson->name);
 	int flag = 0;
-	int dep;
+	int dep = -1;
 	do {
 		if (flag > 0) {
+			//massage for the user for invalid input
 			printf("Please try again\n");
 		}
 		printf("Enter department:\n");
@@ -47,9 +49,16 @@ Person* initWorkerByUser(Worker* w) {
 			printf("%d. %s\n", i, typeTilte[i]);
 		}
 		scanf("%d", &dep);
-		flag++;
-	} while (!initWorker(dep,name, height, age));*/
-	return NULL;
+		flag=1;
+		//copy person name again after freeing it because init worker failed
+		char* new_name = (char*)malloc(size + 1);
+		strcpy(new_name, tempPerson->name);
+		//init worker
+		worker = initWorker(dep,new_name, tempPerson->height, tempPerson->age);
+	} while (!worker);
+	//free the temp person
+	tempPerson->freePerson(tempPerson);
+	return worker;
 }
 
 

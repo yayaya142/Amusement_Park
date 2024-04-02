@@ -4,6 +4,9 @@
 
 #include "Person.h"
 #include "General.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <crtdbg.h> // TODO: remove before release
 
 typedef struct _Worker Worker;
@@ -15,14 +18,12 @@ static const char* typeTilte[eNofTypes] = { "CoffeeShop", "Security", "Restarunt
 typedef struct _Worker{
 	Person*  personBase;
 	int		WorkerId;
-	Department department;
-	//interfaces
-	
+	Department department;	
 } Worker;
 
 Person* initWorker(Department dep, char* name, float height, int age); // constructor
 void freeWorker(Person* worker); // destructor
-Person* initWorkerByUser(Worker* w);
+Person* initWorkerByUser();
 int isValidInfoWorker(Department department);
 int generateWorkerID();
 void printWorker(const Person* worker);

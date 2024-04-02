@@ -4,11 +4,12 @@
 #define MAX_AGE 120
 
 Person* initPerson(char* name, float height, int age) {
+	Person* person = NULL;
 	if(!isValidInfo(name , height, age)){
 		return NULL;
 	}
 	
- 	Person* person = (Person*)malloc(sizeof(Person));			
+ 	person = (Person*)malloc(sizeof(Person));			
 	if (!person) {
 		printf("Memory allocation failed\n");
 		return NULL;
@@ -17,11 +18,19 @@ Person* initPerson(char* name, float height, int age) {
 	person->name = name;
 	person->height = height;
 	person->age = age;
+
+	//init the interfaces
+	person->printPerson = printPerson;
+	person->freePerson = freePerson;
+	person->comparePersonByHeight = comparePersonByHeight;
+
+
 	return person;
 
 }
 
 Person* initPersonByUser() {
+	Person* person = NULL;
 	int flag = 0;
 	char* name = NULL;
 	int age;
@@ -38,9 +47,10 @@ Person* initPersonByUser() {
 
 		printf("Enter height:\n");
 		scanf("%f", &height);
-		flag++;
-	} while (!initPerson(name, height, age));
-	return NULL; //TODO : remove this line
+		flag=1;
+		person = initPerson(name, height, age);
+	} while (!person);
+	return person; 
 }
 
 int isValidInfo(char* name, float height, int age) { 

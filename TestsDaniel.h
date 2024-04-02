@@ -19,4 +19,8 @@ void initWorkerTest();
 void runFacilityTests();
 void testInitFacility();
 void testCompareFacilities();
+
+void runGuestTests();
+void initGuestTests();
+
 #endif
