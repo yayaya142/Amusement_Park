@@ -1,16 +1,36 @@
 ﻿#include "Worker.h"
 
-int initWorker(Worker* w,Person* p, Department dep) { 
+Person* initWorker(Department dep, char* name, float height, int age){
+	Worker* pWorker;
+	Person* pBase;
+	pBase = initPerson(name, height, age);
+	if (!pBase) {
+		return NULL;
+	}
+	pWorker = (Worker*)malloc(sizeof(Worker));
+	if (!pWorker) {
+		printf("Memory allocation failed\n");
+		pBase->freePerson(pBase);
+		return NULL;
+	}
+	//init derived object
+	pBase->pDerived = pWorker;
+	
 	if(!isValidInfoWorker(dep)) {
 		return 0;
 	}
-	w->person = p;
-    w->WorkerId = generateWorkerID();
-	w->department = dep;
-    return 1;
+	pWorker->WorkerId = generateWorkerID();
+	pWorker->department = dep;
+
+	//change base class interfacese
+	pBase->freePerson = freeWorker;
+	pBase->printPerson = printWorker;
+
+    return pBase;
 }
-void initWorkerByUser(Worker* w) {
-	Person* p = malloc(sizeof(Person));
+
+Person* initWorkerByUser(Worker* w) {
+	/*Person* p = malloc(sizeof(Person));
 	if (!p) {
 		printf("Memory allocation failed\n");
 		return ;
@@ -28,7 +48,8 @@ void initWorkerByUser(Worker* w) {
 		}
 		scanf("%d", &dep);
 		flag++;
-	} while (!initWorker(w, p, dep));
+	} while (!initWorker(dep,name, height, age));*/
+	return NULL;
 }
 
 
@@ -54,15 +75,18 @@ int compareWorkerById(Worker* w1, Worker* w2) {
 	return w1->WorkerId - w2->WorkerId;
 }
 
-void printWorker(const void* pWorker) {
-	const Worker* w = (const Worker*)pWorker;
-
-	printPerson(w->person);
+void printWorker(const Person* pWorker) {
+	const Worker* w = pWorker->pDerived;
+	
+	printPerson(pWorker);
 	printf("Worker ID: %d\n", w->WorkerId);
 	printf("Department: %s\n", typeTilte[w->department]);
 }
 
-void freeWorker(Worker* w) {
-	freePerson((w->person));
-	free(w->person);
+void freeWorker(Person* worker) {
+	Worker* w ;
+	w = worker->pDerived;
+	free(w);
+	freePerson(worker);
+	
 }

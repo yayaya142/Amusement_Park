@@ -7,11 +7,13 @@ Person* initPerson(char* name, float height, int age) {
 	if(!isValidInfo(name , height, age)){
 		return NULL;
 	}
-	Person* person = (Person*)malloc(sizeof(Person));			
+	
+ 	Person* person = (Person*)malloc(sizeof(Person));			
 	if (!person) {
 		printf("Memory allocation failed\n");
 		return NULL;
 	}
+	person->pDerived = NULL;
 	person->name = name;
 	person->height = height;
 	person->age = age;

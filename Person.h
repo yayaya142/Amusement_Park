@@ -14,6 +14,7 @@ typedef void (*fptrFreePerson)(Person*);
 
 
 typedef struct _Person {  
+	void* pDerived;
 	char* name;
 	int age;
 	float height;

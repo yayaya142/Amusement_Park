@@ -6,21 +6,26 @@
 #include "General.h"
 #include <crtdbg.h> // TODO: remove before release
 
+typedef struct _Worker Worker;
+ 
 
 typedef enum { eCoffeeShop, eSecurity, eRestarunt, eStands, eNofTypes } Department;
 static const char* typeTilte[eNofTypes] = { "CoffeeShop", "Security", "Restarunt", "Stands" };
 
-typedef struct {
-	Person*  person;//TODO: WATCH OUT
+typedef struct _Worker{
+	Person*  personBase;
 	int		WorkerId;
 	Department department;
+	//interfaces
+	
 } Worker;
 
-int initWorker(Worker* w, Person* p , Department dep);
-void initWorkerByUser(Worker* w);
+Person* initWorker(Department dep, char* name, float height, int age); // constructor
+void freeWorker(Person* worker); // destructor
+Person* initWorkerByUser(Worker* w);
 int isValidInfoWorker(Department department);
 int generateWorkerID();
-void printWorker(const void* worker);
-void freeWorker(Worker* worker);
+void printWorker(const Person* worker);
+
 
 #endif

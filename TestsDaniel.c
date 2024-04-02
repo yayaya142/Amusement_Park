@@ -109,26 +109,50 @@ void testComparePersonByHeight() {
 
 // Test 1: Check that initWorker
 void initWorkerTest() {
-    Worker* w = malloc(sizeof(Worker));
-    if (w == NULL) {
-        printf("Memory allocation failed\n");
-        return;
-    }
-    Person* p = malloc(sizeof(Person));
-    if (p == NULL) {
-        printf("Memory allocation failed\n");
-        return;
-    }
     char* name = (char*)malloc(7 * sizeof(char));
     strcpy(name, "person");
 
-    //assert(initPerson(p, name, 170, 30) == 1);// Initialize the person
-    //assert(initWorker(w, p, eCoffeeShop) == 1); // Check that initWorker returns 1 when valid inputs are given
-    //assert(initWorker(w, p, eNofTypes) == 0); // Check that initWorker returns 0 when invalid department is given
-    freeWorker(w);
-    free(w);
+    // Test with valid parameters
+    Person* worker = initWorker(eCoffeeShop, name, 170, 30);
+    Worker* w = worker->pDerived;
+    printf("inside worker----------------------------\n");
+    worker->printPerson(worker);
+    assert(worker != NULL);
+    worker->freePerson(worker);
+
+
+    // Test with invalid department
+    worker = initWorker(eNofTypes, name, 170, 30);
+    assert(worker == NULL);
+
+    // Test with NULL name
+    worker = initWorker(eCoffeeShop, NULL, 170, 30);
+    assert(worker == NULL);
+
+    // Test with empty name
     
+    name = (char*)malloc(7 * sizeof(char));
+    strcpy(name, "");
+    worker = initWorker(eCoffeeShop, name, 170, 30);
+    assert(worker == NULL);
+
+    // Test with negative height
+    strcpy(name, "person");
+    worker = initWorker(eCoffeeShop, name, -170, 30);
+    assert(worker == NULL);
+
+    // Test with zero height
+    worker = initWorker(eCoffeeShop, name, 0, 30);
+    assert(worker == NULL);
+
+    // Test with negative age
+    worker = initWorker(eCoffeeShop, name, 170, -30);
+    assert(worker == NULL);
+   //Worker* w = worker->pDerived;
+   // w->freeWorker(worker);
+    free(name);
 }
+
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Test 1: Check that initGuest 
@@ -239,9 +263,9 @@ void runFacilityTests() {
 void runAllTestsDaniel() {
     printf("------Running Daniel tests...--------\n");
     runPersonTests();
-   /* runWorkerTests();
+    runWorkerTests();
     runFacilityTests();
-    runGuestTests();*/
+    //runGuestTests();
 
     printf("---------All tests passed!----------\n");
 }
