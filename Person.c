@@ -3,18 +3,23 @@
 #define MAX_HEIGHT 300
 #define MAX_AGE 120
 
-int initPerson(Person *p, char* name, float height, int age) {
+Person* initPerson(char* name, float height, int age) {
 	if(!isValidInfo(name , height, age)){
-		return 0;
+		return NULL;
 	}
-	p->name = name;
-	p->height = height;
-	p->age = age;
-	return 1;
+	Person* person = (Person*)malloc(sizeof(Person));			
+	if (!person) {
+		printf("Memory allocation failed\n");
+		return NULL;
+	}
+	person->name = name;
+	person->height = height;
+	person->age = age;
+	return person;
 
 }
 
-void initPersonByUser(Person *p) {
+Person* initPersonByUser() {
 	int flag = 0;
 	char* name = NULL;
 	int age;
@@ -32,8 +37,8 @@ void initPersonByUser(Person *p) {
 		printf("Enter height:\n");
 		scanf("%f", &height);
 		flag++;
-	} while (!initPerson(p, name, height, age));
-
+	} while (!initPerson(name, height, age));
+	return NULL; //TODO : remove this line
 }
 
 int isValidInfo(char* name, float height, int age) { 
@@ -53,6 +58,9 @@ int isValidInfo(char* name, float height, int age) {
 }
 
 int comparePersonByHeight(const Person* p1, const Person* p2) {
+	if (p1 == NULL || p2 == NULL) {
+		return 0;
+	}
 	if (p1->height == p2->height) {
 		return 0;
 	}
@@ -73,7 +81,17 @@ void printPerson(const Person* p) {
 }
 
 void freePerson(Person* p) {
-	if (p->name != NULL) {
-		free(p->name);
+	
+	if(p == NULL){
+		return;
 	}
+	else {
+		if (p->name != NULL) {
+			free(p->name);
+		}
+		free(p);
+	}
+
+	
+	
 }
