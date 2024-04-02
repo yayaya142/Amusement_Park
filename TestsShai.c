@@ -6,15 +6,13 @@
 #include "Ticket.h"
 #include "TicketMaster.h"
 
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // runAllTests
 // Aim:	this function runs all tests, by default all the tests run automatically. manual tests will be marked as "Manual"
 // Input:	none
 // Output:	if failed, the function assert failed will pop up a message, otherwise, a message that all tests passed will be printed
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 void runAllTestsShai() {
 	printf("---- Running Shai's tests....----\n");
