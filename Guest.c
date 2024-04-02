@@ -1,5 +1,5 @@
 #include "Guest.h"
-
+//
 Person* initGuest(char* name, float height, int age){
 	Guest* pGuest;
 	Person* pBase;
