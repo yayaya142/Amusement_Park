@@ -104,19 +104,16 @@ int loadTimeFromTextFile(Time* pTime, FILE* fp) {
 }
 
 int saveTimeToBinFile(const Time* pTime, FILE* fp) {
+	// save compressed time to file
 	if (fp == NULL) { /// NEED TO BE MACRO
 		return 0;
 	}
 
-	/*if (writeGeneralToBinFile(fp, &(pTime->hour), sizeof(int)) == 0) {
-		return 0;
-	}
+	BYTE data[2];
+	data[0] = (pTime->hour << 3) | (pTime->minute >> 3);
+	data[1] = (pTime->minute << 5);
 
-	if (writeGeneralToBinFile(fp, &(pTime->minute), sizeof(int)) == 0) {
-		return 0;
-	}*/
-
-	if (writeGeneralToBinFile(fp, pTime, sizeof(Time)) == 0) {
+	if (fwrite(data, sizeof(BYTE), 2, fp) != 2) {
 		return 0;
 	}
 
@@ -125,19 +122,20 @@ int saveTimeToBinFile(const Time* pTime, FILE* fp) {
 }
 
 int loadTimeFromBinFile(Time* pTime, FILE* fp) {
+	// load compressed time from file
 	if (fp == NULL) { /// NEED TO BE MACRO
 		return 0;
 	}
-	int tempHour, tempMinute;
-	if (readGeneralFromBinFile(fp, &tempHour, sizeof(int)) == 0) {
+
+	BYTE data[2];
+	if (fread(data, sizeof(BYTE), 2, fp) != 2) {
 		return 0;
 	}
 
-	if (readGeneralFromBinFile(fp, &tempMinute, sizeof(int)) == 0) {
-		return 0;
-	}
+	int hour = data[0] >> 3;
+	int minute = ((data[0] & 0x07) << 3) | (data[1] >> 5);
 
-	if (!initTime(pTime, tempHour, tempMinute)) {
+	if (!initTime(pTime, hour, minute)) {
 		return 0;
 	}
 

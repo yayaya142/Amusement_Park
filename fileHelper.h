@@ -10,6 +10,8 @@
 #include "General.h"
 
 #define MAX_BUFFER_SIZE 256
+typedef unsigned char BYTE;
+
 
 int writeStringToTextFile(FILE* file, const char* str);
 int writeIntToTextFile(FILE* file, int num);
