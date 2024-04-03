@@ -9,6 +9,8 @@
 
 void runAllTestsDaniel();
 
+void printingTests();
+
 void runPersonTests();
 void testComparePersonByHeight();
 void testInitPerson();

@@ -90,9 +90,11 @@ void printPerson(const Person* p) {
 		return;
 	}
 	else {
+		printf("\n");
 		printf("Name: %s\n", p->name);
 		printf("Age: %d\n", p->age);
 		printf("Height: %.2f\n", p->height);
+		printf("\n");
 	}
 }
 
@@ -112,9 +114,8 @@ void freePerson(Person* p) {
 // save and load functions
 int savePersonToTextFile(const Person* person, FILE* fp){
 	//validate the input
-	if (person == NULL || fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp); //TODO MACRO
+
 	if(!isValidInfo(person->name, person->height, person->age)){
 		return 0;
 	}
@@ -134,10 +135,8 @@ int savePersonToTextFile(const Person* person, FILE* fp){
 	return 1;
 }
 int loadPersonFromTextFile(Person** person, FILE* fp){
-	//validate the input
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp); //TODO MACRO
+
 	char* name;
 	int age;
 	double height;
@@ -168,9 +167,8 @@ int loadPersonFromTextFile(Person** person, FILE* fp){
 	return 1;
 }
 int savePersonToBinFile(const Person* person, FILE* fp){
-	if (fp==NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp); //TODO MACRO
+
 	if(!isValidInfo(person->name, person->height, person->age)){
 		return 0;
 	}
@@ -189,9 +187,8 @@ int savePersonToBinFile(const Person* person, FILE* fp){
 	return 1;
 }
 int loadPersonFromBinFile(Person** person, FILE* fp){
-	if(fp == NULL){
-		return 0;
-	}
+	IS_FILE_NULL(fp); //TODO MACRO
+	
 	char* name;
 	int age;
 	double height;

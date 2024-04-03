@@ -68,7 +68,7 @@ Person* initWorkerByUser() {
 int generateWorkerID() {
 	int id_temp = randomNum(1, 9);
 	for (int i = 0; i < WORK_ID; i++) {
-			id_temp= id_temp*10 + randomNum(1, 9);
+		id_temp = SUM(id_temp * 10, randomNum(1, 9));
 	}
 	return id_temp;
 }
@@ -89,10 +89,12 @@ int compareWorkerById(Worker* w1, Worker* w2) {
 
 void printWorker(const Person* pWorker) {
 	const Worker* w = pWorker->pDerived;
-	
+
+	printf("--------------------\n");
 	printPerson(pWorker);
 	printf("Worker ID: %d\n", w->WorkerId);
 	printf("Department: %s\n", typeTilte[w->department]);
+	printf("--------------------\n");
 }
 
 void freeWorker(Person* worker) {
@@ -102,11 +104,13 @@ void freeWorker(Person* worker) {
 	freePerson(worker);
 	
 }
-////////////////////////////////////////////
+
 int saveWorkerToTextFile(const Person* worker, FILE* fp){
-	if(fp == NULL || worker == NULL){
+	if(worker == NULL){
 		return 0;
 	}
+	IS_FILE_NULL(fp); //TODO MACRO
+
 	//cast to worker
 	Worker* tempWorker = worker->pDerived;
 
@@ -126,9 +130,8 @@ int saveWorkerToTextFile(const Person* worker, FILE* fp){
 	return 1;
 }
 int loadWorkerFromTextFile(Person** worker, FILE* fp){
-	if(fp == NULL){
-		return 0;
-	}
+	IS_FILE_NULL(fp); //TODO MACRO
+
 	Person* tempPerson = NULL;
 
 	//load person
@@ -164,9 +167,11 @@ int loadWorkerFromTextFile(Person** worker, FILE* fp){
 }
 
 int saveWorkerToBinFile(const Person* worker, FILE* fp){
-	if(fp == NULL || worker == NULL){
+	if(worker == NULL){
 		return 0;
 	}
+	IS_FILE_NULL(fp); //TODO MACRO
+
 	//cast to worker
 	Worker* tempWorker = worker->pDerived;
 
@@ -188,9 +193,8 @@ int saveWorkerToBinFile(const Person* worker, FILE* fp){
 
 }
 int loadWorkerFromBinFile(Person** worker, FILE* fp){
-	if(fp == NULL){
-		return 0;
-	}
+	IS_FILE_NULL(fp); //TODO MACRO
+
 	Person* tempPerson = NULL;
 
 	//load person

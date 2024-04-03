@@ -2,6 +2,12 @@
 #define __GENERAL__
 
 #define MAX_STR_LEN 255
+
+// define macros
+#define SUM(x,y) ((x)+(y))
+
+
+
 #include <crtdbg.h> // TODO: remove before release
 
 

@@ -51,9 +51,11 @@ Person* initGuestByUser(TicketMaster* tMaster) {
 
 void printGuest(const Person* pGuest) {
 	const Guest* guest = pGuest->pDerived;
-	
+
+	printf("--------------------\n");
 	printPerson(pGuest);
 	printTicket(guest->ticket);
+	printf("--------------------\n");
 }
 
 void freeGuest(Person* pguest) {
@@ -65,9 +67,11 @@ void freeGuest(Person* pguest) {
 
 // save and load functions
 int saveGuestToTextFile(const Person* guest, FILE* fp){
-	if(fp == NULL || guest == NULL){
+	if(guest == NULL){
 		return 0;
 	}
+	IS_FILE_NULL(fp); //TODO MACRO
+
 	Guest* pGuest = guest->pDerived;
 	
 	if(isValidInfo(guest->name, guest->height, guest->age)==0) {
@@ -81,9 +85,8 @@ int saveGuestToTextFile(const Person* guest, FILE* fp){
 
 }
 int loadGuestFromTextFile(Person** guest, TicketMaster* ticketMaster, FILE* fp){
-	if(fp == NULL){
-		return 0;
-	}
+	IS_FILE_NULL(fp); //TODO MACRO
+
 	Person* tempPerson = NULL;
 	//load person
 	if(loadPersonFromTextFile(&tempPerson, fp) == 0){
@@ -116,9 +119,11 @@ int loadGuestFromTextFile(Person** guest, TicketMaster* ticketMaster, FILE* fp){
 	return 1;
 }
 int saveGuestToBinFile(const Person* guest, FILE* fp){
-	if (fp == NULL || guest == NULL) {
+	if (guest == NULL) {
 		return 0;
 	}
+	IS_FILE_NULL(fp); //TODO MACRO
+
 	//cast to guest
 	Guest* pGuest = guest->pDerived;
 
@@ -134,9 +139,8 @@ int saveGuestToBinFile(const Person* guest, FILE* fp){
 	return 1;
 }
 int loadGuestFromBinFile(Person** guest, TicketMaster* ticketMaster, FILE* fp){
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp); //TODO MACRO
+
 	Person* tempPerson = NULL;
 	//load person
 	if (loadPersonFromBinFile(&tempPerson, fp) == 0) {

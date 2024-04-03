@@ -55,7 +55,7 @@ void runAllTestsDaniel() {
 }
 
 
-
+//PERSON TESTS
 // Test 1:check initPerson functionality with valid and invalid inputs
 void testInitPerson() {
     char* name = (char*)malloc(7 * sizeof(char));
@@ -150,10 +150,9 @@ void testComparePersonByHeight() {
     freePerson(p2);
     
 }
-
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+//WORKER TESTS
 // Test 1: Check that initWorker
 void initWorkerTest() {
     char* name = (char*)malloc(7 * sizeof(char));
@@ -162,6 +161,7 @@ void initWorkerTest() {
     // Test with valid parameters
     Person* worker = initWorker(eCoffeeShop, name, 170, 30);
     Worker* w = worker->pDerived;
+    worker->printPerson(worker);//TODO DELETE
     assert(worker != NULL);
     worker->freePerson(worker);
 
@@ -195,10 +195,10 @@ void initWorkerTest() {
     assert(worker == NULL);
     free(name);
 }
-
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- //Test 1: Check that initGuest 
+
+//GUEST TESTS
+//Test 1: Check that initGuest 
 void initGuestTests() {
     char* name = (char*)malloc(7 * sizeof(char));
     strcpy(name, "daniel");
@@ -230,12 +230,15 @@ void initGuestTests() {
    free(name);
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//FACILITY TESTS
 //Test 1: Check that initFacility
 void testInitFacility() {
     Facility facility;
 
    // Test with valid parameters
     assert(initFacility(&facility, "Test Facility", 100, 200, eChildrenFacility) == 1);
+    assert(strcmp(facility.name, "Test Facility") == 0);
     assert(facility.minHeight == 100);
     assert(facility.maxHeight == 200);
     assert(facility.category == eChildrenFacility);
@@ -281,9 +284,9 @@ void testCompareFacilities() {
 
  
 }
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+//SAVE AND LOAD TESTS
 void FacilitySaveAndLoadText() {
     const char* fileName = "AAAfacilityTest.txt";
     Facility facility1;
@@ -333,9 +336,8 @@ void FacilitySaveAndLoadBin() {
 	freeFacility(&facility2);
 
 }
-
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 void PersonSaveAndLoadText() {
     const char* fileName = "AAAPersonTest.txt";
     Person *person1;
@@ -387,6 +389,7 @@ void PersonSaveAndLoadBin() {
 
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 void WorkerSaveAndLoadText(){
 	const char* fileName = "AAAWorkerTest.txt";
 	Person* worker1;
@@ -447,6 +450,7 @@ void WorkerSaveAndLoadBin(){
 	worker2->freePerson(worker2);
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 void GuestSaveAndLoadText(){
     TicketMaster ticketMaster;
     initTicketMaster(&ticketMaster);
@@ -578,3 +582,5 @@ void GuestSaveAndLoadBin(){
     guest1->freePerson(guest1);
     guest2->freePerson(guest2);
 }
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
