@@ -13,7 +13,7 @@
 
 int writeStringToTextFile(FILE* file, const char* str);
 int writeIntToTextFile(FILE* file, int num);
-int writeDoubleToTextFile(FILE* file, double num);
+int writeDoubleToTextFile(FILE* file, const double num);
 int writeStringTobinFile(FILE* file, const char* str);
 int readIntFromTextFile(FILE* file, int* num);
 int readDoubleFromTextFile(FILE* file, double* num);

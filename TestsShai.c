@@ -1239,6 +1239,7 @@ void TicketSaveAndLoadTextTest() {
 	assert(strcmp(ticket1.id, ticket2.id) == 0);
 	assert(ticket1.guestType == ticket2.guestType);
 	assert(compareDates(ticket1.dateOfVisit, ticket2.dateOfVisit) == 0);
+	assert(ticket1.price == ticket2.price);
 }
 void TicketSaveAndLoadBinTest() {
 	Ticket ticket1;
@@ -1264,6 +1265,7 @@ void TicketSaveAndLoadBinTest() {
 	assert(strcmp(ticket1.id, ticket2.id) == 0);
 	assert(ticket1.guestType == ticket2.guestType);
 	assert(compareDates(ticket1.dateOfVisit, ticket2.dateOfVisit) == 0);
+	assert(ticket1.price == ticket2.price);
 }
 void TicketMasterSaveAndLoadTextTest() {
 	TicketMaster ticketMaster;
@@ -1327,6 +1329,13 @@ void TicketMasterSaveAndLoadTextTest() {
 	assert(compareTicketsByGuestType(&ticketMaster.tickets[1], &ticketMaster2.tickets[1]) == 0);
 	assert(compareTicketsByGuestType(&ticketMaster.tickets[2], &ticketMaster2.tickets[2]) == 0);
 	assert(compareTicketsByGuestType(&ticketMaster.tickets[3], &ticketMaster2.tickets[3]) == 0);
+
+
+	// compare by price
+	assert(ticketMaster.tickets[0]->price == ticketMaster2.tickets[0]->price);
+	assert(ticketMaster.tickets[1]->price == ticketMaster2.tickets[1]->price);
+	assert(ticketMaster.tickets[2]->price == ticketMaster2.tickets[2]->price);
+	assert(ticketMaster.tickets[3]->price == ticketMaster2.tickets[3]->price);
 
 	// free
 	freeTicketMaster(&ticketMaster);
@@ -1397,6 +1406,12 @@ void TicketMasterSaveAndLoadBinTest() {
 	assert(compareTicketsByGuestType(&ticketMaster.tickets[1], &ticketMaster2.tickets[1]) == 0);
 	assert(compareTicketsByGuestType(&ticketMaster.tickets[2], &ticketMaster2.tickets[2]) == 0);
 	assert(compareTicketsByGuestType(&ticketMaster.tickets[3], &ticketMaster2.tickets[3]) == 0);
+
+	// compare by price
+	assert(ticketMaster.tickets[0]->price == ticketMaster2.tickets[0]->price);
+	assert(ticketMaster.tickets[1]->price == ticketMaster2.tickets[1]->price);
+	assert(ticketMaster.tickets[2]->price == ticketMaster2.tickets[2]->price);
+	assert(ticketMaster.tickets[3]->price == ticketMaster2.tickets[3]->price);
 
 	// free
 	freeTicketMaster(&ticketMaster);

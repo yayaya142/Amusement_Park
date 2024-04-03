@@ -35,13 +35,15 @@ int writeIntToTextFile(FILE* file, int num) {
 // Input: file pointer, double to write
 // Output: 1 if succeeded
 /////////////////////////////////////////////////////////////////
-int writeDoubleToTextFile(FILE* file, double* num) {
+int writeDoubleToTextFile(FILE* file, const double num) {
 	if (!file) {
 		return 0;
 	}
-	if (fprintf(file, "%f\n", num) < 0) {
+	if (fprintf(file, "%f\n", num) < 1) {
 		return 0;
 	}
+
+	return 1;
 }
 
 
@@ -55,13 +57,11 @@ int readDoubleFromTextFile(FILE* file, double* num) {
 	if (!file) {
 		return 0;
 	}
-	if (fscanf(file, "%lf", &num) != 1) {
+	if (fscanf(file, "%lf", num) < 1) {
 		return 0;
 	}
 	return 1;
 }
-
-
 
 
 /////////////////////////////////////////////////////////////////
