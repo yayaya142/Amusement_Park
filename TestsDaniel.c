@@ -278,51 +278,51 @@ void testCompareFacilities() {
 //SAVE AND LOAD TESTS
 void FacilitySaveAndLoadText() {
     const char* fileName = "AAAfacilityTest.txt";
-    Facility facility1;
+    Facility* facility1 = (Facility*)malloc(sizeof(Facility));
     char* tempName = (char*)malloc(10 * sizeof(char));
     strcpy(tempName, "Facility");
-    initFacility(&facility1, tempName, 100, 200, eChildrenFacility);
+    initFacility(facility1, tempName, 100, 200, eChildrenFacility);
     FILE* file = fopen(fileName, "w");
-    assert(saveFacilityToTextFile(&facility1, file) == 1);
+    assert(saveFacilityToTextFile(facility1, file) == 1);
     fclose(file);
 
-    Facility facility2;
+    Facility *facility2 = (Facility*)malloc(sizeof(Facility));
     file = fopen(fileName, "r");
-    assert(loadFacilityFromTextFile(&facility2, file) == 1);
+    assert(loadFacilityFromTextFile(facility2, file) == 1);
     fclose(file);
-    
-    assert(strcmp(facility1.name, facility2.name) == 0);
-    assert(facility1.minHeight == facility2.minHeight);
-    assert(facility1.maxHeight == facility2.maxHeight);
-    assert(facility1.category == facility2.category);
 
-    freeFacility(&facility1);
-    freeFacility(&facility2);
+    assert(strcmp(facility1->name, facility2->name) == 0);
+    assert(facility1->minHeight == facility2->minHeight);
+    assert(facility1->maxHeight == facility2->maxHeight);
+    assert(facility1->category == facility2->category);
+
+    freeFacility(facility1);
+    freeFacility(facility2);
 
 }
 void FacilitySaveAndLoadBin() {
     const char* fileName = "AAAfacilityTest.bin";
-	Facility facility1;
-	char* tempName = (char*)malloc(10 * sizeof(char));
+    Facility* facility1 = (Facility*)malloc(sizeof(Facility));
+    char* tempName = (char*)malloc(10 * sizeof(char));
 	strcpy(tempName, "Facilite");
 
-	initFacility(&facility1, tempName, 100, 200, eChildrenFacility);
+	initFacility(facility1, tempName, 100, 200, eChildrenFacility);
 	FILE* file = fopen(fileName, "wb");
-	assert(saveFacilityToBinFile(&facility1, file) == 1);
+	assert(saveFacilityToBinFile(facility1, file) == 1);
 	fclose(file);
 
-	Facility facility2;
-	file = fopen(fileName, "rb");
-	assert(loadFacilityFromBinFile(&facility2, file) == 1);
+    Facility* facility2 = (Facility*)malloc(sizeof(Facility));
+    file = fopen(fileName, "rb");
+	assert(loadFacilityFromBinFile(facility2, file) == 1);
 	fclose(file);
 	
-    assert(strcmp(facility1.name, facility2.name) == 0);
-    assert(facility1.minHeight == facility2.minHeight);
-    assert(facility1.maxHeight == facility2.maxHeight);
-    assert(facility1.category == facility2.category);
+    assert(strcmp(facility1->name, facility2->name) == 0);
+    assert(facility1->minHeight == facility2->minHeight);
+    assert(facility1->maxHeight == facility2->maxHeight);
+    assert(facility1->category == facility2->category);
 
-	freeFacility(&facility1);
-	freeFacility(&facility2);
+	freeFacility(facility1);
+	freeFacility(facility2);
 
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

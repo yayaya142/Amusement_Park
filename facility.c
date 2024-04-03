@@ -16,7 +16,7 @@ int initFacility(Facility* pFacility,char* name, int minHeight, int maxHeight, C
 }
 
 void initFacilityByUser(Facility* pFacility) {
-	char name[MAX_STR_LEN];
+	char* name= NULL;
 	int minHeight = 0;
 	int maxHeight = 0;
 	Category category = 0;
@@ -24,17 +24,16 @@ void initFacilityByUser(Facility* pFacility) {
 	do {
 		if (flag > 0) {
 			printf("Please try again\n");
+			free(name);
 		}
-		//TODO : change the strcpy 
-		char* new_name = getStrExactName("Please enter the facility name:\n");
-		strcpy(name, new_name);
-		free(new_name);
-
+		name = getStrExactName("Please enter the facility name:\n");
+		
 		printf("Please enter the Minimum height:\n");
 		scanf("%d", &minHeight);
 		printf("Please enter the Maximum height:\n");
 		scanf("%d", &maxHeight);
 		printf("Please enter the category:\n");
+		//print all categories
 		for (int i = 0; i < eNofTypesFacility; i++) {
 			printf("%d. %s\n", i, facilityTypeTilte[i]);
 		}
@@ -80,6 +79,7 @@ void freeFacility(void* facility) {
 
 	Facility* pFacility = (Facility*)facility;
 	free(pFacility->name);
+	free(pFacility);
 }
 
 // save and load functions

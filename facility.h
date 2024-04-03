@@ -21,7 +21,7 @@ typedef struct facility {
 	Category category;
 } Facility;
 
-int initFacility(Facility* pFacility,char* name, int minAge, int maxAge, Category category);
+int initFacility(Facility* pFacility,char* name, int minHeight, int maxHeight, Category category);
 void initFacilityByUser(Facility* pFacility);
 int validFacility(char* name, int minHeight, int maxHeight, Category category);
 int compareFacilitiesByCategory(const void* pFacility1, const void* pFacility2);
