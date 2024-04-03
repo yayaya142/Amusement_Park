@@ -981,6 +981,10 @@ void SaveAndLoadTests() {
 	ShopSaveAndLoadBinTest();
 	DateSaveAndLoadTextText();
 	DateSaveAndLoadBinTest();
+	TicketSaveAndLoadTextTest();
+	TicketSaveAndLoadBinTest();
+	TicketMasterSaveAndLoadTextTest();
+	TicketMasterSaveAndLoadBinTest();
 }
 void WeatherSaveAndLoadTextTest() {
 	const char* fileName = "AAAWeatherTest.txt";
@@ -1211,4 +1215,190 @@ void DateSaveAndLoadBinTest() {
 	assert(date1.month == date2.month);
 	assert(date1.year == date2.year);
 
+}
+void TicketSaveAndLoadTextTest() {
+	Ticket ticket1;
+	const char* fileName = "AAATicketTest.txt";
+
+	// Test 1: Save and load a valid ticket
+	Date date;
+	initDate(&date, 1, 1, 2025);
+	initTicket(&ticket1, eAdult, date);
+	FILE* file = fopen(fileName, "w");
+
+	assert(saveTicketToTextFile(&ticket1, file) == 1);
+	fclose(file);
+
+	// Load the ticket from the file
+	Ticket ticket2;
+	file = fopen(fileName, "r");
+	assert(loadTicketFromTextFile(&ticket2, file) == 1);
+	fclose(file);
+
+	// Check that the loaded ticket is the same as the saved ticket
+	assert(strcmp(ticket1.id, ticket2.id) == 0);
+	assert(ticket1.guestType == ticket2.guestType);
+	assert(compareDates(ticket1.dateOfVisit, ticket2.dateOfVisit) == 0);
+}
+void TicketSaveAndLoadBinTest() {
+	Ticket ticket1;
+	const char* fileName = "AAATicketTest.bin";
+
+	// Test 1: Save and load a valid ticket
+	Date date;
+	initDate(&date, 1, 1, 2025);
+	initTicket(&ticket1, eChild, date);
+	strcpy(ticket1.id, "AAAAAAAAAAA1");
+	FILE* file = fopen(fileName, "wb");
+
+	assert(saveTicketToBinFile(&ticket1, file) == 1);
+	fclose(file);
+
+	// Load the ticket from the file
+	Ticket ticket2;
+	file = fopen(fileName, "rb");
+	assert(loadTicketFromBinFile(&ticket2, file) == 1);
+	fclose(file);
+
+	// Check that the loaded ticket is the same as the saved ticket
+	assert(strcmp(ticket1.id, ticket2.id) == 0);
+	assert(ticket1.guestType == ticket2.guestType);
+	assert(compareDates(ticket1.dateOfVisit, ticket2.dateOfVisit) == 0);
+}
+void TicketMasterSaveAndLoadTextTest() {
+	TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+	const char* fileName = "AAATicketMasterTest.txt";
+
+	// Create some tickets
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
+
+	Date date;
+	initDate(&date, 1, 1, 2025);
+
+	// Initialize tickets with different IDs
+	initTicket(ticket1, eChild, date);
+	initTicket(ticket2, eAdult, date);
+	initTicket(ticket3, eStudent, date);
+	initTicket(ticket4, eSoldier, date);
+
+	// Manually set IDs to ensure they are different
+	strcpy(ticket1->id, "AAAAAAAAAAA1");
+	strcpy(ticket2->id, "AAAAAAAAAAA2");
+	strcpy(ticket3->id, "AAAAAAAAAAA3");
+	strcpy(ticket4->id, "AAAAAAAAAAA4");
+
+	// Add tickets to the ticket master
+	assert(addTicket(&ticketMaster, ticket1) == 1);
+	assert(addTicket(&ticketMaster, ticket2) == 1);
+	assert(addTicket(&ticketMaster, ticket3) == 1);
+	assert(addTicket(&ticketMaster, ticket4) == 1);
+
+	FILE* file = fopen(fileName, "w");
+	assert(saveTicketMasterToTextFile(&ticketMaster, file) == 1);
+	fclose(file);
+
+	// Load the ticket master from the file
+	TicketMaster ticketMaster2;
+	initTicketMaster(&ticketMaster2);
+	file = fopen(fileName, "r");
+	assert(loadTicketMasterFromTextFile(&ticketMaster2, file) == 1);
+	fclose(file);
+
+	// Check that the loaded ticket master is the same as the saved ticket master
+	assert(ticketMaster.numOfTickets == ticketMaster2.numOfTickets);
+	// compare by id
+	assert(compareTicketsByID(&ticketMaster.tickets[0], &ticketMaster2.tickets[0]) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[1], &ticketMaster2.tickets[1]) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[2], &ticketMaster2.tickets[2]) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[3], &ticketMaster2.tickets[3]) == 0);
+
+	// compare by date
+	assert(compareTicketsByDate(&ticketMaster.tickets[0], &ticketMaster2.tickets[0]) == 0);
+	assert(compareTicketsByDate(&ticketMaster.tickets[1], &ticketMaster2.tickets[1]) == 0);
+	assert(compareTicketsByDate(&ticketMaster.tickets[2], &ticketMaster2.tickets[2]) == 0);
+	assert(compareTicketsByDate(&ticketMaster.tickets[3], &ticketMaster2.tickets[3]) == 0);
+
+	// compare by guest type
+	assert(compareTicketsByGuestType(&ticketMaster.tickets[0], &ticketMaster2.tickets[0]) == 0);
+	assert(compareTicketsByGuestType(&ticketMaster.tickets[1], &ticketMaster2.tickets[1]) == 0);
+	assert(compareTicketsByGuestType(&ticketMaster.tickets[2], &ticketMaster2.tickets[2]) == 0);
+	assert(compareTicketsByGuestType(&ticketMaster.tickets[3], &ticketMaster2.tickets[3]) == 0);
+
+	// free
+	freeTicketMaster(&ticketMaster);
+	freeTicketMaster(&ticketMaster2);
+
+
+
+}
+void TicketMasterSaveAndLoadBinTest() {
+	TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+	const char* fileName = "AAATicketMasterTest.bin";
+
+	// Create some tickets
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
+
+	Date date;
+	initDate(&date, 1, 1, 2025);
+
+	// Initialize tickets with different IDs
+	initTicket(ticket1, eChild, date);
+	initTicket(ticket2, eAdult, date);
+	initTicket(ticket3, eStudent, date);
+	initTicket(ticket4, eSoldier, date);
+
+	// Manually set IDs to ensure they are different
+	strcpy(ticket1->id, "AAAAAAAAAAA1");
+	strcpy(ticket2->id, "AAAAAAAAAAA2");
+	strcpy(ticket3->id, "AAAAAAAAAAA3");
+	strcpy(ticket4->id, "AAAAAAAAAAA4");
+
+	// Add tickets to the ticket master
+	assert(addTicket(&ticketMaster, ticket1) == 1);
+	assert(addTicket(&ticketMaster, ticket2) == 1);
+	assert(addTicket(&ticketMaster, ticket3) == 1);
+	assert(addTicket(&ticketMaster, ticket4) == 1);
+
+	FILE* file = fopen(fileName, "wb");
+	assert(saveTicketMasterToBinFile(&ticketMaster, file) == 1);
+	fclose(file);
+
+	// Load the ticket master from the file
+	TicketMaster ticketMaster2;
+	initTicketMaster(&ticketMaster2);
+	file = fopen(fileName, "rb");
+	assert(loadTicketMasterFromBinFile(&ticketMaster2, file) == 1);
+	fclose(file);
+
+	// Check that the loaded ticket master is the same as the saved ticket master
+	assert(ticketMaster.numOfTickets == ticketMaster2.numOfTickets);
+	// compare by id
+	assert(compareTicketsByID(&ticketMaster.tickets[0], &ticketMaster2.tickets[0]) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[1], &ticketMaster2.tickets[1]) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[2], &ticketMaster2.tickets[2]) == 0);
+	assert(compareTicketsByID(&ticketMaster.tickets[3], &ticketMaster2.tickets[3]) == 0);
+
+	// compare by date
+	assert(compareTicketsByDate(&ticketMaster.tickets[0], &ticketMaster2.tickets[0]) == 0);
+	assert(compareTicketsByDate(&ticketMaster.tickets[1], &ticketMaster2.tickets[1]) == 0);
+	assert(compareTicketsByDate(&ticketMaster.tickets[2], &ticketMaster2.tickets[2]) == 0);
+	assert(compareTicketsByDate(&ticketMaster.tickets[3], &ticketMaster2.tickets[3]) == 0);
+
+	// compare by guest type
+	assert(compareTicketsByGuestType(&ticketMaster.tickets[0], &ticketMaster2.tickets[0]) == 0);
+	assert(compareTicketsByGuestType(&ticketMaster.tickets[1], &ticketMaster2.tickets[1]) == 0);
+	assert(compareTicketsByGuestType(&ticketMaster.tickets[2], &ticketMaster2.tickets[2]) == 0);
+	assert(compareTicketsByGuestType(&ticketMaster.tickets[3], &ticketMaster2.tickets[3]) == 0);
+
+	// free
+	freeTicketMaster(&ticketMaster);
+	freeTicketMaster(&ticketMaster2);
 }

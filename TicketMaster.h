@@ -33,5 +33,12 @@ void sortTicketsByGuestType(TicketMaster* ticketMaster);
 void sortTicketsUser(TicketMaster* ticketMaster);
 Ticket* buyTicket(TicketMaster* ticketMaster);
 Ticket* findTicketByUser(const TicketMaster* ticketMaster);
+// save and load functions
+int saveTicketMasterToTextFile(const TicketMaster* ticketMaster, FILE* fp);
+int loadTicketMasterFromTextFile(TicketMaster* ticketMaster, FILE* fp);
+int saveTicketMasterToBinFile(const TicketMaster* ticketMaster, FILE* fp);
+int loadTicketMasterFromBinFile(TicketMaster* ticketMaster, FILE* fp);
+
+
 
 #endif 

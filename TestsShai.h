@@ -71,7 +71,10 @@ void ShopSaveAndLoadTextTest();
 void ShopSaveAndLoadBinTest();
 void DateSaveAndLoadTextText();
 void DateSaveAndLoadBinTest();
-
+void TicketSaveAndLoadTextTest();
+void TicketSaveAndLoadBinTest();
+void TicketMasterSaveAndLoadTextTest();
+void TicketMasterSaveAndLoadBinTest();
 
 #endif 
 

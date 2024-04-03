@@ -214,7 +214,106 @@ Ticket* buyTicket(TicketMaster* ticketMaster) {
 		return NULL;
 	}
 
-
 	return ticket;
+}
 
+// save and load functions
+int saveTicketMasterToTextFile(const TicketMaster* ticketMaster, FILE* fp) {
+	// this function dont save the sort type
+	if (fp == NULL) {
+		return 0;
+	}
+	if (ticketMaster == NULL || ticketMaster->tickets == NULL) {
+		return 0;
+	}
+
+	// save the number of tickets
+	if (writeIntToTextFile(fp, ticketMaster->numOfTickets) == 0) {
+		return 0;
+	}
+	// save the tickets
+	for (int i = 0; i < ticketMaster->numOfTickets; i++) {
+		if (saveTicketToTextFile(ticketMaster->tickets[i], fp) == 0) {
+			return 0;
+		}
+	}
+	return 1;
+}
+int loadTicketMasterFromTextFile(TicketMaster* ticketMaster, FILE* fp) {
+	if (fp == NULL) {
+		return 0;
+	}
+	if (ticketMaster == NULL) {
+		return 0;
+	}
+	// load the number of tickets
+	int tempNumOfTickets;
+	if (readIntFromTextFile(fp, &tempNumOfTickets) == 0) {
+		return 0;
+	}
+	// load the tickets
+	for (int i = 0; i < tempNumOfTickets; i++) {
+		Ticket* ticket = (Ticket*)malloc(sizeof(Ticket));
+		if (ticket == NULL) {
+			return 0;
+		}
+		if (loadTicketFromTextFile(ticket, fp) == 0) {
+			free(ticket);
+			return 0;
+		}
+		if (!addTicket(ticketMaster, ticket)) {
+			free(ticket);
+			return 0;
+		}
+	}
+
+	return 1;
+}
+int saveTicketMasterToBinFile(const TicketMaster* ticketMaster, FILE* fp) {
+	if (fp == NULL) {
+		return 0;
+	}
+	if (ticketMaster == NULL || ticketMaster->tickets == NULL) {
+		return 0;
+	}
+	// save the number of tickets
+	if (writeGeneralToBinFile(fp, &ticketMaster->numOfTickets, sizeof(int)) == 0) {
+		return 0;
+	}
+	// save the tickets
+	for (int i = 0; i < ticketMaster->numOfTickets; i++) {
+		if (saveTicketToBinFile(ticketMaster->tickets[i], fp) == 0) {
+			return 0;
+		}
+	}
+	return 1;
+}
+int loadTicketMasterFromBinFile(TicketMaster* ticketMaster, FILE* fp) {
+	if (fp == NULL) {
+		return 0;
+	}
+	if (ticketMaster == NULL) {
+		return 0;
+	}
+	// load the number of tickets
+	int tempNumOfTickets;
+	if (readGeneralFromBinFile(fp, &tempNumOfTickets, sizeof(int)) == 0) {
+		return 0;
+	}
+	// load the tickets
+	for (int i = 0; i < tempNumOfTickets; i++) {
+		Ticket* ticket = (Ticket*)malloc(sizeof(Ticket));
+		if (ticket == NULL) {
+			return 0;
+		}
+		if (loadTicketFromBinFile(ticket, fp) == 0) {
+			free(ticket);
+			return 0;
+		}
+		if (!addTicket(ticketMaster, ticket)) {
+			free(ticket);
+			return 0;
+		}
+	}
+	return 1;
 }
