@@ -1,6 +1,5 @@
 ﻿#include "facility.h"
-#include "General.h"
-#include <stdio.h>
+
 
 int initFacility(Facility* pFacility,char* name, int minHeight, int maxHeight, Category category) {
 	if (minHeight < 0 || maxHeight < 0 || minHeight > maxHeight || category < 0 || category >= eNofTypesFacility) {

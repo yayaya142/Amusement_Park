@@ -1,5 +1,4 @@
 #include "Person.h"
-#include "General.h"
 #define MAX_HEIGHT 300
 #define MAX_AGE 120
 

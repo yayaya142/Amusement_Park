@@ -1,6 +1,6 @@
 ﻿#include "Worker.h"
 
-Person* initWorker(Department dep, char* name, double height, int age){
+Person* initWorker(eShopType dep, char* name, double height, int age){
 	Worker* pWorker;
 	Person* pBase;
 	pBase = initPerson(name, height, age);
@@ -48,8 +48,8 @@ Person* initWorkerByUser() {
 			printf("Please try again\n");
 		}
 		printf("Enter department:\n");
-		for (int i = 0; i < eNofTypes; i++) {
-			printf("%d. %s\n", i, typeTilte[i]);
+		for (int i = 0; i < eNofShopTypes; i++) {
+			printf("%d. %s\n", i, ShopTypeStr[i]);
 		}
 		scanf("%d", &dep);
 		flag=1;
@@ -73,8 +73,8 @@ int generateWorkerID() {
 	return id_temp;
 }
 
-int isValidInfoWorker(Department department) {
-	if (department < 0 || department >= eNofTypes) {
+int isValidInfoWorker(eShopType department) {
+	if (department < 0 || department >= eNofShopTypes) {
 		return 0;
 	}
 	return 1;
@@ -93,7 +93,7 @@ void printWorker(const Person* pWorker) {
 	printf("--------------------\n");
 	printPerson(pWorker);
 	printf("Worker ID: %d\n", w->WorkerId);
-	printf("Department: %s\n", typeTilte[w->department]);
+	printf("Department: %s\n", ShopTypeStr[w->department]);
 	printf("--------------------\n");
 }
 
@@ -181,7 +181,7 @@ int saveWorkerToBinFile(const Person* worker, FILE* fp){
 	//save person
 	savePersonToBinFile(worker, fp);
 	//save department
-	if (writeGeneralToBinFile(fp, &(tempWorker->department), sizeof(Department)) == 0) {
+	if (writeGeneralToBinFile(fp, &(tempWorker->department), sizeof(eShopType)) == 0) {
 		return 0;
 	}
 	//save worker id
@@ -202,8 +202,8 @@ int loadWorkerFromBinFile(Person** worker, FILE* fp){
 		return 0;
 	}
 	//load department
-	Department tempDepartment;
-	if (readGeneralFromBinFile(fp, &tempDepartment, sizeof(Department)) == 0) {
+	eShopType tempDepartment;
+	if (readGeneralFromBinFile(fp, &tempDepartment, sizeof(eShopType)) == 0) {
 		freePerson(tempPerson);
 		return 0;
 	}

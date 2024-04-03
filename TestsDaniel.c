@@ -1,14 +1,4 @@
-#include "Person.h"
-#include "Worker.h"
-#include "Guest.h"
-#include "Facility.h"
-#include "TicketMaster.h"
 #include "TestsDaniel.h"
-#include <crtdbg.h> // TODO: remove before release
-#include <assert.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 // Person
 void runPersonTests() {
@@ -161,13 +151,12 @@ void initWorkerTest() {
     // Test with valid parameters
     Person* worker = initWorker(eCoffeeShop, name, 170, 30);
     Worker* w = worker->pDerived;
-    worker->printPerson(worker);//TODO DELETE
     assert(worker != NULL);
     worker->freePerson(worker);
 
 
     // Test with invalid department
-    worker = initWorker(eNofTypes, name, 170, 30);
+    worker = initWorker(eNofShopTypes, name, 170, 30);
     assert(worker == NULL);
 
     // Test with NULL name

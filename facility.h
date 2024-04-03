@@ -1,6 +1,7 @@
 #ifndef __FACILITY_H
 #define __FACILITY_H
 
+#include <stdio.h>
 #include <crtdbg.h> // TODO: remove before release
 #include "General.h"
 #include "string.h"

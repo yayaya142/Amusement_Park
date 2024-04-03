@@ -4,12 +4,17 @@
 #include <crtdbg.h> // TODO: remove before release
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "Person.h"
+#include "Worker.h"
+#include "Guest.h"
+#include "Facility.h"
+#include "TicketMaster.h"
 
 
 
 void runAllTestsDaniel();
-
-void printingTests();
 
 void runPersonTests();
 void testComparePersonByHeight();
