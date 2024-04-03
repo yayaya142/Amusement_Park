@@ -24,9 +24,9 @@ typedef struct facility {
 int initFacility(Facility* pFacility,char* name, int minAge, int maxAge, Category category);
 void initFacilityByUser(Facility* pFacility);
 int validFacility(char* name, int minHeight, int maxHeight, Category category);
-int compareFacilitiesByCategory(const Facility* pFacility1, const Facility* pFacility2);
-void printFacility(const Facility* pFacility);
-void freeFacility(Facility* pFacility);
+int compareFacilitiesByCategory(const void* pFacility1, const void* pFacility2);
+void printFacility(const void* pFacility);
+void freeFacility(void* pFacility);
 
 // save and load functions
 int saveFacilityToTextFile(const Facility* facility, FILE* fp);

@@ -60,19 +60,25 @@ int validFacility(char* name, int minHeight, int maxHeight, Category category) {
 	return 1;
 }
 
-void printFacility(const Facility* pFacility) {
+void printFacility(const void* pFacility) {
+	Facility* facility = (Facility*)pFacility;
 	printf("----------------------------\n");
-	printf("Name: %s\nCategory: %s\nHeight Limitation:\n\t-Min Height: %d\n\t-Max Height: %d\n",pFacility->name, facilityTypeTilte[pFacility->category], pFacility->minHeight, pFacility->maxHeight);
+	printf("Name: %s\nCategory: %s\nHeight Limitation:\n\t-Min Height: %d\n\t-Max Height: %d\n",facility->name, facilityTypeTilte[facility->category], facility->minHeight, facility->maxHeight);
 	printf("----------------------------\n");
 
 }
 
 
-int compareFacilitiesByCategory(const Facility* pFacility1, const Facility* pFacility2) {
+int compareFacilitiesByCategory(const void* facility1, const void* facility2) {
+	Facility* pFacility1 = (Facility*)facility1;
+	Facility* pFacility2 = (Facility*)facility2; 
+
 	return pFacility1->category - pFacility2->category;
 }
 
-void freeFacility(Facility* pFacility) {
+void freeFacility(void* facility) {
+
+	Facility* pFacility = (Facility*)facility;
 	free(pFacility->name);
 }
 
