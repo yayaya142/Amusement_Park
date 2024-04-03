@@ -979,6 +979,8 @@ void SaveAndLoadTests() {
 	TimeSaveAndLoadBinTest();
 	ShopSaveAndLoadTextTest();
 	ShopSaveAndLoadBinTest();
+	DateSaveAndLoadTextText();
+	DateSaveAndLoadBinTest();
 }
 void WeatherSaveAndLoadTextTest() {
 	const char* fileName = "AAAWeatherTest.txt";
@@ -1162,4 +1164,51 @@ void ShopSaveAndLoadBinTest() {
 	assert(compareTime(&shop3.closeHour, &shop4.closeHour) == 0);
 	freeShop(&shop3);
 	freeShop(&shop4);
+}
+void DateSaveAndLoadTextText() {
+	Date date1;
+	const char* fileName = "AAADateTest.txt";
+
+	// Test 1: Save and load a valid date
+	initDate(&date1, 1, 1, 2025);
+	FILE* file = fopen(fileName, "w");
+
+	assert(saveDateToTextFile(&date1, file) == 1);
+	fclose(file);
+
+	// Load the date from the file
+	Date date2;
+	file = fopen(fileName, "r");
+	assert(loadDateFromTextFile(&date2, file) == 1);
+	fclose(file);
+
+	// Check that the loaded date is the same as the saved date
+	assert(compareDates(date1, date2) == 0);
+	assert(date1.day == date2.day);
+	assert(date1.month == date2.month);
+	assert(date1.year == date2.year);
+}
+void DateSaveAndLoadBinTest() {
+	Date date1;
+	const char* fileName = "AAADateTest.bin";
+
+	// Test 1: Save and load a valid date
+	initDate(&date1, 1, 1, 2025);
+	FILE* file = fopen(fileName, "wb");
+
+	assert(saveDateToBinFile(&date1, file) == 1);
+	fclose(file);
+
+	// Load the date from the file
+	Date date2;
+	file = fopen(fileName, "rb");
+	assert(loadDateFromBinFile(&date2, file) == 1);
+	fclose(file);
+
+	// Check that the loaded date is the same as the saved date
+	assert(compareDates(date1, date2) == 0);
+	assert(date1.day == date2.day);
+	assert(date1.month == date2.month);
+	assert(date1.year == date2.year);
+
 }

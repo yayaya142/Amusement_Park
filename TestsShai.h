@@ -69,6 +69,8 @@ void TimeSaveAndLoadTextTest();
 void TimeSaveAndLoadBinTest();
 void ShopSaveAndLoadTextTest();
 void ShopSaveAndLoadBinTest();
+void DateSaveAndLoadTextText();
+void DateSaveAndLoadBinTest();
 
 
 #endif 
