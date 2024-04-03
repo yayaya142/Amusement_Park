@@ -8,7 +8,6 @@
 // Output:	if failed, the function assert failed will pop up a message, otherwise, a message that all tests passed will be printed
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//
 void runAllTestsShai() {
 	printf("---- Running Shai's tests....----\n");
 	//initByUserManualsTest(); // Manual
@@ -20,6 +19,7 @@ void runAllTestsShai() {
 	TicketMasterTests();
 	generalLibaryTests();
 	SaveAndLoadTests();
+	LunaParkTests();
 	printf("---- All Shai's tests passed ----\n");
 }
 // Date tests
@@ -1483,4 +1483,77 @@ void TicketMasterSaveAndLoadBinTest() {
 	// free
 	freeTicketMaster(&ticketMaster);
 	freeTicketMaster(&ticketMaster2);
+}
+// LunaPark tests
+void LunaParkTests() {
+	initLunaParkTest();
+	addFacilityToLunaParkTest();
+}
+void initLunaParkTest() {
+	LunaPark lunaPark;
+	char* name = (char*)malloc(19 * sizeof(char));
+	strcpy(name, "ShaiAndDanielPark");
+
+	initLunaPark(&lunaPark, name);
+	assert(lunaPark.numOfShops == 0);
+	assert(lunaPark.openTime.hour == DEFALUT_OPEN_HOUR);
+	assert(lunaPark.openTime.minute == DEFALUT_OPEN_MINUTE);
+	assert(lunaPark.closeTime.hour == DEFALUT_CLOSE_HOUR);
+	assert(lunaPark.closeTime.minute == DEFALUT_CLOSE_MINUTE);
+	assert(strcmp(lunaPark.name, name) == 0);
+	assert(lunaPark.weather.condition == DEFALUT_WEATHER);
+	assert(lunaPark.weather.temp == DEFALUT_TEMPERATURE);
+	assert(lunaPark.numOfWorkers == 0);
+	freeLunaPark(&lunaPark);
+
+}
+void addFacilityToLunaParkTest() {
+	LunaPark lunaPark;
+	char* name = (char*)malloc(18 * sizeof(char));
+	strcpy(name, "ShaiAndDanielPark");
+
+	initLunaPark(&lunaPark, name);
+
+	Facility* facility1 = (Facility*)malloc(sizeof(Facility));
+	Facility* facility2 = (Facility*)malloc(sizeof(Facility));
+	Facility* facility3 = (Facility*)malloc(sizeof(Facility));
+	Facility* facility4 = (Facility*)malloc(sizeof(Facility));
+
+	// create names for facilities
+	char* name1 = (char*)malloc(5 * sizeof(char));
+	strcpy(name1, "fOne");
+	char* name2 = (char*)malloc(5 * sizeof(char));
+	strcpy(name2, "fTwo");
+	char* name3 = (char*)malloc(7 * sizeof(char));
+	strcpy(name3, "fThree");
+	char* name4 = (char*)malloc(6 * sizeof(char));
+	strcpy(name4, "fFour");
+
+	// init facilities
+	initFacility(facility1, name1, 1, 70, eAdultFacility);
+	initFacility(facility2, name2, 2, 80, eChildrenFacility);
+	initFacility(facility3, name3, 3, 90, eExtremeFacility);
+	initFacility(facility4, name4, 4, 100, eSuper_ExtremesFacility);
+
+	// add facilities to luna park
+	assert(addFacilityToLunaPark(&lunaPark, facility1) == 1);
+	assert(addFacilityToLunaPark(&lunaPark, facility2) == 1);
+	assert(addFacilityToLunaPark(&lunaPark, facility3) == 1);
+	assert(addFacilityToLunaPark(&lunaPark, facility4) == 1);
+
+	// check that the facilities were added
+	int facilityCount = L_count(&lunaPark.facilities);
+	assert(facilityCount == 4);
+
+	// check that the facilities are the same
+	NODE* node = lunaPark.facilities.head.next;
+	assert(node->key == facility4);
+	node = node->next;
+	assert(node->key == facility3);
+	node = node->next;
+	assert(node->key == facility2);
+	node = node->next;
+	assert(node->key == facility1);
+
+	freeLunaPark(&lunaPark);
 }

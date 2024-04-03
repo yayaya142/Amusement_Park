@@ -14,7 +14,8 @@
 #include "Shop.h"
 #include "Ticket.h"
 #include "TicketMaster.h"
-
+#include "LunaPark.h"
+#include "facility.h"
 void runAllTestsShai();
 
 // Date tests
@@ -81,6 +82,9 @@ void TicketSaveAndLoadTextTest();
 void TicketSaveAndLoadBinTest();
 void TicketMasterSaveAndLoadTextTest();
 void TicketMasterSaveAndLoadBinTest();
-
+// LunaPark tests
+void LunaParkTests();
+void initLunaParkTest();
+void addFacilityToLunaParkTest();
 #endif 
 

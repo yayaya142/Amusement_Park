@@ -25,6 +25,7 @@ int isValidWeather(eWeatherType condition, int temp);
 void printWeather(const Weather* weather);
 int compareWeatherByTemp(const Weather* weather1, const Weather* weather2);
 void initWeatherByUser(Weather* weather);
+void printWeatherForcastTemp(int temp);
 // save and load functions
 int saveWeatherToTextFile(const Weather* weather, FILE* fp);
 int loadWeatherFromTextFile(Weather* weather, FILE* fp);

@@ -53,6 +53,30 @@ void initWeatherByUser(Weather* weather) {
 	} while (!initWeather(weather, condition - 1, temp));
 }
 
+void printWeatherForcastTemp(int temp) {
+	if (temp < MIN_TEMP || temp > MAX_TEMP) {
+		printf("Invalid temperature");
+		return;
+	}
+
+	if (temp < 0) {
+		printf("the temp is %d, it's Freezing outside join the snowball fight!\n", temp);
+	}
+	if (temp >= 0 && temp <= 10) {
+		printf("the temp is %d, It's cold outside, don't forget Your coat!\n", temp);
+	}
+	if (temp > 10 && temp <= 20) {
+		printf("the temp is %d, It's chilly outside for all the adventurers\n", temp);
+	}
+	if (temp > 20 && temp <= 30) {
+		printf("the temp is %d It's a fine day, go have fun!\n", temp);
+	}
+	if (temp > 30) {
+		printf("the temp is %d, Very hot day drink alot of water", temp);
+	}
+
+}
+
 // ---- save functions ----
 int saveWeatherToTextFile(const Weather* weather, FILE* fp) {
 	IS_FILE_NULL(fp);
