@@ -29,5 +29,10 @@ int isValidInfoWorker(Department department);
 int generateWorkerID();
 void printWorker(const Person* worker);
 
+// save and load functions
+int saveWorkerToTextFile(const Person* worker, FILE* fp);
+int loadWorkerFromTextFile(Person** worker, FILE* fp);
+int saveWorkerToBinFile(const Person* worker, FILE* fp);
+int loadWorkerFromBinFile(Person** worker, FILE* fp);
 
 #endif

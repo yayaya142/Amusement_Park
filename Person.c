@@ -23,6 +23,10 @@ Person* initPerson(char* name, double height, int age) {
 	person->printPerson = printPerson;
 	person->freePerson = freePerson;
 	person->comparePersonByHeight = comparePersonByHeight;
+	person->loadPersonFromTextFile = loadPersonFromTextFile;
+	person->loadPersonFromBinFile = loadPersonFromBinFile;
+	person->savePersonToTextFile = savePersonToTextFile;
+	person->savePersonToBinFile = savePersonToBinFile;
 
 
 	return person;
@@ -104,15 +108,6 @@ void freePerson(Person* p) {
 		free(p);
 	}
 }
-//void* pDerived;
-//char* name;
-//int age;
-//float height;
-//---------function pointers (interfaces)-------
-//fptrinitPersonByUser initPersonByUser;
-//fptrPrintPerson printPerson;
-//fptrFreePerson freePerson;
-//fptrComparePersonByHeight comparePersonByHeight;
 
 // save and load functions
 int savePersonToTextFile(const Person* person, FILE* fp){

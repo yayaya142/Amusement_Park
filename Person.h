@@ -14,6 +14,10 @@ typedef void (*fptrinitPersonByUser)(Person*);
 typedef void (*fptrPrintPerson)(const Person*);
 typedef int (*fptrComparePersonByHeight)(const Person*, const Person*);
 typedef void (*fptrFreePerson)(Person*);
+typedef void (*fptrSavePersonToTextFile)(const Person*, FILE*);
+typedef void (*fptrLoadPersonFromTextFile)(Person**, FILE*);
+typedef void (*fptrSavePersonToBinFile)(const Person*, FILE*);
+typedef void (*fptrLoadPersonFromBinFile)(Person**, FILE*);
 
 
 typedef struct _Person {  
@@ -21,11 +25,16 @@ typedef struct _Person {
 	char* name;
 	int age;
 	double height;
+
 	//function pointers (interfaces)
 	fptrinitPersonByUser initPersonByUser;
 	fptrPrintPerson printPerson;
 	fptrFreePerson freePerson;
 	fptrComparePersonByHeight comparePersonByHeight;
+	fptrSavePersonToTextFile savePersonToTextFile;
+	fptrLoadPersonFromTextFile loadPersonFromTextFile;
+	fptrSavePersonToBinFile savePersonToBinFile;
+	fptrLoadPersonFromBinFile loadPersonFromBinFile;
 } Person;
 
 Person* initPerson(char* name, double height, int age);//constructor

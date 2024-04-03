@@ -29,4 +29,6 @@ void FacilitySaveAndLoadText();
 void FacilitySaveAndLoadBin();
 void PersonSaveAndLoadText();
 void PersonSaveAndLoadBin();
+void WorkerSaveAndLoadText();
+void WorkerSaveAndLoadBin();
 #endif

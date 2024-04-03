@@ -28,7 +28,10 @@ Person* initWorker(Department dep, char* name, double height, int age){
 	//change base class interfacese
 	pBase->freePerson = freeWorker;
 	pBase->printPerson = printWorker;
-
+	pBase->loadPersonFromBinFile = loadWorkerFromBinFile;
+	pBase->loadPersonFromTextFile = loadWorkerFromTextFile;
+	pBase->savePersonToBinFile = saveWorkerToBinFile;
+	pBase->savePersonToTextFile = saveWorkerToTextFile;
     return pBase;
 }
 
@@ -98,4 +101,126 @@ void freeWorker(Person* worker) {
 	free(w);
 	freePerson(worker);
 	
+}
+
+int saveWorkerToTextFile(const Person* worker, FILE* fp){
+	if(fp == NULL || worker == NULL){
+		return 0;
+	}
+	//cast to worker
+	Worker* tempWorker = worker->pDerived;
+
+	if(isValidInfoWorker(tempWorker->department) == 0){
+		return 0;
+	}
+	//save person
+	savePersonToTextFile(worker, fp);
+	//save department
+	if (writeIntToTextFile(fp, tempWorker->department) == 0) {
+		return 0;
+	}
+	//save worker id
+	if(writeIntToTextFile(fp, tempWorker->WorkerId) == 0){
+		return 0;
+	}
+	return 1;
+}
+int loadWorkerFromTextFile(Person** worker, FILE* fp){
+	if(fp == NULL){
+		return 0;
+	}
+	Person* tempPerson = NULL;
+
+	//load person
+	if(loadPersonFromTextFile(&tempPerson, fp) == 0){
+		return 0;
+	}
+	//load department
+	int tempDepartment;
+	if (readIntFromTextFile(fp, &tempDepartment) == 0) {
+		freePerson(tempPerson);
+		return 0;
+	}
+	//copy person name to worker
+	char * personName = (char*)malloc(strlen(tempPerson->name) + 1);
+	strcpy(personName, tempPerson->name);
+
+	//init worker
+	*worker = initWorker(tempDepartment, personName, tempPerson->height, tempPerson->age);
+	freePerson(tempPerson);
+	if (*worker == NULL) {
+		free(personName);
+		return 0;
+	}
+
+	//load worker id
+	int tempId;
+	if (readIntFromTextFile(fp, &tempId) == 0) {
+		return 0;
+	}
+	Worker* temp = (*worker)->pDerived;
+	temp->WorkerId = tempId;
+	return 1;
+}
+
+int saveWorkerToBinFile(const Person* worker, FILE* fp){
+	if(fp == NULL || worker == NULL){
+		return 0;
+	}
+	//cast to worker
+	Worker* tempWorker = worker->pDerived;
+
+	if(isValidInfoWorker(tempWorker->department) == 0){
+		return 0;
+	}
+	//save person
+	savePersonToBinFile(worker, fp);
+	//save department
+	if (writeGeneralToBinFile(fp, &(tempWorker->department), sizeof(Department)) == 0) {
+		return 0;
+	}
+	//save worker id
+	if (writeGeneralToBinFile(fp, &(tempWorker->WorkerId), sizeof(int)) == 0) {
+		return 0;
+	}
+	return 1;
+
+
+}
+int loadWorkerFromBinFile(Person** worker, FILE* fp){
+	if(fp == NULL){
+		return 0;
+	}
+	Person* tempPerson = NULL;
+
+	//load person
+	if(loadPersonFromBinFile(&tempPerson, fp) == 0){
+		return 0;
+	}
+	//load department
+	Department tempDepartment;
+	if (readGeneralFromBinFile(fp, &tempDepartment, sizeof(Department)) == 0) {
+		freePerson(tempPerson);
+		return 0;
+	}
+	//copy person name to worker
+	char * personName = (char*)malloc(strlen(tempPerson->name) + 1);
+	strcpy(personName, tempPerson->name);
+
+	//init worker
+	*worker = initWorker(tempDepartment, personName, tempPerson->height, tempPerson->age);
+
+	freePerson(tempPerson);
+	if(*worker == NULL){
+		free(personName);
+		return 0;
+	}
+	//load worker id
+	int tempId;
+	if (readGeneralFromBinFile(fp, &tempId, sizeof(int)) == 0) {
+		return 0;
+	}
+	Worker* temp = (*worker)->pDerived;
+	temp->WorkerId = tempId;
+	return 1;
 }

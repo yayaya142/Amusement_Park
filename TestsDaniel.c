@@ -37,6 +37,8 @@ void runAllSaveAndLoadTests() {
     FacilitySaveAndLoadBin();
     PersonSaveAndLoadText();
     PersonSaveAndLoadBin();
+    WorkerSaveAndLoadText();
+    WorkerSaveAndLoadBin();
 }
 
 //main test
@@ -383,3 +385,62 @@ void PersonSaveAndLoadBin() {
 
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+void WorkerSaveAndLoadText(){
+	const char* fileName = "AAAWorkerTest.txt";
+	Person* worker1;
+	char* tempName = (char*)malloc(7 * sizeof(char));
+	strcpy(tempName, "Worker");
+	worker1 = initWorker(eCoffeeShop, tempName, 170, 30);
+	// Save the worker to a file
+	FILE* file = fopen(fileName, "w");
+	assert(saveWorkerToTextFile(worker1, file) == 1);
+	fclose(file);
+
+	Person* worker2 = NULL;
+	file = fopen(fileName, "r");
+	assert(loadWorkerFromTextFile(&worker2, file) == 1);
+	fclose(file);
+
+	// Check if the loaded worker is the same as the saved worker
+	assert(strcmp(worker1->name, worker2->name) == 0);
+	assert(worker1->height == worker2->height);
+	assert(worker1->age == worker2->age);
+	Worker* w1 = worker1->pDerived;
+	Worker* w2 = worker2->pDerived;
+	assert(w1->department == w2->department);
+    assert(w1->WorkerId == w2->WorkerId);
+
+
+	worker1->freePerson(worker1);
+	worker2->freePerson(worker2);
+
+
+}
+void WorkerSaveAndLoadBin(){
+    const char* fileName = "AAAWorkerTest.bin";
+	Person* worker1;
+	char* tempName = (char*)malloc(8 * sizeof(char));
+	strcpy(tempName, "Worker");
+	worker1 = initWorker(eCoffeeShop, tempName, 170, 30);
+	// Save the worker to a file
+	FILE* file = fopen(fileName, "wb");
+	assert(saveWorkerToBinFile(worker1, file) == 1);
+	fclose(file);
+
+	Person* worker2 = NULL;
+	file = fopen(fileName, "rb");
+	assert(loadWorkerFromBinFile(&worker2, file) == 1);
+	fclose(file);
+
+	// Check if the loaded worker is the same as the saved worker
+	assert(strcmp(worker1->name, worker2->name) == 0);
+	assert(worker1->height == worker2->height);
+	assert(worker1->age == worker2->age);
+	Worker* w1 = worker1->pDerived;
+	Worker* w2 = worker2->pDerived;
+	assert(w1->department == w2->department);
+    assert(w1->WorkerId == w2->WorkerId);
+
+	worker1->freePerson(worker1);
+	worker2->freePerson(worker2);
+}
