@@ -110,11 +110,7 @@ void initTicketByUser(Ticket* ticket) {
 
 	} while (!initTicket(ticket, guestType - 1, date));
 }
-//char id[ID_TICKET_LEN + 1]; // + 1 for null terminator
-//eGuestType guestType;
-//double price;
-//int isUsed;
-//Date dateOfVisit;
+
 // save and load functions
 int saveTicketToTextFile(const Ticket* ticket, FILE* fp) {
 	if (fp == NULL) {
@@ -132,7 +128,7 @@ int saveTicketToTextFile(const Ticket* ticket, FILE* fp) {
 		return 0;
 	}
 	// write the price to the file
-	if (fprintf(fp, "%f\n", ticket->price) < 0) {
+	if (writeDoubleToTextFile(fp, ticket->price) == 0) {
 		return 0;
 	}
 	// write the isUsed to the file
@@ -166,7 +162,7 @@ int loadTicketFromTextFile(Ticket* ticket, FILE* fp) {
 		return 0;
 	}
 	// read the price from the file
-	if (fscanf(fp, "%lf", &price) != 1) {
+	if (readDoubleFromTextFile(fp, &price) == 0) {
 		return 0;
 	}
 	// read the isUsed from the file

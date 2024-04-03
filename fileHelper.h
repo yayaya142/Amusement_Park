@@ -13,8 +13,10 @@
 
 int writeStringToTextFile(FILE* file, const char* str);
 int writeIntToTextFile(FILE* file, int num);
+int writeDoubleToTextFile(FILE* file, double num);
 int writeStringTobinFile(FILE* file, const char* str);
 int readIntFromTextFile(FILE* file, int* num);
+int readDoubleFromTextFile(FILE* file, double* num);
 char* readStringFromTextFile(FILE* file, char* buffer, int size);
 char* readStringFromBinFile(FILE* file);
 int writeGeneralToBinFile(FILE* file, void* fileType, size_t sizeOfElement);

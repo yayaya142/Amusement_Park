@@ -29,6 +29,39 @@ int writeIntToTextFile(FILE* file, int num) {
 	fprintf(file, "%d\n", num);
 	return 1;
 }
+/////////////////////////////////////////////////////////////////
+// WriteDoubleToTextFile
+// Aim: To write double to text file
+// Input: file pointer, double to write
+// Output: 1 if succeeded
+/////////////////////////////////////////////////////////////////
+int writeDoubleToTextFile(FILE* file, double* num) {
+	if (!file) {
+		return 0;
+	}
+	if (fprintf(file, "%f\n", num) < 0) {
+		return 0;
+	}
+}
+
+
+/////////////////////////////////////////////////////////////////
+// readDoubleFromTextFile
+// Aim: To read double from text file
+// Input: file pointer
+// Output: double read from file
+/////////////////////////////////////////////////////////////////
+int readDoubleFromTextFile(FILE* file, double* num) {
+	if (!file) {
+		return 0;
+	}
+	if (fscanf(file, "%lf", &num) != 1) {
+		return 0;
+	}
+	return 1;
+}
+
+
 
 
 /////////////////////////////////////////////////////////////////
