@@ -36,6 +36,7 @@ typedef struct {
 	Shop* shops;
 	int numOfShops;
 	int todayVisitors;
+	// TODO NEED TO ADD GUEST
 } LunaPark;
 
 
@@ -44,8 +45,15 @@ int initLunaParkByUser(LunaPark* lunaPark); //done
 void printLunaParkMenu(const LunaPark* lunaPark); //done
 void printLunaParkInfo(const LunaPark* lunaPark); //done
 void freeLunaPark(LunaPark* lunaPark); //done
-int addFacilityToLunaPark(LunaPark* lunaPark, Facility* facility);
-void addFacilityToLunaParkByUser(LunaPark* lunaPark);
+int addFacilityToLunaPark(LunaPark* lunaPark, Facility* facility); // done
+void addFacilityToLunaParkByUser(LunaPark* lunaPark); // done
+int addWorkerToLunaPark(LunaPark* lunaPark, Person* worker);
+void addWorkerToLunaParkByUser(LunaPark* lunaPark);
+int addShopToLunaPark(LunaPark* lunaPark, Shop* shop); // need to do with no malloc
+void addShopToLunaParkByUser(LunaPark* lunaPark);
+int changeLunaParkTimeByUser(LunaPark* lunaPark);
+int changeLunaParkWeatherByUser(LunaPark* lunaPark);
+
 
 // save and load functions
 int saveLunaParkToTextFile(const LunaPark* lunaPark, const char* fileName);

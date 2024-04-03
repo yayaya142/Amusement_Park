@@ -75,11 +75,7 @@ void printLunaParkInfo(const LunaPark* lunaPark) {
 	}
 
 	printf("Number of Shops: %d\n", lunaPark->numOfShops);
-	for (int i = 0; i < lunaPark->numOfShops; i++)
-	{
-		printShop(&lunaPark->shops[i]);
-		printf("\n");
-	}
+	generalArrayFunction((void*)&lunaPark->shops, lunaPark->numOfShops, sizeof(Shop), (void*)printShop); // TODO need to check
 
 	int numOfFacilities = L_count(&lunaPark->facilities);
 	printf("Number of Facilities: %d\n", numOfFacilities);
@@ -142,10 +138,8 @@ void freeLunaPark(LunaPark* lunaPark) {
 	//freeTicketMaster(lunaPark->ticketMasters);
 
 	//// free shops
-	//for (int i = 0; i < lunaPark->numOfShops; i++){
-	//	freeShop(lunaPark->shops[i]);
-	//	free(lunaPark->shops[i]);
-	//}
+	generalArrayFunction((void*)&lunaPark->shops, lunaPark->numOfShops, sizeof(Shop), (void*)freeShop); // TODO need to check
+
 
 
 
@@ -177,6 +171,67 @@ void addFacilityToLunaParkByUser(LunaPark* lunaPark) {
 	initFacilityByUser(facility);
 	printFacility(facility);
 	addFacilityToLunaPark(lunaPark, facility);
+}
+
+
+
+int addShopToLunaPark(LunaPark* lunaPark, Shop* shop) {}
+void addShopToLunaParkByUser(LunaPark* lunaPark) {}
+int changeLunaParkTimeByUser(LunaPark* lunaPark) {
+	if (lunaPark == NULL) {
+		return 0;
+	}
+
+	int userOption = 0;
+	Time tempOpenTime = lunaPark->openTime;
+	Time tempCloseTime = lunaPark->closeTime;
+	int flag = 0;
+	while (userOption != 3) {
+		printf("Please choose an option:\n");
+		printf("1. Change Open Time\n");
+		printf("2. Change Close Time\n");
+		printf("3. Exit\n");
+		scanf("%d", &userOption);
+		switch (userOption)
+		{
+		case 1:
+			initTimeByUser(&tempOpenTime);
+			flag = 1;
+			break;
+		case 2:
+			initTimeByUser(&tempCloseTime);
+			flag = 1;
+			break;
+		case 3:
+			break;
+		default:
+			printf("Invalid option, please try again\n");
+			break;
+		}
+
+		if (flag > 0 && compareTime(&tempOpenTime, &tempCloseTime) == 1) {
+			printf("Open Time need to be before Close Time\n");
+			flag = 0; // reset flag to allow user to re-enter times
+		}
+	}
+
+	if (flag > 0) {
+		// If valid times were entered, update the LunaPark times
+		lunaPark->openTime = tempOpenTime;
+		lunaPark->closeTime = tempCloseTime;
+	}
+
+	return 1;
+}
+int changeLunaParkWeatherByUser(LunaPark* lunaPark) {
+	if (lunaPark == NULL) {
+		return 0;
+	}
+	Weather tempWeather;
+	initWeatherByUser(&tempWeather);
+	lunaPark->weather = tempWeather;
+
+	return 1;
 }
 
 
