@@ -4,6 +4,7 @@
 
 #include "Person.h"
 #include "General.h"
+#include "fileHelper.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,7 +22,7 @@ typedef struct _Worker{
 	Department department;	
 } Worker;
 
-Person* initWorker(Department dep, char* name, float height, int age); // constructor
+Person* initWorker(Department dep, char* name, double height, int age); // constructor
 void freeWorker(Person* worker); // destructor
 Person* initWorkerByUser();
 int isValidInfoWorker(Department department);

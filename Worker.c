@@ -1,6 +1,6 @@
 ﻿#include "Worker.h"
 
-Person* initWorker(Department dep, char* name, float height, int age){
+Person* initWorker(Department dep, char* name, double height, int age){
 	Worker* pWorker;
 	Person* pBase;
 	pBase = initPerson(name, height, age);

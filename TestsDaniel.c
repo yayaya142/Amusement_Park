@@ -8,6 +8,49 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
+
+// Person
+void runPersonTests() {
+    testInitPerson();
+    testComparePersonByHeight();
+}
+
+// Worker
+void runWorkerTests() {
+    initWorkerTest();
+}
+// Guest
+void runGuestTests() {
+    initGuestTests();
+}
+// Facility
+void runFacilityTests() {
+    testInitFacility();
+    testCompareFacilities();
+}
+
+
+//Tests for load & save from file (text\bin)
+void runAllSaveAndLoadTests() {
+    FacilitySaveAndLoadText();
+    FacilitySaveAndLoadBin();
+    PersonSaveAndLoadText();
+    PersonSaveAndLoadBin();
+}
+
+//main test
+void runAllTestsDaniel() {
+    printf("------Running Daniel tests...--------\n");
+    runPersonTests();
+    runWorkerTests();
+    runFacilityTests();
+    runGuestTests();
+    runAllSaveAndLoadTests();
+    printf("---------All tests passed!----------\n");
+}
+
+
 
 // Test 1:check initPerson functionality with valid and invalid inputs
 void testInitPerson() {
@@ -115,8 +158,6 @@ void initWorkerTest() {
     // Test with valid parameters
     Person* worker = initWorker(eCoffeeShop, name, 170, 30);
     Worker* w = worker->pDerived;
-    printf("inside worker----------------------------\n");
-    worker->printPerson(worker);
     assert(worker != NULL);
     worker->freePerson(worker);
 
@@ -148,8 +189,6 @@ void initWorkerTest() {
     // Test with negative age
     worker = initWorker(eCoffeeShop, name, 170, -30);
     assert(worker == NULL);
-   //Worker* w = worker->pDerived;
-   // w->freeWorker(worker);
     free(name);
 }
 
@@ -247,7 +286,6 @@ void FacilitySaveAndLoadText() {
     char* tempName = (char*)malloc(10 * sizeof(char));
     strcpy(tempName, "Facility");
     initFacility(&facility1, tempName, 100, 200, eChildrenFacility);
-    printFacility(&facility1);
     FILE* file = fopen(fileName, "w");
     assert(saveFacilityToTextFile(&facility1, file) == 1);
     fclose(file);
@@ -273,7 +311,6 @@ void FacilitySaveAndLoadBin() {
 	strcpy(tempName, "Facilite");
 
 	initFacility(&facility1, tempName, 100, 200, eChildrenFacility);
-	printFacility(&facility1);
 	FILE* file = fopen(fileName, "wb");
 	assert(saveFacilityToBinFile(&facility1, file) == 1);
 	fclose(file);
@@ -295,41 +332,54 @@ void FacilitySaveAndLoadBin() {
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+void PersonSaveAndLoadText() {
+    const char* fileName = "AAAPersonTest.txt";
+    Person *person1;
+    char* tempName = (char*)malloc(8 * sizeof(char));
+    strcpy(tempName, "Person");
+    person1 = initPerson(tempName, 170, 30);
+    // Save the person to a file
+    FILE* file = fopen(fileName, "w");
+    assert(savePersonToTextFile(person1, file) == 1);
+    fclose(file);
 
-// Person
-void runPersonTests() {
-    testInitPerson();
-    testComparePersonByHeight();
-}
+    Person* person2 = NULL;
+    file = fopen(fileName, "r");
+    assert(loadPersonFromTextFile(&person2, file) == 1);
+    fclose(file);
 
-// Worker
-void runWorkerTests() {
-	initWorkerTest();
-}
-// Guest
-void runGuestTests() {
-    initGuestTests();
-}
-// Facility
-void runFacilityTests() {
-    testInitFacility();
-    testCompareFacilities();
-}
+    // Check if the loaded person is the same as the saved person
+    assert(strcmp(person1->name, person2->name) == 0);
+    assert(person1->height == person2->height);
+    assert(person1->age == person2->age);
+     
 
-
-//Tests for load & save from file (text\bin)
-void runAllSaveAndLoadTests() {
-     FacilitySaveAndLoadText();
-     FacilitySaveAndLoadBin();
+    freePerson(person1);
+    freePerson(person2);
 }
+void PersonSaveAndLoadBin() {
+    const char* fileName = "AAAPersonTest.bin";
+	Person* person1;
+	char* tempName = (char*)malloc(8 * sizeof(char));
+	strcpy(tempName, "Person");
+	person1 = initPerson(tempName, 170, 30);
+	// Save the person to a file
+	FILE* file = fopen(fileName, "wb");
+	assert(savePersonToBinFile(person1, file) == 1);
+	fclose(file);
 
-//main test
-void runAllTestsDaniel() {
-    printf("------Running Daniel tests...--------\n");
-    runPersonTests();
-    runWorkerTests();
-    runFacilityTests();
-    runGuestTests();
-    runAllSaveAndLoadTests();
-    printf("---------All tests passed!----------\n");
+	Person* person2 = NULL;
+	file = fopen(fileName, "rb");
+	assert(loadPersonFromBinFile(&person2, file) == 1);
+	fclose(file);
+
+	// Check if the loaded person is the same as the saved person
+	assert(strcmp(person1->name, person2->name) == 0);
+	assert(person1->height == person2->height);
+	assert(person1->age == person2->age);
+
+	freePerson(person1);
+	freePerson(person2);
+
 }
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

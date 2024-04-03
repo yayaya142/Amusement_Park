@@ -1,6 +1,6 @@
 #include "Guest.h"
 //
-Person* initGuest(char* name, float height, int age){
+Person* initGuest(char* name, double height, int age){
 	Guest* pGuest;
 	Person* pBase;
 	pBase = initPerson(name, height, age);
