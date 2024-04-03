@@ -585,6 +585,7 @@ void TicketMasterTests() {
 	sortTicketsByIDTest();
 	sortTicketsByDateTest();
 	sortTicketsByGuestTypeTest();
+	findTicketByIDTest();
 	//sortTicketsUserTestManual(); // manual test off by default
 	//buyTicketTestManual(); // manual test off by default
 	//findTicketByUserTestManual(); // manual test off by default
@@ -899,6 +900,75 @@ void findTicketByUserTestManual() {
 	freeTicketMaster(&ticketMaster);
 
 }
+void findTicketByIDTest() {
+	TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket5 = (Ticket*)malloc(sizeof(Ticket));
+
+	Date date1, date2, date3, date4, date5;
+	initDate(&date1, 1, 1, 2025);
+	initDate(&date2, 2, 1, 2025);
+	initDate(&date3, 3, 1, 2025);
+	initDate(&date4, 4, 1, 2025);
+	initDate(&date5, 5, 1, 2025);
+
+	initTicket(ticket1, eChild, date1);
+	initTicket(ticket2, eAdult, date2);
+	initTicket(ticket3, eStudent, date3);
+	initTicket(ticket4, eStudent, date4);
+	initTicket(ticket5, eAdult, date5);
+
+	addTicket(&ticketMaster, ticket1);
+	addTicket(&ticketMaster, ticket2);
+	addTicket(&ticketMaster, ticket3);
+	addTicket(&ticketMaster, ticket4);
+	addTicket(&ticketMaster, ticket5);
+
+	// Test 1: Find ticket by ID
+	Ticket* foundTicket1 = findTicketByID(&ticketMaster, ticket1->id);
+	assert(compareTicketsByID(&foundTicket1, &ticket1) == 0);
+	assert(foundTicket1 == ticket1);
+	assert(foundTicket1->price == ticket1->price);
+
+	// Test 2: Find ticket by ID
+	Ticket* foundTicket2 = findTicketByID(&ticketMaster, ticket2->id);
+	assert(compareTicketsByID(&foundTicket2, &ticket2) == 0);
+	assert(foundTicket2 == ticket2);
+	assert(foundTicket2->price == ticket2->price);
+
+	// Test 3: Find ticket by ID
+	Ticket* foundTicket3 = findTicketByID(&ticketMaster, ticket3->id);
+	assert(compareTicketsByID(&foundTicket3, &ticket3) == 0);
+	assert(foundTicket3 == ticket3);
+	assert(foundTicket3->price == ticket3->price);
+
+	// Test 4: Find ticket by ID
+	Ticket* foundTicket4 = findTicketByID(&ticketMaster, ticket4->id);
+	assert(compareTicketsByID(&foundTicket4, &ticket4) == 0);
+	assert(foundTicket4 == ticket4);
+	assert(foundTicket4->price == ticket4->price);
+
+
+	// Test 5: Find ticket by ID
+	Ticket* foundTicket5 = findTicketByID(&ticketMaster, ticket5->id);
+	assert(compareTicketsByID(&foundTicket5, &ticket5) == 0);
+	assert(foundTicket5 == ticket5);
+	assert(foundTicket5->price == ticket5->price);
+
+
+	// get invalid ticket
+	Ticket* foundTicket6 = findTicketByID(&ticketMaster, "AAAAAAAAAAA6");
+	assert(foundTicket6 == NULL);
+
+
+	// free
+	freeTicketMaster(&ticketMaster);
+}
 // initializes By User Manuals Tests
 void initByUserManualsTest() {
 	//initDateByUserManualsTest();
@@ -1067,6 +1137,8 @@ void TimeSaveAndLoadBinTest() {
 
 	// Check that the loaded time is the same as the saved time
 	assert(compareTime(&time1, &time2) == 0);
+	assert(time1.hour == time2.hour);
+	assert(time1.minute == time2.minute);
 }
 void ShopSaveAndLoadTextTest() {
 	Shop shop1;

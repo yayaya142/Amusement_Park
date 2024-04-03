@@ -197,6 +197,36 @@ Ticket* findTicketByUser(const TicketMaster* ticketMaster) {
 	return found;
 }
 
+Ticket* findTicketByID(const TicketMaster* ticketMaster, char* id) {
+	if (ticketMaster == NULL || ticketMaster->tickets == NULL || ticketMaster->numOfTickets == 0) {
+		return NULL;
+	}
+
+
+	Ticket* toSearch = (Ticket*)malloc(sizeof(Ticket));
+	Ticket** foundPtr = NULL;
+	Ticket* found = NULL;
+
+	if (toSearch == NULL) {
+		printf("Memory allocation failed\n");
+		return NULL;
+	}
+
+	strcpy(toSearch->id, id);
+
+	sortTicketsByID(ticketMaster);
+	foundPtr = (Ticket**)bsearch(&toSearch, ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket*), compareTicketsByID);
+
+	// If foundPtr is not NULL, the ticket was found
+	if (foundPtr != NULL) {
+		found = *foundPtr;
+	}
+
+	free(toSearch);
+	return found;
+}
+
+
 
 Ticket* buyTicket(TicketMaster* ticketMaster) {
 
