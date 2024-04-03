@@ -23,5 +23,11 @@ void freeGuest(Person* guest); // destructor
 Person* initGuestByUser(TicketMaster* tMaster);
 void printGuest(const Person* guest);
 
+// save and load functions
+int saveGuestToTextFile(const Person* guest, FILE* fp);
+int loadGuestFromTextFile(Person** guest, TicketMaster* ticketMaster, FILE* fp);
+int saveGuestToBinFile(const Person* guest, FILE* fp);
+int loadGuestFromBinFile(Person** guest, TicketMaster* ticketMaster, FILE* fp);
+
 
 #endif

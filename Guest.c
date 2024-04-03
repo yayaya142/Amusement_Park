@@ -19,6 +19,10 @@ Person* initGuest(char* name, double height, int age){
 	//change class interfaces
 	pBase->freePerson = freeGuest;
 	pBase->printPerson = printGuest;
+	pBase->loadPersonFromBinFile = loadGuestFromBinFile;
+	pBase->loadPersonFromTextFile = loadGuestFromTextFile;
+	pBase->savePersonToBinFile = saveGuestToBinFile;
+	pBase->savePersonToTextFile = saveGuestToTextFile;
 
 	return pBase;
 }
@@ -57,4 +61,110 @@ void freeGuest(Person* pguest) {
 	guest = pguest->pDerived;
 	free(guest);
 	freePerson(pguest);	
+}
+
+// save and load functions
+int saveGuestToTextFile(const Person* guest, FILE* fp){
+	if(fp == NULL || guest == NULL){
+		return 0;
+	}
+	Guest* pGuest = guest->pDerived;
+	
+	if(isValidInfo(guest->name, guest->height, guest->age)==0) {
+		return 0;
+	}
+	//save person
+	savePersonToTextFile(guest, fp);
+	//save ticket
+	saveTicketToTextFile(pGuest->ticket, fp);
+	return 1;
+
+}
+int loadGuestFromTextFile(Person** guest, TicketMaster* ticketMaster, FILE* fp){
+	if(fp == NULL){
+		return 0;
+	}
+	Person* tempPerson = NULL;
+	//load person
+	if(loadPersonFromTextFile(&tempPerson, fp) == 0){
+		return 0;
+	}
+	
+	//load ticket
+	Ticket tempTicket;
+	if(loadTicketFromTextFile(&tempTicket, fp) == 0){
+		freePerson(tempPerson);
+		return 0;
+	}
+
+	//find ticket by id from the ticket master
+	Ticket* new_ticket = findTicketByID(ticketMaster, tempTicket.id);
+
+	//copy person name to guest
+	char * personName = (char*)malloc(strlen(tempPerson->name) + 1);
+	strcpy(personName, tempPerson->name);
+
+	//init guest
+	*guest = initGuest(personName, tempPerson->height, tempPerson->age);
+	freePerson(tempPerson);
+	if (*guest == NULL) {
+		free(personName);
+		return 0;
+	}
+	Guest* pGuest = (*guest)->pDerived;
+	pGuest->ticket = new_ticket;
+	return 1;
+}
+int saveGuestToBinFile(const Person* guest, FILE* fp){
+	if (fp == NULL || guest == NULL) {
+		return 0;
+	}
+	//cast to guest
+	Guest* pGuest = guest->pDerived;
+
+	if (isValidInfo(guest->name, guest->height, guest->age) == 0) {
+		return 0;
+	}
+
+	//save person
+	savePersonToBinFile(guest, fp);
+	//save ticket
+	saveTicketToBinFile(pGuest->ticket, fp);
+	
+	return 1;
+}
+int loadGuestFromBinFile(Person** guest, TicketMaster* ticketMaster, FILE* fp){
+	if (fp == NULL) {
+		return 0;
+	}
+	Person* tempPerson = NULL;
+	//load person
+	if (loadPersonFromBinFile(&tempPerson, fp) == 0) {
+		return 0;
+	}
+
+	//load ticket
+	Ticket tempTicket;
+	if (loadTicketFromBinFile(&tempTicket, fp) == 0) {
+		freePerson(tempPerson);
+		return 0;
+	}
+
+	//find ticket by id from the ticket master
+	Ticket* new_ticket = findTicketByID(ticketMaster, tempTicket.id);
+
+	//copy person name to guest
+	char* personName = (char*)malloc(strlen(tempPerson->name) + 1);
+	strcpy(personName, tempPerson->name);
+
+	//init guest
+	*guest = initGuest(personName, tempPerson->height, tempPerson->age);
+	freePerson(tempPerson);
+	if (*guest == NULL) {
+		free(personName);
+		return 0;
+	}
+	Guest* pGuest = (*guest)->pDerived;
+	pGuest->ticket = new_ticket;
+	return 1;
 }

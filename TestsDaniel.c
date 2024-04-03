@@ -39,6 +39,8 @@ void runAllSaveAndLoadTests() {
     PersonSaveAndLoadBin();
     WorkerSaveAndLoadText();
     WorkerSaveAndLoadBin();
+    GuestSaveAndLoadText();
+    GuestSaveAndLoadBin();
 }
 
 //main test
@@ -443,4 +445,136 @@ void WorkerSaveAndLoadBin(){
 
 	worker1->freePerson(worker1);
 	worker2->freePerson(worker2);
+}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+void GuestSaveAndLoadText(){
+    TicketMaster ticketMaster;
+    initTicketMaster(&ticketMaster);
+
+    Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+    Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+    Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+    Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
+    Ticket* ticket5 = (Ticket*)malloc(sizeof(Ticket));
+
+    Date date1, date2, date3, date4, date5;
+    initDate(&date1, 1, 1, 2025);
+    initDate(&date2, 2, 1, 2025);
+    initDate(&date3, 3, 1, 2025);
+    initDate(&date4, 4, 1, 2025);
+    initDate(&date5, 5, 1, 2025);
+
+    initTicket(ticket1, eChild, date1);
+    initTicket(ticket2, eAdult, date2);
+    initTicket(ticket3, eStudent, date3);
+    initTicket(ticket4, eStudent, date4);
+    initTicket(ticket5, eAdult, date5);
+
+    addTicket(&ticketMaster, ticket1);
+    addTicket(&ticketMaster, ticket2);
+    addTicket(&ticketMaster, ticket3);
+    addTicket(&ticketMaster, ticket4);
+    addTicket(&ticketMaster, ticket5);
+        
+    const char* fileName = "AAAGuestTest.txt";
+    Person* guest1;
+    char* tempName = (char*)malloc(7 * sizeof(char));
+    strcpy(tempName, "Guest");
+        
+    // Create a guest
+    guest1 = initGuest(tempName, 170, 30);
+    Guest* g = guest1->pDerived;
+    g->ticket = ticket1;
+
+    // Save the guest to a file
+    FILE* file = fopen(fileName, "w");
+    assert(saveGuestToTextFile(guest1, file) == 1);
+    fclose(file);
+
+    // Load the guest from the file
+    Person* guest2 = NULL;
+    file = fopen(fileName, "r");
+    assert(loadGuestFromTextFile(&guest2,&ticketMaster, file) == 1);
+    fclose(file);
+
+    // Check if the loaded guest is the same as the saved guest
+    
+    assert(strcmp(guest1->name, guest2->name) == 0);
+    assert(guest1->height == guest2->height);
+    assert(guest1->age == guest2->age);
+    Guest* g1 = guest1->pDerived;
+    Guest* g2 = guest2->pDerived;
+    assert(g1->ticket == g2->ticket);
+        
+    
+
+
+    freeTicketMaster(&ticketMaster);
+    guest1->freePerson(guest1);
+    guest2->freePerson(guest2);
+
+}
+void GuestSaveAndLoadBin(){
+    TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket5 = (Ticket*)malloc(sizeof(Ticket));
+
+	Date date1, date2, date3, date4, date5;
+	initDate(&date1, 1, 1, 2025);
+	initDate(&date2, 2, 1, 2025);
+	initDate(&date3, 3, 1, 2025);
+	initDate(&date4, 4, 1, 2025);
+	initDate(&date5, 5, 1, 2025);
+
+	initTicket(ticket1, eChild, date1);
+	initTicket(ticket2, eAdult, date2);
+	initTicket(ticket3, eStudent, date3);
+	initTicket(ticket4, eStudent, date4);
+	initTicket(ticket5, eAdult, date5);
+
+	addTicket(&ticketMaster, ticket1);
+	addTicket(&ticketMaster, ticket2);
+	addTicket(&ticketMaster, ticket3);
+	addTicket(&ticketMaster, ticket4);
+	addTicket(&ticketMaster, ticket5);
+		
+	const char* fileName = "AAAGuestTest.bin";
+	Person* guest1;
+	char* tempName = (char*)malloc(7 * sizeof(char));
+	strcpy(tempName, "Guest");
+		
+	// Create a guest
+	guest1 = initGuest(tempName, 170, 30);
+	Guest* g = guest1->pDerived;
+	g->ticket = ticket1;
+
+	// Save the guest to a file
+	FILE* file = fopen(fileName, "wb");
+	assert(saveGuestToBinFile(guest1, file) == 1);
+	fclose(file);
+
+	// Load the guest from the file
+	Person* guest2 = NULL;
+	file = fopen(fileName, "rb");
+	assert(loadGuestFromBinFile(&guest2,&ticketMaster, file) == 1);
+	fclose(file);
+
+	// Check if the loaded guest is the same as the saved guest
+	
+	assert(strcmp(guest1->name, guest2->name) == 0);
+    assert(guest1->height == guest2->height);
+    assert(guest1->age == guest2->age);
+    Guest* g1 = guest1->pDerived;
+    Guest* g2 = guest2->pDerived;
+    assert(g1->ticket == g2->ticket);
+
+
+    freeTicketMaster(&ticketMaster);
+    guest1->freePerson(guest1);
+    guest2->freePerson(guest2);
 }

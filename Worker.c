@@ -102,7 +102,7 @@ void freeWorker(Person* worker) {
 	freePerson(worker);
 	
 }
-
+////////////////////////////////////////////
 int saveWorkerToTextFile(const Person* worker, FILE* fp){
 	if(fp == NULL || worker == NULL){
 		return 0;

@@ -31,4 +31,6 @@ void PersonSaveAndLoadText();
 void PersonSaveAndLoadBin();
 void WorkerSaveAndLoadText();
 void WorkerSaveAndLoadBin();
+void GuestSaveAndLoadText();
+void GuestSaveAndLoadBin();
 #endif
