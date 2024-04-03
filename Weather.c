@@ -53,15 +53,10 @@ void initWeatherByUser(Weather* weather) {
 	} while (!initWeather(weather, condition - 1, temp));
 }
 
-//eWeatherType condition;
-//float temp;
-
-
 // ---- save functions ----
 int saveWeatherToTextFile(const Weather* weather, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	if (weather == NULL || isValidWeather(weather->condition, weather->temp) == 0) {
 		return 0;
@@ -79,9 +74,8 @@ int saveWeatherToTextFile(const Weather* weather, FILE* fp) {
 }
 
 int loadWeatherFromTextFile(Weather* weather, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	int condition;
 	int temp;
@@ -101,9 +95,8 @@ int loadWeatherFromTextFile(Weather* weather, FILE* fp) {
 	return 1;
 }
 int saveWeatherToBinFile(const Weather* weather, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	if (weather == NULL || isValidWeather(weather->condition, weather->temp) == 0) {
 		return 0;
@@ -117,9 +110,8 @@ int saveWeatherToBinFile(const Weather* weather, FILE* fp) {
 
 }
 int loadWeatherFromBinFile(Weather* weather, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	if (readGeneralFromBinFile(fp, weather, sizeof(Weather)) == 0) {
 		return 0;

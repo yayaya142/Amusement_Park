@@ -11,6 +11,8 @@
 
 #define MAX_BUFFER_SIZE 256
 typedef unsigned char BYTE;
+// define macros
+#define IS_FILE_NULL(file) if (file == NULL) { return 0; }
 
 
 int writeStringToTextFile(FILE* file, const char* str);
@@ -21,7 +23,7 @@ int readIntFromTextFile(FILE* file, int* num);
 int readDoubleFromTextFile(FILE* file, double* num);
 char* readStringFromTextFile(FILE* file, char* buffer, int size);
 char* readStringFromBinFile(FILE* file);
-int writeGeneralToBinFile(FILE* file, void* fileType, size_t sizeOfElement);
+int writeGeneralToBinFile(FILE* file, const void* fileType, size_t sizeOfElement);
 int readGeneralFromBinFile(FILE* file, void* readValue, size_t sizeOfElement);
 
 

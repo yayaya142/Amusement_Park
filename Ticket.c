@@ -113,9 +113,8 @@ void initTicketByUser(Ticket* ticket) {
 
 // save and load functions
 int saveTicketToTextFile(const Ticket* ticket, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 	if (ticket == NULL || isValidTicket(ticket->guestType, ticket->dateOfVisit) == 0) {
 		return 0;
 	}
@@ -143,9 +142,8 @@ int saveTicketToTextFile(const Ticket* ticket, FILE* fp) {
 
 }
 int loadTicketFromTextFile(Ticket* ticket, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	char id[ID_TICKET_LEN + 1]; // + 1 for null terminator
 	int guestType;
@@ -190,9 +188,8 @@ int loadTicketFromTextFile(Ticket* ticket, FILE* fp) {
 
 }
 int saveTicketToBinFile(const Ticket* ticket, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 	if (ticket == NULL || isValidTicket(ticket->guestType, ticket->dateOfVisit) == 0) {
 		return 0;
 	}
@@ -219,9 +216,8 @@ int saveTicketToBinFile(const Ticket* ticket, FILE* fp) {
 	return 1;
 }
 int loadTicketFromBinFile(Ticket* ticket, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	char id[ID_TICKET_LEN + 1]; // + 1 for null terminator
 	eGuestType guestType;

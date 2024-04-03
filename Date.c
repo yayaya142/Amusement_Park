@@ -61,31 +61,6 @@ int compareDates(const Date Date1, const Date Date2) {
 }
 
 
-//int saveDateToBinFile(FILE* file, Date* pDate) {
-//	if (file == NULL || pDate == NULL) {
-//		return 0;
-//	}
-//
-//	if (writeGeneralToBinFile(file, pDate, sizeof(Date)) != 1) {
-//		return 0;
-//	}
-//	return 1;
-//}
-//Date readDateFromBinFile(FILE* file) {
-//	Date date;
-//	date.day = 0;
-//	date.month = 0;
-//	date.year = 0;
-//	if (file == NULL) {
-//		return date;
-//	}
-//	if (readGeneralFromBinFile(file, &date, sizeof(Date)) != 1) {
-//		return date;
-//	}
-//
-//	return date;
-//}
-
 void initDateByUser(Date* pDate) {
 	int flag = 0;
 	int day, month, year;
@@ -108,9 +83,9 @@ void initDateByUser(Date* pDate) {
 
 // save and load function
 int saveDateToTextFile(const Date* pDate, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
+
 	if (pDate == NULL || isDateValid(pDate->day, pDate->month, pDate->year) == 0) {
 		return 0;
 	}
@@ -131,9 +106,9 @@ int saveDateToTextFile(const Date* pDate, FILE* fp) {
 }
 
 int loadDateFromTextFile(Date* pDate, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
+
 	int day, month, year;
 	// read day from file
 	if (readIntFromTextFile(fp, &day) == 0) {
@@ -155,9 +130,9 @@ int loadDateFromTextFile(Date* pDate, FILE* fp) {
 }
 
 int saveDateToBinFile(const Date* pDate, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
+
 	if (pDate == NULL || isDateValid(pDate->day, pDate->month, pDate->year) == 0) {
 		return 0;
 	}
@@ -169,9 +144,7 @@ int saveDateToBinFile(const Date* pDate, FILE* fp) {
 	return 1;
 }
 int loadDateFromBinFile(Date* pDate, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
 
 	if (readGeneralFromBinFile(fp, pDate, sizeof(Date)) == 0) {
 		return 0;

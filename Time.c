@@ -65,9 +65,8 @@ void initTimeByUser(Time* time) {
 
 // save and load functions
 int saveTimeToTextFile(const Time* pTime, FILE* fp) {
-	if (fp == NULL) { /// NEED TO BE MACRO
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	if (writeIntToTextFile(fp, pTime->hour) == 0) {
 		return 0;
@@ -82,9 +81,8 @@ int saveTimeToTextFile(const Time* pTime, FILE* fp) {
 
 
 int loadTimeFromTextFile(Time* pTime, FILE* fp) {
-	if (fp == NULL) { /// NEED TO BE MACRO
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 	int tempHour, tempMinute;
 
 	if (readIntFromTextFile(fp, &tempHour) == 0) {
@@ -105,9 +103,8 @@ int loadTimeFromTextFile(Time* pTime, FILE* fp) {
 
 int saveTimeToBinFile(const Time* pTime, FILE* fp) {
 	// save compressed time to file
-	if (fp == NULL) { /// NEED TO BE MACRO
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	BYTE data[2];
 	data[0] = (pTime->hour << 3) | (pTime->minute >> 3);
@@ -123,9 +120,8 @@ int saveTimeToBinFile(const Time* pTime, FILE* fp) {
 
 int loadTimeFromBinFile(Time* pTime, FILE* fp) {
 	// load compressed time from file
-	if (fp == NULL) { /// NEED TO BE MACRO
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	BYTE data[2];
 	if (fread(data, sizeof(BYTE), 2, fp) != 2) {

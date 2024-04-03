@@ -102,9 +102,8 @@ void initShopByUser(Shop* shop) {
 
 // save and load functions
 int saveShopToTextFile(const Shop* shop, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	if (!isValidShop(shop->name, shop->type, shop->openHour, shop->closeHour)) {
 		return 0;
@@ -133,9 +132,8 @@ int saveShopToTextFile(const Shop* shop, FILE* fp) {
 
 }
 int loadShopFromTextFile(Shop* shop, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	char buffer[MAX_BUFFER_SIZE];
 	// read name from file
@@ -179,9 +177,8 @@ int loadShopFromTextFile(Shop* shop, FILE* fp) {
 	return 1;
 }
 int saveShopToBinFile(const Shop* shop, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	if (!isValidShop(shop->name, shop->type, shop->openHour, shop->closeHour)) {
 		return 0;
@@ -210,9 +207,8 @@ int saveShopToBinFile(const Shop* shop, FILE* fp) {
 	return 1;
 }
 int loadShopFromBinFile(Shop* shop, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 
 	// read name from file
 	char* tempName = readStringFromBinFile(fp);

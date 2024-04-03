@@ -9,9 +9,8 @@
 // Output: 1 if succeeded
 /////////////////////////////////////////////////////////////////
 int writeStringToTextFile(FILE* file, const char* str) {
-	if (!file) {
-		return 0;
-	}
+	IS_FILE_NULL(file);
+
 	fprintf(file, "%s\n", str);
 	return 1;
 }
@@ -23,9 +22,9 @@ int writeStringToTextFile(FILE* file, const char* str) {
 // Output: 1 if succeeded
 /////////////////////////////////////////////////////////////////
 int writeIntToTextFile(FILE* file, int num) {
-	if (!file) {
-		return 0;
-	}
+	IS_FILE_NULL(file);
+
+
 	fprintf(file, "%d\n", num);
 	return 1;
 }
@@ -36,9 +35,9 @@ int writeIntToTextFile(FILE* file, int num) {
 // Output: 1 if succeeded
 /////////////////////////////////////////////////////////////////
 int writeDoubleToTextFile(FILE* file, const double num) {
-	if (!file) {
-		return 0;
-	}
+	IS_FILE_NULL(file);
+
+
 	if (fprintf(file, "%f\n", num) < 1) {
 		return 0;
 	}
@@ -54,9 +53,9 @@ int writeDoubleToTextFile(FILE* file, const double num) {
 // Output: double read from file
 /////////////////////////////////////////////////////////////////
 int readDoubleFromTextFile(FILE* file, double* num) {
-	if (!file) {
-		return 0;
-	}
+	IS_FILE_NULL(file);
+
+
 	if (fscanf(file, "%lf", num) < 1) {
 		return 0;
 	}
@@ -72,9 +71,9 @@ int readDoubleFromTextFile(FILE* file, double* num) {
 /////////////////////////////////////////////////////////////////
 
 int writeStringTobinFile(FILE* file, const char* str) {
-	if (!file) {
-		return 0;
-	}
+	IS_FILE_NULL(file);
+
+
 	size_t len = (size_t)strlen(str) + 1; // +1 for the null terminator
 	// write the length of the string
 	if (fwrite(&len, sizeof(int), 1, file) != 1)
@@ -123,9 +122,8 @@ char* readStringFromTextFile(FILE* file, char* buffer, int size) {
 
 
 int readIntFromTextFile(FILE* file, int* num) {
-	if (!file) {
-		return 0;
-	}
+	IS_FILE_NULL(file);
+
 	if (fscanf(file, "%d", num) != 1) {
 		return 0;
 	}
@@ -141,9 +139,9 @@ int readIntFromTextFile(FILE* file, int* num) {
 /////////////////////////////////////////////////////////////////
 char* readStringFromBinFile(FILE* file) {
 	// allocate dynamic memory for the string make sure to use cautiously!
-	if (!file) {
-		return NULL;
-	}
+	IS_FILE_NULL(file);
+
+
 	int len;
 	if (fread(&len, sizeof(int), 1, file) != 1) {
 		return NULL;
@@ -166,10 +164,9 @@ char* readStringFromBinFile(FILE* file) {
 // Input: file pointer, data to write, size of the data
 // Output: 1 if succeeded
 /////////////////////////////////////////////////////////////////
-int writeGeneralToBinFile(FILE* file, void* fileType, size_t sizeOfElement) {
-	if (!file) {
-		return 0;
-	}
+int writeGeneralToBinFile(FILE* file, const void* fileType, size_t sizeOfElement) {
+	IS_FILE_NULL(file);
+
 
 	if (fwrite(fileType, sizeOfElement, 1, file) != 1) {
 		return 0;
@@ -186,9 +183,9 @@ int writeGeneralToBinFile(FILE* file, void* fileType, size_t sizeOfElement) {
 // Output: 1 if succeeded
 /////////////////////////////////////////////////////////////////
 int readGeneralFromBinFile(FILE* file, void* readValue, size_t sizeOfElement) {
-	if (!file) {
-		return 0;
-	}
+	IS_FILE_NULL(file);
+
+
 	if (fread(readValue, sizeOfElement, 1, file) != 1) {
 		return 0;
 	}

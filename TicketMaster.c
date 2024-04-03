@@ -32,7 +32,6 @@ void printTicketMaster(const TicketMaster* ticketMaster) {
 		printf("No ticket added yet\n");
 		return;
 	}
-
 	generalArrayFunction(ticketMaster->tickets, ticketMaster->numOfTickets, sizeof(Ticket*), (void*)printTicketWrapper);
 }
 
@@ -57,7 +56,7 @@ double calcDaily(const TicketMaster* ticketMaster, Date* date) {
 	double sum = 0;
 	for (int i = 0; i < ticketMaster->numOfTickets; i++) {
 		if (compareDates(ticketMaster->tickets[i]->dateOfVisit, *date) == 0) {
-			sum += ticketMaster->tickets[i]->price;
+			sum = SUM(sum, ticketMaster->tickets[i]->price);
 		}
 	}
 	return sum;
@@ -197,7 +196,8 @@ Ticket* findTicketByUser(const TicketMaster* ticketMaster) {
 	return found;
 }
 
-Ticket* findTicketByID(const TicketMaster* ticketMaster, char* id) {
+Ticket* findTicketByID(TicketMaster* ticketMaster, char* id) {
+	// sort the ticket by id so i can preforme binary search, beucase of this TicketMaster* ticketMaster is not const
 	if (ticketMaster == NULL || ticketMaster->tickets == NULL || ticketMaster->numOfTickets == 0) {
 		return NULL;
 	}
@@ -250,9 +250,8 @@ Ticket* buyTicket(TicketMaster* ticketMaster) {
 // save and load functions
 int saveTicketMasterToTextFile(const TicketMaster* ticketMaster, FILE* fp) {
 	// this function dont save the sort type
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 	if (ticketMaster == NULL || ticketMaster->tickets == NULL) {
 		return 0;
 	}
@@ -270,9 +269,8 @@ int saveTicketMasterToTextFile(const TicketMaster* ticketMaster, FILE* fp) {
 	return 1;
 }
 int loadTicketMasterFromTextFile(TicketMaster* ticketMaster, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 	if (ticketMaster == NULL) {
 		return 0;
 	}
@@ -300,9 +298,8 @@ int loadTicketMasterFromTextFile(TicketMaster* ticketMaster, FILE* fp) {
 	return 1;
 }
 int saveTicketMasterToBinFile(const TicketMaster* ticketMaster, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 	if (ticketMaster == NULL || ticketMaster->tickets == NULL) {
 		return 0;
 	}
@@ -319,9 +316,8 @@ int saveTicketMasterToBinFile(const TicketMaster* ticketMaster, FILE* fp) {
 	return 1;
 }
 int loadTicketMasterFromBinFile(TicketMaster* ticketMaster, FILE* fp) {
-	if (fp == NULL) {
-		return 0;
-	}
+	IS_FILE_NULL(fp);
+
 	if (ticketMaster == NULL) {
 		return 0;
 	}
