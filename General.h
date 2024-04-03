@@ -1,14 +1,16 @@
 #ifndef __GENERAL__
 #define __GENERAL__
 
-#define MAX_STR_LEN 255
+#include <crtdbg.h> // TODO: remove before release
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 
+
+#define MAX_STR_LEN 255
 // define macros
 #define SUM(x,y) ((x)+(y))
-
-
-
-#include <crtdbg.h> // TODO: remove before release
 
 
 char* getStrExactName(const char* msg);

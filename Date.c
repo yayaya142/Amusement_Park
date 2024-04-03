@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include "General.h"
-#include "fileHelper.h"
 #include "Date.h"
 
 #define DATE_DELIMITER '/'

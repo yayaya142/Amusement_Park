@@ -8,7 +8,12 @@
 #include <stdlib.h>
 #include "General.h"
 #include "fileHelper.h"
-
+#include "Date.h"
+#include "Weather.h"
+#include "Time.h"
+#include "Shop.h"
+#include "Ticket.h"
+#include "TicketMaster.h"
 
 void runAllTestsShai();
 

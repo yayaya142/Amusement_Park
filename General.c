@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
 #include "General.h"
 
 
@@ -100,7 +96,7 @@ int randomNum(int min, int max) {
 }
 
 int validName(char* name) {
-	if(name == NULL || strlen(name) == 0) {
+	if (name == NULL || strlen(name) == 0) {
 		return 0;
 	}
 	for (int i = 0; i < strlen(name); i++) {

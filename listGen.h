@@ -7,7 +7,8 @@
 #ifndef _LIST_
 #define _LIST_
 #include <crtdbg.h> // TODO: remove before release
-
+#include <stdio.h>
+#include <stdlib.h>
 #include "def.h"
 
 
