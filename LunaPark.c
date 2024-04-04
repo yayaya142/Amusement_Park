@@ -110,8 +110,7 @@ void printLunaParkMenu(const LunaPark* lunaPark) {
 	printTime(&lunaPark->openTime);
 	printf(" to ");
 	printTime(&lunaPark->closeTime);
-	printf("\n---------------------------------------------\n");
-	printf("\n\n");
+	printf("\n---------------------------------------------\n\n");
 }
 
 void printProfit(const LunaPark* lunaPark) {
