@@ -1,6 +1,7 @@
 #ifndef __LunaPark__
 #define __LunaPark__
 
+#include <crtdbg.h> // TODO: remove before release
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

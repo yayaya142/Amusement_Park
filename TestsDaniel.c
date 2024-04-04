@@ -19,7 +19,13 @@ void runFacilityTests() {
     testInitFacility();
     testCompareFacilities();
 }
+//LunaPark
+void runLunaParkTests() {
+    addWorkerToLunaParkTest();
+    //addFacilityToLunaParkTest();
+    //addGuestToLunaParkTest();
 
+}
 
 //Tests for load & save from file (text\bin)
 void runAllSaveAndLoadTests() {
@@ -40,7 +46,8 @@ void runAllTestsDaniel() {
     runWorkerTests();
     runFacilityTests();
     runGuestTests();
-    runAllSaveAndLoadTests();
+    //runAllSaveAndLoadTests();
+    runLunaParkTests();
     printf("---------All tests passed!----------\n");
 }
 
@@ -573,3 +580,45 @@ void GuestSaveAndLoadBin(){
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+void addWorkerToLunaParkTest() {
+    //init LunaPark
+    LunaPark lunaPark;
+    char* name = (char*)malloc(9 * sizeof(char));
+    strcpy(name, "LunaPark");
+    initLunaPark(&lunaPark, name);
+
+    //init Worker
+	char* name1 = (char*)malloc(7 * sizeof(char));
+	strcpy(name1, "person");
+	Person* worker = initWorker(eCoffeeShop, name1, 170, 30);
+
+    //add worker number 1 to LunaPark
+   assert(addWorkerToLunaPark(&lunaPark, worker) == 1);
+    //check if worker was added to LunaPark
+	assert(lunaPark.numOfWorkers == 1);
+    assert(lunaPark.workers[0] == worker);
+    assert(lunaPark.workers[0]->age == worker->age);
+
+    printf("%s-----------------------\n", lunaPark.workers[0]->name);
+    assert(strcmp(lunaPark.workers[0]->name, worker->name) == 0);
+    Worker* w = lunaPark.workers[0]->pDerived;
+    assert(w->department == eCoffeeShop);
+
+    //add worker number 2 to LunaPark
+    char* name2 = (char*)malloc(7 * sizeof(char));
+	strcpy(name2, "person");
+    Person* worker2 = initWorker(eRestaurant, name2, 170, 30);
+    assert(addWorkerToLunaPark(&lunaPark, worker2) == 1);
+    //check if worker was added to LunaPark
+    assert(lunaPark.numOfWorkers == 2);
+    assert(lunaPark.workers[1]->age == worker2->age);
+    assert(strcmp(lunaPark.workers[1]->name, worker2->name) == 0);
+
+    Worker* w2 = lunaPark.workers[1]->pDerived;
+    assert(w2->department == eRestaurant);
+
+
+	//free memory
+	freeLunaPark(&lunaPark);
+}

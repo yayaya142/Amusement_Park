@@ -11,6 +11,7 @@
 #include "Guest.h"
 #include "Facility.h"
 #include "TicketMaster.h"
+#include "LunaPark.h"
 
 
 
@@ -29,6 +30,10 @@ void testCompareFacilities();
 
 void runGuestTests();
 void initGuestTests();
+
+void runLunaParkTests();
+void addWorkerToLunaParkTest();
+
 
 //------File Test---------
 void runAllSaveAndLoadTests();

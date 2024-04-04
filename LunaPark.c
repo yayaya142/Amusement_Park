@@ -121,18 +121,11 @@ void freeLunaPark(LunaPark* lunaPark) {
 
 	L_free(&lunaPark->facilities, freeFacility);
 
-
-
-
-
-
-
-
-	//// free workers
-	//for (int i = 0; i < lunaPark->numOfWorkers; i++) {
-	//	lunaPark->workers[i].freePerson(lunaPark->workers[i]); // NEED To check
-	//}
-	//free(lunaPark->workers);
+	// free workers
+	for (int i = 0; i < lunaPark->numOfWorkers; i++) {
+		lunaPark->workers[i]->freePerson(lunaPark->workers[i]);
+	}
+	free(lunaPark->workers);
 
 	//// free ticketMasters
 	//freeTicketMaster(lunaPark->ticketMasters);
@@ -200,7 +193,6 @@ int addShopToLunaPark(LunaPark* lunaPark, Shop shop) {
 }
 
 
-
 void addShopToLunaParkByUser(LunaPark* lunaPark) {
 	if (lunaPark == NULL) {
 		return;
@@ -210,6 +202,8 @@ void addShopToLunaParkByUser(LunaPark* lunaPark) {
 	initShopByUser(&shop);
 	addShopToLunaPark(lunaPark, shop);
 }
+
+
 int changeLunaParkTimeByUser(LunaPark* lunaPark) {
 	if (lunaPark == NULL) {
 		return 0;
@@ -278,7 +272,7 @@ void addWorkerToLunaParkByUser(LunaPark* lunaPark) {
 		return 0;
 	}
 	// creat worker
-	Person* worker = initWorkerByUser();// will it work?
+	Person* worker = initWorkerByUser();
 	if (worker == NULL) {
 		return 0;
 	}
@@ -298,21 +292,6 @@ int changeLunaParkWeatherByUser(LunaPark* lunaPark) {
 
 	return 1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // save and load functions
