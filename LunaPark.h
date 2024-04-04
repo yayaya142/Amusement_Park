@@ -28,6 +28,7 @@
 
 typedef struct {
 	char* name;
+	TicketMaster ticketMasters;
 	LIST facilities;
 	Time openTime;
 	Time closeTime;
@@ -35,30 +36,28 @@ typedef struct {
 	int numOfWorkers;
 	Person** guests;
 	int numOfGuests;
-	TicketMaster ticketMasters;
 	Weather weather;
 	Shop* shops;
 	int numOfShops;
-	int todayVisitors;
 } LunaPark;
 
 
-int initLunaPark(LunaPark* lunaPark, char* name); //done
-void initLunaParkByUser(LunaPark* lunaPark); //done
-void printLunaParkMenu(const LunaPark* lunaPark); //done
-void printLunaParkInfo(const LunaPark* lunaPark); //done
-void freeLunaPark(LunaPark* lunaPark); //done
-int addFacilityToLunaPark(LunaPark* lunaPark, Facility* facility); // done
-void addFacilityToLunaParkByUser(LunaPark* lunaPark); // done
-int addWorkerToLunaPark(LunaPark* lunaPark, Person* worker);// done
-void addWorkerToLunaParkByUser(LunaPark* lunaPark); // done
-int addShopToLunaPark(LunaPark* lunaPark, Shop shop); // done
-void addShopToLunaParkByUser(LunaPark* lunaPark); // done
-int changeLunaParkTimeByUser(LunaPark* lunaPark); // done
-int changeLunaParkWeatherByUser(LunaPark* lunaPark); // done
-void addGuestToLunaParkByUser(LunaPark* lunaPark, TicketMaster* ticketMaster); // done
-int addGuestToLunaPark(LunaPark* lunaPark, Person* guest); // done
-void printProfit(const LunaPark* lunaPark); // done
+int initLunaPark(LunaPark* lunaPark, char* name);
+void initLunaParkByUser(LunaPark* lunaPark);
+void printLunaParkMenu(const LunaPark* lunaPark);
+void printLunaParkInfo(const LunaPark* lunaPark);
+void freeLunaPark(LunaPark* lunaPark);
+int addFacilityToLunaPark(LunaPark* lunaPark, Facility* facility);
+void addFacilityToLunaParkByUser(LunaPark* lunaPark);
+int addWorkerToLunaPark(LunaPark* lunaPark, Person* worker);
+void addWorkerToLunaParkByUser(LunaPark* lunaPark);
+int addShopToLunaPark(LunaPark* lunaPark, Shop shop);
+void addShopToLunaParkByUser(LunaPark* lunaPark);
+int changeLunaParkTimeByUser(LunaPark* lunaPark);
+int changeLunaParkWeatherByUser(LunaPark* lunaPark);
+void addGuestToLunaParkByUser(LunaPark* lunaPark, TicketMaster* ticketMaster);
+int addGuestToLunaPark(LunaPark* lunaPark, Person* guest);
+void printProfit(const LunaPark* lunaPark);
 
 // save and load functions
 int saveLunaParkToTextFile(const LunaPark* lunaPark, const char* fileName);
