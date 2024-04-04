@@ -598,10 +598,80 @@ int saveLunaParkToBinFile(const LunaPark* lunaPark, const char* fileName) {
 
 	IS_FILE_NULL(fp);
 
+	// save name
+	if (writeStringTobinFile(fp, lunaPark->name) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
 
+	// Save TicketMaster
+	if (saveTicketMasterToBinFile(&lunaPark->ticketMasters, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
 
+	// Save Facilities
+	if (saveFacilityListToBinFile(lunaPark->facilities, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
 
+	// Save opem time
+	if (saveTimeToBinFile(&lunaPark->openTime, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
 
+	// Save close time
+	if (saveTimeToBinFile(&lunaPark->closeTime, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Save workers
+	if (writeGeneralToBinFile(fp, &lunaPark->numOfWorkers, sizeof(int)) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	for (int i = 0; i < lunaPark->numOfWorkers; i++) {
+		if (saveWorkerToBinFile(lunaPark->workers[i], fp) == 0) {
+			CLOSE_FILE(fp);
+			return 0;
+		}
+	}
+
+	// Save guests
+	if (writeGeneralToBinFile(fp, &lunaPark->numOfGuests, sizeof(int)) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	for (int i = 0; i < lunaPark->numOfGuests; i++) {
+		if (saveGuestToBinFile(lunaPark->guests[i], fp) == 0) {
+			CLOSE_FILE(fp);
+			return 0;
+		}
+	}
+
+	// Save weather
+	if (saveWeatherToBinFile(&lunaPark->weather, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Save shops
+	if (writeGeneralToBinFile(fp, &lunaPark->numOfShops, sizeof(int)) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	for (int i = 0; i < lunaPark->numOfShops; i++) {
+		if (saveShopToBinFile(&lunaPark->shops[i], fp) == 0) {
+			CLOSE_FILE(fp);
+			return 0;
+		}
+	}
 
 
 	CLOSE_FILE(fp);
@@ -609,11 +679,134 @@ int saveLunaParkToBinFile(const LunaPark* lunaPark, const char* fileName) {
 
 }
 int loadLunaParkFromBinFile(LunaPark* lunaPark, const char* fileName) {
+	// check if lunaPark is valid
+	if (lunaPark == NULL) {
+		return 0;
+	}
+	FILE* fp = fopen(fileName, "rb");
 
-	//printf("\n######################################################################\n");
-	//printLunaParkInfo(lunaPark);
-	//printf("\n######################################################################\n");
+	IS_FILE_NULL(fp);
 
-	//	CLOSE_FILE(fp);
+	// load name
+	char* name = readStringFromBinFile(fp);
+	if (name == NULL) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
 
+	// init lunaPark
+	initLunaPark(lunaPark, name);
+
+
+	// Load TicketMaster
+	initTicketMaster(&lunaPark->ticketMasters);
+	if (loadTicketMasterFromBinFile(&lunaPark->ticketMasters, fp) == 0) {
+		CLOSE_FILE(fp);
+		freeLunaPark(lunaPark);
+		return 0;
+	}
+
+
+	// Load Facilities
+	if (L_init(&lunaPark->facilities) == 0) {
+		CLOSE_FILE(fp);
+		freeLunaPark(lunaPark);
+		return 0;
+	}
+	int numOfFacilities = 0;
+	if (readGeneralFromBinFile(fp, &numOfFacilities, sizeof(int)) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+	for (int i = 0; i < numOfFacilities; i++) {
+		Facility* facility = (Facility*)malloc(sizeof(Facility));
+		if (facility == NULL) {
+			CLOSE_FILE(fp);
+			freeLunaPark(lunaPark);
+			return 0;
+		}
+		if (loadFacilityFromBinFile(facility, fp) == 0) {
+			freeFacility(facility);
+			CLOSE_FILE(fp);
+			freeLunaPark(lunaPark);
+			return 0;
+		}
+		L_insert(&lunaPark->facilities.head, facility);
+	}
+
+	// Load open time
+	if (loadTimeFromBinFile(&lunaPark->openTime, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Load close time
+	if (loadTimeFromBinFile(&lunaPark->closeTime, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Load workers
+	int tempNumOfWorkers;
+	if (readGeneralFromBinFile(fp, &tempNumOfWorkers, sizeof(int)) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	for (int i = 0; i < tempNumOfWorkers; i++)
+	{
+		Person* worker = NULL;
+		if (loadWorkerFromBinFile(&worker, fp) == 0) {
+			CLOSE_FILE(fp);
+			freeLunaPark(lunaPark);
+			return 0;
+		}
+		addWorkerToLunaPark(lunaPark, worker);
+	}
+
+	// Load guests
+	int tempNUmOfGuests;
+	if (readGeneralFromBinFile(fp, &tempNUmOfGuests, sizeof(int)) == 0) {
+		CLOSE_FILE(fp);
+		freeLunaPark(lunaPark);
+		return 0;
+	}
+
+	for (int i = 0; i < tempNUmOfGuests; i++)
+	{
+		Person* guest = NULL;
+		if (loadGuestFromBinFile(&guest, &lunaPark->ticketMasters, fp) == 0) {
+			CLOSE_FILE(fp);
+			freeLunaPark(lunaPark);
+			return 0;
+		}
+		addGuestToLunaPark(lunaPark, guest);
+	}
+
+	// Load weather
+	if (loadWeatherFromBinFile(&lunaPark->weather, fp) == 0) {
+		CLOSE_FILE(fp);
+		freeLunaPark(lunaPark);
+		return 0;
+	}
+
+	// Load shops
+	int tempNumOfShops;
+	if (readGeneralFromBinFile(fp, &tempNumOfShops, sizeof(int)) == 0) {
+		CLOSE_FILE(fp);
+		freeLunaPark(lunaPark);
+		return 0;
+	}
+	for (int i = 0; i < tempNumOfShops; i++) {
+		Shop shop;
+		if (loadShopFromBinFile(&shop, fp) == 0) {
+			CLOSE_FILE(fp);
+			freeLunaPark(lunaPark);
+			return 0;
+		}
+		addShopToLunaPark(lunaPark, shop);
+	}
+
+	CLOSE_FILE(fp);
+	return 1;
 }
