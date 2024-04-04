@@ -43,7 +43,7 @@ int initLunaPark(LunaPark* lunaPark, char* name) {
 	lunaPark->todayVisitors = 0;
 	return 1;
 }
-int initLunaParkByUser(LunaPark* lunaPark) {
+void initLunaParkByUser(LunaPark* lunaPark) {
 	int flag = 0;
 	char* name = NULL;
 	do {
@@ -84,6 +84,13 @@ void printLunaParkInfo(const LunaPark* lunaPark) {
 	printf("Facilities: \n");
 	L_print(&lunaPark->facilities, printFacility);
 
+	printf("Number of Guests: %d\n", lunaPark->numOfGuests);
+	for (int i = 0; i < lunaPark->numOfGuests; i++)
+	{
+		lunaPark->guests[i]->printPerson(lunaPark->guests[i]);
+		printf("\n");
+	}
+
 	printf("Ticket Master: \n");
 	printTicketMaster(&lunaPark->ticketMasters);
 
@@ -109,6 +116,36 @@ void printLunaParkMenu(const LunaPark* lunaPark) {
 	printf("\n\n");
 }
 
+void printProfit(const LunaPark* lunaPark) {
+	if (lunaPark == NULL || &lunaPark->ticketMasters == NULL) {
+		return;
+	}
+	Date date;
+	int userOption = 0;
+	printf("Please choose an option:\n");
+	printf("1. Print All Income\n");
+	printf("2. Print Income By Date\n");
+	scanf("%d", &userOption);
+	double income = 0;
+
+	switch (userOption)
+	{
+		//% .2lf % s\n", ticket->price, CURRENCY_SYMBOL);
+	case 1:
+		income = calcAllIncome(&lunaPark->ticketMasters);
+		printf("Total Income: %.2lf%s\n", income, CURRENCY_SYMBOL);
+		break;
+	case 2:
+		initDateByUser(&date);
+		income = calcDaily(&lunaPark->ticketMasters, &date);
+		printf("Income for ");
+		printDate(&date);
+		printf(" is: %.2lf%s\n", income, CURRENCY_SYMBOL);
+		break;
+	default:
+		break;
+	}
+}
 
 
 
@@ -135,8 +172,8 @@ void freeLunaPark(LunaPark* lunaPark) {
 	}
 	free(lunaPark->guests);
 
-	//// free ticketMasters
-	//freeTicketMaster(lunaPark->ticketMasters);
+	// free ticketMasters
+	freeTicketMaster(&lunaPark->ticketMasters);
 
 	//// free shops
 	generalArrayFunction((void*)lunaPark->shops, lunaPark->numOfShops, sizeof(Shop), (void*)freeShop); // TODO need to check
@@ -277,19 +314,18 @@ int addWorkerToLunaPark(LunaPark* lunaPark, Person* worker) {
 
 void addWorkerToLunaParkByUser(LunaPark* lunaPark) {
 	if (lunaPark == NULL) {
-		return 0;
+		return;
 	}
 	// creat worker
 	Person* worker = initWorkerByUser();
 	if (worker == NULL) {
-		return 0;
+		return;
 	}
 	addWorkerToLunaPark(lunaPark, worker);
-	return 1;
 }
 
 
-void addGuestToLunaParkByUser(LunaPark* lunaPark, TicketMaster* ticketMaster){
+void addGuestToLunaParkByUser(LunaPark* lunaPark, TicketMaster* ticketMaster) {
 	if (lunaPark == NULL || ticketMaster == NULL) {
 		return;
 	}
@@ -300,7 +336,7 @@ void addGuestToLunaParkByUser(LunaPark* lunaPark, TicketMaster* ticketMaster){
 	addGuestToLunaPark(lunaPark, guest);
 }
 
-int addGuestToLunaPark(LunaPark* lunaPark, Person* guest){
+int addGuestToLunaPark(LunaPark* lunaPark, Person* guest) {
 	if (lunaPark == NULL) {
 		return 0;
 	}

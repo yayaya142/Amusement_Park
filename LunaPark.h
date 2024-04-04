@@ -32,9 +32,9 @@ typedef struct {
 	Time openTime;
 	Time closeTime;
 	Person** workers;
+	int numOfWorkers;
 	Person** guests;
 	int numOfGuests;
-	int numOfWorkers;
 	TicketMaster ticketMasters;
 	Weather weather;
 	Shop* shops;
@@ -44,7 +44,7 @@ typedef struct {
 
 
 int initLunaPark(LunaPark* lunaPark, char* name); //done
-int initLunaParkByUser(LunaPark* lunaPark); //done
+void initLunaParkByUser(LunaPark* lunaPark); //done
 void printLunaParkMenu(const LunaPark* lunaPark); //done
 void printLunaParkInfo(const LunaPark* lunaPark); //done
 void freeLunaPark(LunaPark* lunaPark); //done
@@ -56,16 +56,16 @@ int addShopToLunaPark(LunaPark* lunaPark, Shop shop); // done
 void addShopToLunaParkByUser(LunaPark* lunaPark); // done
 int changeLunaParkTimeByUser(LunaPark* lunaPark); // done
 int changeLunaParkWeatherByUser(LunaPark* lunaPark); // done
-
-void addGuestToLunaParkByUser(LunaPark* lunaPark, TicketMaster* ticketMaster);
-int addGuestToLunaPark(LunaPark* lunaPark, Person* guest);
-
+void addGuestToLunaParkByUser(LunaPark* lunaPark, TicketMaster* ticketMaster); // done
+int addGuestToLunaPark(LunaPark* lunaPark, Person* guest); // done
+void printProfit(const LunaPark* lunaPark); // done
 
 // save and load functions
 int saveLunaParkToTextFile(const LunaPark* lunaPark, const char* fileName);
 int loadLunaParkFromTextFile(LunaPark* lunaPark, const char* fileName);
 int saveLunaParkToBinFile(const LunaPark* lunaPark, const char* fileName);
 int loadLunaParkFromBinFile(LunaPark* lunaPark, const char* fileName);
+
 
 
 #endif 
