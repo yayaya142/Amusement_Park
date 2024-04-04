@@ -28,6 +28,7 @@
 
 typedef struct {
 	char* name;
+	TicketMaster ticketMasters;
 	LIST facilities;
 	Time openTime;
 	Time closeTime;
@@ -35,11 +36,9 @@ typedef struct {
 	int numOfWorkers;
 	Person** guests;
 	int numOfGuests;
-	TicketMaster ticketMasters;
 	Weather weather;
 	Shop* shops;
 	int numOfShops;
-	int todayVisitors;
 } LunaPark;
 
 

@@ -83,6 +83,8 @@ void TicketSaveAndLoadTextTest();
 void TicketSaveAndLoadBinTest();
 void TicketMasterSaveAndLoadTextTest();
 void TicketMasterSaveAndLoadBinTest();
+void LunaParkSaveAndLoadTextTest();
+void LunaParkSaveAndLoadBinTest();
 // LunaPark tests
 void LunaParkTests();
 void initLunaParkTest();

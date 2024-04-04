@@ -1086,6 +1086,8 @@ void SaveAndLoadTests() {
 	TicketSaveAndLoadBinTest();
 	TicketMasterSaveAndLoadTextTest();
 	TicketMasterSaveAndLoadBinTest();
+	LunaParkSaveAndLoadTextTest();
+	LunaParkSaveAndLoadBinTest();
 }
 void WeatherSaveAndLoadTextTest() {
 	const char* fileName = "AAAWeatherTest.txt";
@@ -1519,6 +1521,275 @@ void TicketMasterSaveAndLoadBinTest() {
 	// free
 	freeTicketMaster(&ticketMaster);
 	freeTicketMaster(&ticketMaster2);
+}
+void LunaParkSaveAndLoadTextTest() {
+	LunaPark lunaPark;
+	char* name = (char*)malloc(19 * sizeof(char));
+	strcpy(name, "ShaiAndDanielPark");
+
+	assert(initLunaPark(&lunaPark, name) == 1);
+	lunaPark.openTime.hour = 8;
+	lunaPark.openTime.minute = 9;
+	lunaPark.closeTime.hour = 21;
+	lunaPark.closeTime.minute = 22;
+
+	lunaPark.weather.condition = eStorm;
+	lunaPark.weather.temp = -5;
+
+	// create 2 tickets
+	Date date;
+	initDate(&date, 1, 1, 2025);
+
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+
+	initTicket(ticket1, eAdult, date);
+	initTicket(ticket2, eChild, date);
+
+	assert(addTicket(&lunaPark.ticketMasters, ticket1) == 1);
+	assert(addTicket(&lunaPark.ticketMasters, ticket2) == 1);
+
+	strcpy(ticket1->id, "AAAAAAAAAAA1");
+	strcpy(ticket2->id, "AAAAAAAAAAA2");
+
+
+	// Add two workers
+	char* name1 = (char*)malloc(9 * sizeof(char));
+	strcpy(name1, "WorkerA");
+	Person* worker1 = initWorker(0, name1, 180, 30);
+	char* name2 = (char*)malloc(9 * sizeof(char));
+	strcpy(name2, "WorkerB");
+	Person* worker2 = initWorker(1, name2, 170, 35);
+
+	assert(addWorkerToLunaPark(&lunaPark, worker1) == 1);
+	assert(addWorkerToLunaPark(&lunaPark, worker2) == 1);
+
+	// Add two guests
+
+	char* guestName1 = (char*)malloc(7 * sizeof(char));
+	strcpy(guestName1, "GuestA");
+	Person* guest1 = initGuest(guestName1, 160, 20);
+	char* guestName2 = (char*)malloc(7 * sizeof(char));
+	strcpy(guestName2, "GuestB");
+	Person* guest2 = initGuest(guestName2, 150, 25);
+
+	assert(addGuestToLunaPark(&lunaPark, guest1) == 1);
+	assert(addGuestToLunaPark(&lunaPark, guest2) == 1);
+
+	Guest* guestSon = guest1->pDerived;
+	Guest* guestDaughter = guest2->pDerived;
+
+	guestSon->ticket = ticket1;
+	guestDaughter->ticket = ticket2;
+
+
+	// add two facilities
+	Facility* facility1 = (Facility*)malloc(sizeof(Facility));
+	Facility* facility2 = (Facility*)malloc(sizeof(Facility));
+
+	// init facilities
+	char* fName1 = (char*)malloc(5 * sizeof(char));
+	strcpy(fName1, "fOne");
+	char* fName2 = (char*)malloc(5 * sizeof(char));
+	strcpy(fName2, "fTwo");
+
+	initFacility(facility1, fName1, 1, 70, eAdultFacility);
+	initFacility(facility2, fName2, 2, 80, eChildrenFacility);
+
+	addFacilityToLunaPark(&lunaPark, facility1);
+	addFacilityToLunaPark(&lunaPark, facility2);
+
+
+	// add 2 shops
+	Shop shop1, shop2;
+	Time openHour;
+	initTime(&openHour, 8, 0);
+	Time closeHour;
+	initTime(&closeHour, 20, 0);
+
+	initShop(&shop1, "Shop1", eRestaurant, openHour, closeHour, 0);
+	char* sName = (char*)malloc(6 * sizeof(char));
+	strcpy(sName, "Shop2");
+	initShop(&shop2, sName, eRestaurant, openHour, closeHour, 1);
+
+	addShopToLunaPark(&lunaPark, shop1);
+	addShopToLunaPark(&lunaPark, shop2);
+
+
+	// save to file
+	const char* fileName = "AAALunaParkTest.txt";
+	assert(saveLunaParkToTextFile(&lunaPark, fileName) == 1);
+
+	// Load the luna park from the file
+	LunaPark loadedLunaPark;
+	assert(loadLunaParkFromTextFile(&loadedLunaPark, fileName) == 1);
+
+	// Check that the loaded luna park is the same as the saved luna park
+	assert(strcmp(lunaPark.name, loadedLunaPark.name) == 0);
+	assert(lunaPark.numOfWorkers == loadedLunaPark.numOfWorkers);
+	assert(lunaPark.numOfShops == loadedLunaPark.numOfShops);
+	assert(lunaPark.weather.condition == loadedLunaPark.weather.condition);
+	assert(lunaPark.weather.temp == loadedLunaPark.weather.temp);
+	assert(compareTime(&lunaPark.openTime, &loadedLunaPark.openTime) == 0);
+	assert(compareTime(&lunaPark.closeTime, &loadedLunaPark.closeTime) == 0);
+
+
+	// Check that the loaded workers are the same as the saved workers
+	Worker* worker1Load = loadedLunaPark.workers[0]->pDerived;
+	Worker* worker2Load = loadedLunaPark.workers[1]->pDerived;
+
+	Worker* worker1Com = worker1->pDerived;
+	Worker* worker2Com = worker2->pDerived;
+
+	assert(worker1Load->WorkerId == worker1Com->WorkerId);
+	assert(worker2Load->WorkerId == worker2Com->WorkerId);
+
+	// Check that the loaded guests are the same as the saved guests
+	Guest* guestSonLoad = lunaPark.guests[0]->pDerived;
+	Guest* guestDaughterLoad = lunaPark.guests[1]->pDerived;
+
+	assert(compareTicketsByID(&guestSon->ticket, &guestSonLoad->ticket) == 0);
+	assert(compareTicketsByID(&guestDaughter->ticket, &guestDaughterLoad->ticket) == 0);
+
+
+	// Free memory
+	freeLunaPark(&lunaPark);
+	freeLunaPark(&loadedLunaPark);
+}
+
+void LunaParkSaveAndLoadBinTest() {
+	LunaPark lunaPark;
+	char* name = (char*)malloc(19 * sizeof(char));
+	strcpy(name, "ShaiAndDanielPark");
+
+	assert(initLunaPark(&lunaPark, name) == 1);
+	lunaPark.openTime.hour = 8;
+	lunaPark.openTime.minute = 9;
+	lunaPark.closeTime.hour = 21;
+	lunaPark.closeTime.minute = 22;
+
+	lunaPark.weather.condition = eStorm;
+	lunaPark.weather.temp = -5;
+
+	// create 2 tickets
+	Date date;
+	initDate(&date, 1, 1, 2025);
+
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+
+	initTicket(ticket1, eAdult, date);
+	initTicket(ticket2, eChild, date);
+
+	assert(addTicket(&lunaPark.ticketMasters, ticket1) == 1);
+	assert(addTicket(&lunaPark.ticketMasters, ticket2) == 1);
+
+	strcpy(ticket1->id, "AAAAAAAAAAA1");
+	strcpy(ticket2->id, "AAAAAAAAAAA2");
+
+
+	// Add two workers
+	char* name1 = (char*)malloc(9 * sizeof(char));
+	strcpy(name1, "WorkerA");
+	Person* worker1 = initWorker(0, name1, 180, 30);
+	char* name2 = (char*)malloc(9 * sizeof(char));
+	strcpy(name2, "WorkerB");
+	Person* worker2 = initWorker(1, name2, 170, 35);
+
+	assert(addWorkerToLunaPark(&lunaPark, worker1) == 1);
+	assert(addWorkerToLunaPark(&lunaPark, worker2) == 1);
+
+	// Add two guests
+
+	char* guestName1 = (char*)malloc(7 * sizeof(char));
+	strcpy(guestName1, "GuestA");
+	Person* guest1 = initGuest(guestName1, 160, 20);
+	char* guestName2 = (char*)malloc(7 * sizeof(char));
+	strcpy(guestName2, "GuestB");
+	Person* guest2 = initGuest(guestName2, 150, 25);
+
+	assert(addGuestToLunaPark(&lunaPark, guest1) == 1);
+	assert(addGuestToLunaPark(&lunaPark, guest2) == 1);
+
+	Guest* guestSon = guest1->pDerived;
+	Guest* guestDaughter = guest2->pDerived;
+
+	guestSon->ticket = ticket1;
+	guestDaughter->ticket = ticket2;
+
+
+	// add two facilities
+	Facility* facility1 = (Facility*)malloc(sizeof(Facility));
+	Facility* facility2 = (Facility*)malloc(sizeof(Facility));
+
+	// init facilities
+	char* fName1 = (char*)malloc(5 * sizeof(char));
+	strcpy(fName1, "fOne");
+	char* fName2 = (char*)malloc(5 * sizeof(char));
+	strcpy(fName2, "fTwo");
+
+	initFacility(facility1, fName1, 1, 70, eAdultFacility);
+	initFacility(facility2, fName2, 2, 80, eChildrenFacility);
+
+	addFacilityToLunaPark(&lunaPark, facility1);
+	addFacilityToLunaPark(&lunaPark, facility2);
+
+
+	// add 2 shops
+	Shop shop1, shop2;
+	Time openHour;
+	initTime(&openHour, 8, 0);
+	Time closeHour;
+	initTime(&closeHour, 20, 0);
+
+	initShop(&shop1, "Shop1", eRestaurant, openHour, closeHour, 0);
+	char* sName = (char*)malloc(6 * sizeof(char));
+	strcpy(sName, "Shop2");
+	initShop(&shop2, sName, eRestaurant, openHour, closeHour, 1);
+
+	addShopToLunaPark(&lunaPark, shop1);
+	addShopToLunaPark(&lunaPark, shop2);
+
+
+	// save to file
+	const char* fileName = "AAALunaParkTest.bin";
+	assert(saveLunaParkToBinFile(&lunaPark, fileName) == 1);
+
+	// Load the luna park from the file
+	LunaPark loadedLunaPark;
+	assert(loadLunaParkFromBinFile(&loadedLunaPark, fileName) == 1);
+
+	// Check that the loaded luna park is the same as the saved luna park
+	assert(strcmp(lunaPark.name, loadedLunaPark.name) == 0);
+	assert(lunaPark.numOfWorkers == loadedLunaPark.numOfWorkers);
+	assert(lunaPark.numOfShops == loadedLunaPark.numOfShops);
+	assert(lunaPark.weather.condition == loadedLunaPark.weather.condition);
+	assert(lunaPark.weather.temp == loadedLunaPark.weather.temp);
+	assert(compareTime(&lunaPark.openTime, &loadedLunaPark.openTime) == 0);
+	assert(compareTime(&lunaPark.closeTime, &loadedLunaPark.closeTime) == 0);
+
+
+	// Check that the loaded workers are the same as the saved workers
+	Worker* worker1Load = loadedLunaPark.workers[0]->pDerived;
+	Worker* worker2Load = loadedLunaPark.workers[1]->pDerived;
+
+	Worker* worker1Com = worker1->pDerived;
+	Worker* worker2Com = worker2->pDerived;
+
+	assert(worker1Load->WorkerId == worker1Com->WorkerId);
+	assert(worker2Load->WorkerId == worker2Com->WorkerId);
+
+	// Check that the loaded guests are the same as the saved guests
+	Guest* guestSonLoad = lunaPark.guests[0]->pDerived;
+	Guest* guestDaughterLoad = lunaPark.guests[1]->pDerived;
+
+	assert(compareTicketsByID(&guestSon->ticket, &guestSonLoad->ticket) == 0);
+	assert(compareTicketsByID(&guestDaughter->ticket, &guestDaughterLoad->ticket) == 0);
+
+
+	// Free memory
+	freeLunaPark(&lunaPark);
+	freeLunaPark(&loadedLunaPark);
 }
 // LunaPark tests
 void LunaParkTests() {

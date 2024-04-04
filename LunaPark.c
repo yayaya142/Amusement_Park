@@ -40,7 +40,6 @@ int initLunaPark(LunaPark* lunaPark, char* name) {
 	lunaPark->weather = weather;
 	lunaPark->shops = NULL;
 	lunaPark->numOfShops = 0;
-	lunaPark->todayVisitors = 0;
 	return 1;
 }
 void initLunaParkByUser(LunaPark* lunaPark) {
@@ -95,7 +94,6 @@ void printLunaParkInfo(const LunaPark* lunaPark) {
 	printTicketMaster(&lunaPark->ticketMasters);
 
 	printf("\n");
-	printf("Today Visitors: %d\n", lunaPark->todayVisitors);
 	printWeather(&lunaPark->weather);
 
 }
@@ -367,7 +365,255 @@ int changeLunaParkWeatherByUser(LunaPark* lunaPark) {
 
 
 // save and load functions
-int saveLunaParkToTextFile(const LunaPark* lunaPark, const char* fileName) {}
-int loadLunaParkFromTextFile(LunaPark* lunaPark, const char* fileName) {}
-int saveLunaParkToBinFile(const LunaPark* lunaPark, const char* fileName) {}
-int loadLunaParkFromBinFile(LunaPark* lunaPark, const char* fileName) {}
+int saveLunaParkToTextFile(const LunaPark* lunaPark, const char* fileName) {
+	// check if lunaPark is valid
+	if (lunaPark == NULL) {
+		return 0;
+	}
+	FILE* fp = fopen(fileName, "w");
+
+	IS_FILE_NULL(fp);
+
+	// save name
+	if (writeStringToTextFile(fp, lunaPark->name) == 0) { // TO DO FIX THIS PART
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Save TicketMaster
+	if (saveTicketMasterToTextFile(&lunaPark->ticketMasters, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Save Facilities
+	if (saveFacilityListToTextFile(lunaPark->facilities, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Save opem time
+	if (saveTimeToTextFile(&lunaPark->openTime, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Save close time
+	if (saveTimeToTextFile(&lunaPark->closeTime, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Save workers
+	if (writeIntToTextFile(fp, lunaPark->numOfWorkers) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	for (int i = 0; i < lunaPark->numOfWorkers; i++) {
+		if (saveWorkerToTextFile(lunaPark->workers[i], fp) == 0) {
+			CLOSE_FILE(fp);
+			return 0;
+		}
+	}
+
+	// Save guests
+	if (writeIntToTextFile(fp, lunaPark->numOfGuests) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	for (int i = 0; i < lunaPark->numOfGuests; i++) {
+		if (saveGuestToTextFile(lunaPark->guests[i], fp) == 0) {
+			CLOSE_FILE(fp);
+			return 0;
+		}
+	}
+
+	// Save weather
+	if (saveWeatherToTextFile(&lunaPark->weather, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Save shops
+	if (writeIntToTextFile(fp, lunaPark->numOfShops) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	for (int i = 0; i < lunaPark->numOfShops; i++) {
+		if (saveShopToTextFile(&lunaPark->shops[i], fp) == 0) {
+			CLOSE_FILE(fp);
+			return 0;
+		}
+	}
+	CLOSE_FILE(fp);
+	return 1;
+}
+int loadLunaParkFromTextFile(LunaPark* lunaPark, const char* fileName) {
+	// check if lunaPark is valid
+	if (lunaPark == NULL) {
+		return 0;
+	}
+	FILE* fp = fopen(fileName, "r");
+
+
+	IS_FILE_NULL(fp);
+
+	// load name
+	char buffer[MAX_BUFFER_SIZE];
+	readStringFromTextFile(fp, buffer, MAX_BUFFER_SIZE);
+	char* name = getDynStr(buffer);
+
+	// init lunaPark
+	initLunaPark(lunaPark, name);
+
+	// Load TicketMaster
+	initTicketMaster(&lunaPark->ticketMasters);
+	if (loadTicketMasterFromTextFile(&lunaPark->ticketMasters, fp) == 0) {
+		CLOSE_FILE(fp);
+		freeLunaPark(lunaPark);
+		return 0;
+	}
+
+
+	// Load Facilities
+	if (L_init(&lunaPark->facilities) == 0) {
+		CLOSE_FILE(fp);
+		freeLunaPark(lunaPark);
+		return 0;
+	}
+	int numOfFacilities = 0;
+	if (readIntFromTextFile(fp, &numOfFacilities) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	for (int i = 0; i < numOfFacilities; i++) {
+		Facility* facility = (Facility*)malloc(sizeof(Facility));
+		if (facility == NULL) {
+			CLOSE_FILE(fp);
+			freeLunaPark(lunaPark);
+			return 0;
+		}
+		if (loadFacilityFromTextFile(facility, fp) == 0) {
+			freeFacility(facility);
+			CLOSE_FILE(fp);
+			freeLunaPark(lunaPark);
+			return 0;
+		}
+		L_insert(&lunaPark->facilities.head, facility);
+	}
+
+
+
+	// Load open time
+	if (loadTimeFromTextFile(&lunaPark->openTime, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Load close time
+	if (loadTimeFromTextFile(&lunaPark->closeTime, fp) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	// Load workers
+	int tempNumOfWorkers;
+	if (readIntFromTextFile(fp, &tempNumOfWorkers) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+
+	for (int i = 0; i < tempNumOfWorkers; i++)
+	{
+		Person* worker = NULL;
+		if (loadWorkerFromTextFile(&worker, fp) == 0) {
+			CLOSE_FILE(fp);
+			freeLunaPark(lunaPark);
+			return 0;
+		}
+		addWorkerToLunaPark(lunaPark, worker);
+	}
+
+	// Load guests
+	int tempNUmOfGuests;
+	if (readIntFromTextFile(fp, &tempNUmOfGuests) == 0) {
+		CLOSE_FILE(fp);
+		freeLunaPark(lunaPark);
+		return 0;
+	}
+
+	for (int i = 0; i < tempNUmOfGuests; i++)
+	{
+		Person* guest = NULL;
+		if (loadGuestFromTextFile(&guest, &lunaPark->ticketMasters, fp) == 0) {
+			CLOSE_FILE(fp);
+			freeLunaPark(lunaPark);
+			return 0;
+		}
+		addGuestToLunaPark(lunaPark, guest);
+	}
+
+	// Load weather
+	if (loadWeatherFromTextFile(&lunaPark->weather, fp) == 0) {
+		CLOSE_FILE(fp);
+		freeLunaPark(lunaPark);
+		return 0;
+	}
+
+	// Load shops
+	int tempNumOfShops;
+	if (readIntFromTextFile(fp, &tempNumOfShops) == 0) {
+		CLOSE_FILE(fp);
+		freeLunaPark(lunaPark);
+		return 0;
+	}
+
+	for (int i = 0; i < tempNumOfShops; i++)
+	{
+		Shop shop;
+		if (loadShopFromTextFile(&shop, fp) == 0) {
+			CLOSE_FILE(fp);
+			freeLunaPark(lunaPark);
+			return 0;
+		}
+		addShopToLunaPark(lunaPark, shop);
+	}
+
+
+
+	CLOSE_FILE(fp);
+	return 1;
+
+}
+int saveLunaParkToBinFile(const LunaPark* lunaPark, const char* fileName) {
+	// check if lunaPark is valid
+	if (lunaPark == NULL) {
+		return 0;
+	}
+	FILE* fp = fopen(fileName, "w");
+
+	IS_FILE_NULL(fp);
+
+
+
+
+
+
+
+	CLOSE_FILE(fp);
+	return 1;
+
+}
+int loadLunaParkFromBinFile(LunaPark* lunaPark, const char* fileName) {
+
+	//printf("\n######################################################################\n");
+	//printLunaParkInfo(lunaPark);
+	//printf("\n######################################################################\n");
+
+	//	CLOSE_FILE(fp);
+
+}

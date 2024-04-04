@@ -13,7 +13,7 @@
 typedef unsigned char BYTE;
 // define macros
 #define IS_FILE_NULL(file) if (file == NULL) { return 0; }
-
+#define CLOSE_FILE(file) fclose(file);
 
 int writeStringToTextFile(FILE* file, const char* str);
 int writeIntToTextFile(FILE* file, int num);
