@@ -581,6 +581,7 @@ void TicketMasterTests() {
 	sortTicketsByDateTest();
 	sortTicketsByGuestTypeTest();
 	findTicketByIDTest();
+	calcAllIncomeTest();
 	//sortTicketsUserTestManual(); // manual test off by default
 	//buyTicketTestManual(); // manual test off by default
 	//findTicketByUserTestManual(); // manual test off by default
@@ -685,6 +686,41 @@ void calcDailyTest() {
 
 	freeTicketMaster(&ticketMaster);
 }
+void calcAllIncomeTest() {
+	TicketMaster ticketMaster;
+	initTicketMaster(&ticketMaster);
+
+	// Create some tickets
+	Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+	Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
+
+
+	Date date1, date2, date3;
+	initDate(&date1, 1, 1, 2025);
+	initDate(&date2, 2, 1, 2025);
+	initDate(&date3, 3, 1, 2025);
+
+	initTicket(ticket1, eChild, date3);
+	initTicket(ticket2, eAdult, date1);
+	initTicket(ticket3, eStudent, date2);
+	initTicket(ticket4, eSoldier, date2);
+
+	// Add tickets to the ticket master
+	assert(addTicket(&ticketMaster, ticket1) == 1);
+	assert(addTicket(&ticketMaster, ticket2) == 1);
+	assert(addTicket(&ticketMaster, ticket3) == 1);
+	assert(addTicket(&ticketMaster, ticket4) == 1);
+
+	// Test 1: Calculate total income
+	double totalIncome = calcAllIncome(&ticketMaster);
+	double resultNeedToBe = (BASE_TICKET_PRICE * Discount[0]) + (BASE_TICKET_PRICE * Discount[1]) + (BASE_TICKET_PRICE * Discount[2]) + (BASE_TICKET_PRICE * Discount[3]);
+	assert(totalIncome == resultNeedToBe);
+
+	freeTicketMaster(&ticketMaster);
+}
+
 void sortTicketsByIDTest() {
 	TicketMaster ticketMaster;
 	initTicketMaster(&ticketMaster);

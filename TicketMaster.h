@@ -26,6 +26,7 @@ int addTicket(TicketMaster* ticketMaster, Ticket* ticket);
 void printTicketMaster(const TicketMaster* ticketMaster);
 void freeTicketMaster(TicketMaster* ticketMaster);
 double calcDaily(const TicketMaster* ticketMaster, Date* date);
+double calcAllIncome(const TicketMaster* ticketMaster);
 void printDailyIncome(const TicketMaster* ticketMaster, Date* date);
 void sortTicketsByID(TicketMaster* ticketMaster);
 void sortTicketsByDate(TicketMaster* ticketMaster);

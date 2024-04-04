@@ -62,6 +62,16 @@ double calcDaily(const TicketMaster* ticketMaster, Date* date) {
 	return sum;
 }
 
+double calcAllIncome(const TicketMaster* ticketMaster) {
+	if (ticketMaster == NULL || ticketMaster->tickets == NULL) {
+		return 0;
+	}
+	double sum = 0;
+	for (int i = 0; i < ticketMaster->numOfTickets; i++) {
+		sum = SUM(sum, ticketMaster->tickets[i]->price);
+	}
+	return sum;
+}
 
 
 void printDailyIncome(const TicketMaster* ticketMaster, Date* date) {

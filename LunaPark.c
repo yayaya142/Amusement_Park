@@ -33,6 +33,8 @@ int initLunaPark(LunaPark* lunaPark, char* name) {
 	lunaPark->openTime = openTime;
 	lunaPark->closeTime = closeTime;
 	lunaPark->workers = NULL;
+	lunaPark->guests = NULL;
+	lunaPark->numOfGuests = 0;
 	lunaPark->numOfWorkers = 0;
 	lunaPark->ticketMasters = ticketMaster;
 	lunaPark->weather = weather;
@@ -41,7 +43,7 @@ int initLunaPark(LunaPark* lunaPark, char* name) {
 	lunaPark->todayVisitors = 0;
 	return 1;
 }
-int initLunaParkByUser(LunaPark* lunaPark) {
+void initLunaParkByUser(LunaPark* lunaPark) {
 	int flag = 0;
 	char* name = NULL;
 	do {
@@ -82,6 +84,13 @@ void printLunaParkInfo(const LunaPark* lunaPark) {
 	printf("Facilities: \n");
 	L_print(&lunaPark->facilities, printFacility);
 
+	printf("Number of Guests: %d\n", lunaPark->numOfGuests);
+	for (int i = 0; i < lunaPark->numOfGuests; i++)
+	{
+		lunaPark->guests[i]->printPerson(lunaPark->guests[i]);
+		printf("\n");
+	}
+
 	printf("Ticket Master: \n");
 	printTicketMaster(&lunaPark->ticketMasters);
 
@@ -107,6 +116,36 @@ void printLunaParkMenu(const LunaPark* lunaPark) {
 	printf("\n\n");
 }
 
+void printProfit(const LunaPark* lunaPark) {
+	if (lunaPark == NULL || &lunaPark->ticketMasters == NULL) {
+		return;
+	}
+	Date date;
+	int userOption = 0;
+	printf("Please choose an option:\n");
+	printf("1. Print All Income\n");
+	printf("2. Print Income By Date\n");
+	scanf("%d", &userOption);
+	double income = 0;
+
+	switch (userOption)
+	{
+		//% .2lf % s\n", ticket->price, CURRENCY_SYMBOL);
+	case 1:
+		income = calcAllIncome(&lunaPark->ticketMasters);
+		printf("Total Income: %.2lf%s\n", income, CURRENCY_SYMBOL);
+		break;
+	case 2:
+		initDateByUser(&date);
+		income = calcDaily(&lunaPark->ticketMasters, &date);
+		printf("Income for ");
+		printDate(&date);
+		printf(" is: %.2lf%s\n", income, CURRENCY_SYMBOL);
+		break;
+	default:
+		break;
+	}
+}
 
 
 
@@ -121,21 +160,20 @@ void freeLunaPark(LunaPark* lunaPark) {
 
 	L_free(&lunaPark->facilities, freeFacility);
 
+	// free workers
+	for (int i = 0; i < lunaPark->numOfWorkers; i++) {
+		lunaPark->workers[i]->freePerson(lunaPark->workers[i]);
+	}
+	free(lunaPark->workers);
 
+	// free guests
+	for (int i = 0; i < lunaPark->numOfGuests; i++) {
+		lunaPark->guests[i]->freePerson(lunaPark->guests[i]);
+	}
+	free(lunaPark->guests);
 
-
-
-
-
-
-	//// free workers
-	//for (int i = 0; i < lunaPark->numOfWorkers; i++) {
-	//	lunaPark->workers[i].freePerson(lunaPark->workers[i]); // NEED To check
-	//}
-	//free(lunaPark->workers);
-
-	//// free ticketMasters
-	//freeTicketMaster(lunaPark->ticketMasters);
+	// free ticketMasters
+	freeTicketMaster(&lunaPark->ticketMasters);
 
 	//// free shops
 	generalArrayFunction((void*)lunaPark->shops, lunaPark->numOfShops, sizeof(Shop), (void*)freeShop); // TODO need to check
@@ -200,7 +238,6 @@ int addShopToLunaPark(LunaPark* lunaPark, Shop shop) {
 }
 
 
-
 void addShopToLunaParkByUser(LunaPark* lunaPark) {
 	if (lunaPark == NULL) {
 		return;
@@ -210,6 +247,8 @@ void addShopToLunaParkByUser(LunaPark* lunaPark) {
 	initShopByUser(&shop);
 	addShopToLunaPark(lunaPark, shop);
 }
+
+
 int changeLunaParkTimeByUser(LunaPark* lunaPark) {
 	if (lunaPark == NULL) {
 		return 0;
@@ -256,6 +295,65 @@ int changeLunaParkTimeByUser(LunaPark* lunaPark) {
 
 	return 1;
 }
+int addWorkerToLunaPark(LunaPark* lunaPark, Person* worker) {
+	if (lunaPark == NULL) {
+		return 0;
+	}
+
+	Person** tempArr = (Person**)realloc(lunaPark->workers, (lunaPark->numOfWorkers + 1) * sizeof(Person*));
+	if (tempArr == NULL) {
+		return 0;
+	}
+	lunaPark->workers = tempArr;
+	lunaPark->workers[lunaPark->numOfWorkers] = worker;
+	lunaPark->numOfWorkers++;
+
+	return 1;
+}
+
+
+void addWorkerToLunaParkByUser(LunaPark* lunaPark) {
+	if (lunaPark == NULL) {
+		return;
+	}
+	// creat worker
+	Person* worker = initWorkerByUser();
+	if (worker == NULL) {
+		return;
+	}
+	addWorkerToLunaPark(lunaPark, worker);
+}
+
+
+void addGuestToLunaParkByUser(LunaPark* lunaPark, TicketMaster* ticketMaster) {
+	if (lunaPark == NULL || ticketMaster == NULL) {
+		return;
+	}
+	Person* guest = initGuestByUser(ticketMaster);
+	if (guest == NULL) {
+		return;
+	}
+	addGuestToLunaPark(lunaPark, guest);
+}
+
+int addGuestToLunaPark(LunaPark* lunaPark, Person* guest) {
+	if (lunaPark == NULL) {
+		return 0;
+	}
+
+	Person** tempArr = (Person**)realloc(lunaPark->guests, (lunaPark->numOfGuests + 1) * sizeof(Person*));
+	if (tempArr == NULL) {
+		return 0;
+	}
+	lunaPark->guests = tempArr;
+	lunaPark->guests[lunaPark->numOfGuests] = guest;
+	lunaPark->numOfGuests++;
+
+	return 1;
+
+}
+
+
 int changeLunaParkWeatherByUser(LunaPark* lunaPark) {
 	if (lunaPark == NULL) {
 		return 0;
@@ -266,21 +364,6 @@ int changeLunaParkWeatherByUser(LunaPark* lunaPark) {
 
 	return 1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // save and load functions
