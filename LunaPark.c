@@ -75,11 +75,7 @@ void printLunaParkInfo(const LunaPark* lunaPark) {
 	}
 
 	printf("Number of Shops: %d\n", lunaPark->numOfShops);
-	for (int i = 0; i < lunaPark->numOfShops; i++)
-	{
-		printShop(&lunaPark->shops[i]);
-		printf("\n");
-	}
+	generalArrayFunction((void*)lunaPark->shops, lunaPark->numOfShops, sizeof(Shop), (void*)printShop); // TODO need to check
 
 	int numOfFacilities = L_count(&lunaPark->facilities);
 	printf("Number of Facilities: %d\n", numOfFacilities);
@@ -142,14 +138,9 @@ void freeLunaPark(LunaPark* lunaPark) {
 	//freeTicketMaster(lunaPark->ticketMasters);
 
 	//// free shops
-	//for (int i = 0; i < lunaPark->numOfShops; i++){
-	//	freeShop(lunaPark->shops[i]);
-	//	free(lunaPark->shops[i]);
-	//}
+	generalArrayFunction((void*)lunaPark->shops, lunaPark->numOfShops, sizeof(Shop), (void*)freeShop); // TODO need to check
 
-
-
-
+	free(lunaPark->shops);
 
 
 
@@ -177,6 +168,135 @@ void addFacilityToLunaParkByUser(LunaPark* lunaPark) {
 	initFacilityByUser(facility);
 	printFacility(facility);
 	addFacilityToLunaPark(lunaPark, facility);
+}
+
+
+
+int addShopToLunaPark(LunaPark* lunaPark, Shop shop) {
+	if (lunaPark == NULL) {
+		return 0;
+	}
+
+	// Allocate memory for new shop array
+	Shop* tempShops = (Shop*)realloc(lunaPark->shops, (lunaPark->numOfShops + 1) * sizeof(Shop));
+	if (tempShops == NULL) {
+		return 0;
+	}
+
+	Shop* newShop = &tempShops[lunaPark->numOfShops];
+	// deep copy the shop values
+	newShop->name = getDynStr(shop.name);
+	newShop->openHour = shop.openHour;
+	newShop->closeHour = shop.closeHour;
+	newShop->type = shop.type;
+	newShop->isNameDynamic = 1;
+	freeShop(&shop); // free the original shop
+
+	// Update LunaPark shops
+	lunaPark->shops = tempShops;
+	lunaPark->numOfShops++;
+
+	return 1;
+}
+
+
+
+void addShopToLunaParkByUser(LunaPark* lunaPark) {
+	if (lunaPark == NULL) {
+		return;
+	}
+
+	Shop shop;
+	initShopByUser(&shop);
+	addShopToLunaPark(lunaPark, shop);
+}
+int changeLunaParkTimeByUser(LunaPark* lunaPark) {
+	if (lunaPark == NULL) {
+		return 0;
+	}
+
+	int userOption = 0;
+	Time tempOpenTime = lunaPark->openTime;
+	Time tempCloseTime = lunaPark->closeTime;
+	int flag = 0;
+	while (userOption != 3) {
+		printf("Please choose an option:\n");
+		printf("1. Change Open Time\n");
+		printf("2. Change Close Time\n");
+		printf("3. Exit\n");
+		scanf("%d", &userOption);
+		switch (userOption)
+		{
+		case 1:
+			initTimeByUser(&tempOpenTime);
+			flag = 1;
+			break;
+		case 2:
+			initTimeByUser(&tempCloseTime);
+			flag = 1;
+			break;
+		case 3:
+			break;
+		default:
+			printf("Invalid option, please try again\n");
+			break;
+		}
+
+		if (flag > 0 && compareTime(&tempOpenTime, &tempCloseTime) == 1) {
+			printf("Open Time need to be before Close Time\n");
+			flag = 0; // reset flag to allow user to re-enter times
+		}
+	}
+
+	if (flag > 0) {
+		// If valid times were entered, update the LunaPark times
+		lunaPark->openTime = tempOpenTime;
+		lunaPark->closeTime = tempCloseTime;
+	}
+
+	return 1;
+}
+int addWorkerToLunaPark(LunaPark* lunaPark, Person* worker) {
+	if (lunaPark == NULL) {
+		return 0;
+	}
+
+	Person** tempArr = (Person**)realloc(lunaPark->workers, (lunaPark->numOfWorkers + 1) * sizeof(Person*));
+	if (tempArr == NULL) {
+		return 0;
+	}
+	lunaPark->workers = tempArr;
+	lunaPark->workers[lunaPark->numOfWorkers] = worker;
+	lunaPark->numOfWorkers++;
+
+	return 1;
+}
+
+
+void addWorkerToLunaParkByUser(LunaPark* lunaPark) {
+	if (lunaPark == NULL) {
+		return 0;
+	}
+	// creat worker
+	Person* worker = initWorkerByUser();// will it work?
+	if (worker == NULL) {
+		return 0;
+	}
+	addWorkerToLunaPark(lunaPark, worker);
+	return 1;
+}
+
+
+
+int changeLunaParkWeatherByUser(LunaPark* lunaPark) {
+	if (lunaPark == NULL) {
+		return 0;
+	}
+	Weather tempWeather;
+	initWeatherByUser(&tempWeather);
+	lunaPark->weather = tempWeather;
+
+	return 1;
 }
 
 
