@@ -36,5 +36,6 @@ int loadFacilityFromTextFile(Facility* facility, FILE* fp);
 int saveFacilityToBinFile(const Facility* facility, FILE* fp);
 int loadFacilityFromBinFile(Facility* facility, FILE* fp);
 int saveFacilityListToTextFile(LIST list, FILE* fp);
+int saveFacilityListToBinFile(LIST list, FILE* fp);
 
 #endif 

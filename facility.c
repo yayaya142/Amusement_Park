@@ -237,3 +237,28 @@ int saveFacilityListToTextFile(LIST list, FILE* fp) {
 	}
 	return 1;
 }
+
+int saveFacilityListToBinFile(LIST list, FILE* fp) {
+	if (fp == NULL) {
+		return 0;
+	}
+	int count = L_count(&list);
+	if (writeGeneralToBinFile(fp, &count, sizeof(int)) == 0) {
+		CLOSE_FILE(fp);
+		return 0;
+	}
+	NODE* ptr = list.head.next;
+	while (ptr != NULL) {
+		Facility* pFacility = (Facility*)ptr->key;
+		if (pFacility == NULL) {
+			CLOSE_FILE(fp);
+			return 0;
+		}
+		if (saveFacilityToBinFile(pFacility, fp) == 0) {
+			CLOSE_FILE(fp);
+			return 0;
+		}
+		ptr = ptr->next;
+	}
+	return 1;
+}
