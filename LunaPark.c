@@ -33,6 +33,8 @@ int initLunaPark(LunaPark* lunaPark, char* name) {
 	lunaPark->openTime = openTime;
 	lunaPark->closeTime = closeTime;
 	lunaPark->workers = NULL;
+	lunaPark->guests = NULL;
+	lunaPark->numOfGuests = 0;
 	lunaPark->numOfWorkers = 0;
 	lunaPark->ticketMasters = ticketMaster;
 	lunaPark->weather = weather;
@@ -126,6 +128,12 @@ void freeLunaPark(LunaPark* lunaPark) {
 		lunaPark->workers[i]->freePerson(lunaPark->workers[i]);
 	}
 	free(lunaPark->workers);
+
+	// free guests
+	for (int i = 0; i < lunaPark->numOfGuests; i++) {
+		lunaPark->guests[i]->freePerson(lunaPark->guests[i]);
+	}
+	free(lunaPark->guests);
 
 	//// free ticketMasters
 	//freeTicketMaster(lunaPark->ticketMasters);
@@ -280,6 +288,34 @@ void addWorkerToLunaParkByUser(LunaPark* lunaPark) {
 	return 1;
 }
 
+
+void addGuestToLunaParkByUser(LunaPark* lunaPark, TicketMaster* ticketMaster){
+	if (lunaPark == NULL || ticketMaster == NULL) {
+		return;
+	}
+	Person* guest = initGuestByUser(ticketMaster);
+	if (guest == NULL) {
+		return;
+	}
+	addGuestToLunaPark(lunaPark, guest);
+}
+
+int addGuestToLunaPark(LunaPark* lunaPark, Person* guest){
+	if (lunaPark == NULL) {
+		return 0;
+	}
+
+	Person** tempArr = (Person**)realloc(lunaPark->guests, (lunaPark->numOfGuests + 1) * sizeof(Person*));
+	if (tempArr == NULL) {
+		return 0;
+	}
+	lunaPark->guests = tempArr;
+	lunaPark->guests[lunaPark->numOfGuests] = guest;
+	lunaPark->numOfGuests++;
+
+	return 1;
+
+}
 
 
 int changeLunaParkWeatherByUser(LunaPark* lunaPark) {

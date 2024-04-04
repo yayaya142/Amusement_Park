@@ -8,6 +8,7 @@
 #include "Time.h"
 #include "Facility.h"
 #include "Worker.h"
+#include "Guest.h"
 #include "TicketMaster.h"
 #include "Date.h"
 #include "Ticket.h"
@@ -31,13 +32,14 @@ typedef struct {
 	Time openTime;
 	Time closeTime;
 	Person** workers;
+	Person** guests;
+	int numOfGuests;
 	int numOfWorkers;
 	TicketMaster ticketMasters;
 	Weather weather;
 	Shop* shops;
 	int numOfShops;
 	int todayVisitors;
-	// TODO NEED TO ADD GUEST
 } LunaPark;
 
 
@@ -48,12 +50,15 @@ void printLunaParkInfo(const LunaPark* lunaPark); //done
 void freeLunaPark(LunaPark* lunaPark); //done
 int addFacilityToLunaPark(LunaPark* lunaPark, Facility* facility); // done
 void addFacilityToLunaParkByUser(LunaPark* lunaPark); // done
-int addWorkerToLunaPark(LunaPark* lunaPark, Person* worker);
-void addWorkerToLunaParkByUser(LunaPark* lunaPark);
-int addShopToLunaPark(LunaPark* lunaPark, Shop shop);
-void addShopToLunaParkByUser(LunaPark* lunaPark);
-int changeLunaParkTimeByUser(LunaPark* lunaPark);
-int changeLunaParkWeatherByUser(LunaPark* lunaPark);
+int addWorkerToLunaPark(LunaPark* lunaPark, Person* worker);// done
+void addWorkerToLunaParkByUser(LunaPark* lunaPark); // done
+int addShopToLunaPark(LunaPark* lunaPark, Shop shop); // done
+void addShopToLunaParkByUser(LunaPark* lunaPark); // done
+int changeLunaParkTimeByUser(LunaPark* lunaPark); // done
+int changeLunaParkWeatherByUser(LunaPark* lunaPark); // done
+
+void addGuestToLunaParkByUser(LunaPark* lunaPark, TicketMaster* ticketMaster);
+int addGuestToLunaPark(LunaPark* lunaPark, Person* guest);
 
 
 // save and load functions

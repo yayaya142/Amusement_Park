@@ -22,8 +22,7 @@ void runFacilityTests() {
 //LunaPark
 void runLunaParkTests() {
     addWorkerToLunaParkTest();
-    //addFacilityToLunaParkTest();
-    //addGuestToLunaParkTest();
+    addGuestToLunaParkTest();
 
 }
 
@@ -46,7 +45,7 @@ void runAllTestsDaniel() {
     runWorkerTests();
     runFacilityTests();
     runGuestTests();
-    //runAllSaveAndLoadTests();
+    runAllSaveAndLoadTests();
     runLunaParkTests();
     printf("---------All tests passed!----------\n");
 }
@@ -599,8 +598,6 @@ void addWorkerToLunaParkTest() {
 	assert(lunaPark.numOfWorkers == 1);
     assert(lunaPark.workers[0] == worker);
     assert(lunaPark.workers[0]->age == worker->age);
-
-    printf("%s-----------------------\n", lunaPark.workers[0]->name);
     assert(strcmp(lunaPark.workers[0]->name, worker->name) == 0);
     Worker* w = lunaPark.workers[0]->pDerived;
     assert(w->department == eCoffeeShop);
@@ -621,4 +618,72 @@ void addWorkerToLunaParkTest() {
 
 	//free memory
 	freeLunaPark(&lunaPark);
+}
+
+void addGuestToLunaParkTest() {
+    LunaPark lunaPark;
+    char* name = (char*)malloc(9 * sizeof(char));
+    strcpy(name, "LunaPark");
+    initLunaPark(&lunaPark, name);
+
+    TicketMaster ticketMaster;
+    initTicketMaster(&ticketMaster);
+
+    Ticket* ticket1 = (Ticket*)malloc(sizeof(Ticket));
+    Ticket* ticket2 = (Ticket*)malloc(sizeof(Ticket));
+    Ticket* ticket3 = (Ticket*)malloc(sizeof(Ticket));
+    Ticket* ticket4 = (Ticket*)malloc(sizeof(Ticket));
+    Ticket* ticket5 = (Ticket*)malloc(sizeof(Ticket));
+
+    Date date1, date2, date3, date4, date5;
+    initDate(&date1, 1, 1, 2025);
+    initDate(&date2, 2, 1, 2025);
+    initDate(&date3, 3, 1, 2025);
+    initDate(&date4, 4, 1, 2025);
+    initDate(&date5, 5, 1, 2025);
+
+    initTicket(ticket1, eChild, date1);
+    initTicket(ticket2, eAdult, date2);
+    initTicket(ticket3, eStudent, date3);
+    initTicket(ticket4, eStudent, date4);
+    initTicket(ticket5, eAdult, date5);
+    
+    addTicket(&ticketMaster, ticket1);
+    addTicket(&ticketMaster, ticket2);
+    addTicket(&ticketMaster, ticket3);
+    addTicket(&ticketMaster, ticket4);
+    addTicket(&ticketMaster, ticket5);
+
+    //init Guest
+    char* name1 = (char*)malloc(7 * sizeof(char));
+    strcpy(name1, "person");
+    Person* guest = initGuest(name1, 170, 30);
+    Guest* g = guest->pDerived;
+    g->ticket = ticket1;
+
+    //add guest number 1 to LunaPark
+    assert(addGuestToLunaPark(&lunaPark, guest) == 1);
+    //check if guest was added to LunaPark
+    assert(lunaPark.numOfGuests == 1);
+    assert(lunaPark.guests[0] == guest);
+    assert(lunaPark.guests[0]->age == guest->age);
+    assert(strcmp(lunaPark.guests[0]->name, guest->name) == 0);
+    assert(g->ticket == ticket1);
+
+    //add guest number 2 to LunaPark
+    char* name2 = (char*)malloc(7 * sizeof(char));
+    strcpy(name2, "person");
+    Person* guest2 = initGuest(name2, 170, 30);
+    Guest* g2 = guest2->pDerived;
+    g2->ticket = ticket2;
+    assert(addGuestToLunaPark(&lunaPark, guest2) == 1);
+    //check if guest was added to LunaPark
+    assert(lunaPark.numOfGuests == 2);
+    assert(lunaPark.guests[1]->age == guest2->age);
+    assert(strcmp(lunaPark.guests[1]->name, guest2->name) == 0);
+    assert(g2->ticket == ticket2);
+
+    //free memory
+    freeLunaPark(&lunaPark);
+    freeTicketMaster(&ticketMaster);
 }

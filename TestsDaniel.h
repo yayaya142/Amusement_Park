@@ -33,6 +33,7 @@ void initGuestTests();
 
 void runLunaParkTests();
 void addWorkerToLunaParkTest();
+void addGuestToLunaParkTest();
 
 
 //------File Test---------
