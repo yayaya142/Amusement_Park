@@ -141,6 +141,7 @@ void sortTicketsByUser(TicketMaster* ticketMaster) {
 		sortTicketsByGuestType(ticketMaster);
 		break;
 	}
+	printf("\nTickets sorted by %s\n\n", sortTypeStr[choice]);
 }
 
 

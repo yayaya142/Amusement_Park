@@ -32,6 +32,10 @@ int isValidShop(char* name, eShopType type, Time openHour, Time closeHour) {
 
 	return 1;
 }
+
+//printf("----------------------------\n");
+//printf("Name: %s\nCategory: %s\nHeight Limitation:\n\t-Min Height: %d\n\t-Max Height: %d\n", facility->name, facilityTypeTilte[facility->category], facility->minHeight, facility->maxHeight);
+//printf("----------------------------\n");
 void printShop(const void* pShop) {
 	const Shop* shop = (Shop*)pShop;
 
@@ -40,13 +44,15 @@ void printShop(const void* pShop) {
 		printf("Invalid shop\n");
 		return;
 	}
-	printf("Shop name: %s\n", shop->name);
-	printf("Shop type: %s\n", ShopTypeStr[shop->type]);
-	printf("Open hour: ");
+	printf("----------------------------\n");
+	printf("Name: %s\nCategory: %s\n", shop->name, ShopTypeStr[shop->type]);
+	printf("Opening hours: \n");
+	printf("\tOpen hour: ");
 	printTime(&shop->openHour);
-	printf("\nClose hour: ");
+	printf("\n\tClose hour: ");
 	printTime(&shop->closeHour);
 	printf("\n");
+	printf("----------------------------\n");
 }
 
 int compareShopsByName(const Shop* shop1, const Shop* shop2) {

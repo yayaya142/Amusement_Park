@@ -102,15 +102,15 @@ void printLunaParkMenu(const LunaPark* lunaPark) {
 	if (lunaPark == NULL || validName(lunaPark->name) == 0) {
 		return;
 	}
-	printf("\n\n--------------------  %s  -------------------\n", lunaPark->name);
-	printf("Welcome Back!\n");
+	printf("\n\n--------------------  %s  -------------------\n\n", lunaPark->name);
+	printf("\t\t\tWelcome Back!\n\n");
 	printf("Today's is %s,", WeatherTypeStr[lunaPark->weather.condition]);
 	printWeatherForcastTemp(lunaPark->weather.temp);
-	printf("We are open from ");
+	printf("\t\tWe are open from ");
 	printTime(&lunaPark->openTime);
 	printf(" to ");
 	printTime(&lunaPark->closeTime);
-	printf("\n---------------------------------------------\n\n");
+	printf("\n------------------------------------------------------------------\n\n");
 }
 
 void printProfit(const LunaPark* lunaPark) {
