@@ -1488,6 +1488,7 @@ void TicketMasterSaveAndLoadBinTest() {
 void LunaParkTests() {
 	initLunaParkTest();
 	addFacilityToLunaParkTest();
+	addShopToLunaParkTest();
 }
 void initLunaParkTest() {
 	LunaPark lunaPark;
@@ -1554,6 +1555,58 @@ void addFacilityToLunaParkTest() {
 	assert(node->key == facility2);
 	node = node->next;
 	assert(node->key == facility1);
+
+	freeLunaPark(&lunaPark);
+}
+void addShopToLunaParkTest() {
+	LunaPark lunaPark;
+	Shop shop1, shop2, shop3, shop4;
+	char* name = (char*)malloc(18 * sizeof(char));
+	strcpy(name, "ShaiAndDanielPark");
+
+	assert(initLunaPark(&lunaPark, name) == 1);
+
+	Time openHour;
+	initTime(&openHour, 8, 0);
+	Time closeHour;
+	initTime(&closeHour, 20, 0);
+
+	initShop(&shop1, "Shop1", eRestaurant, openHour, closeHour, 0);
+	initShop(&shop2, "Shop2", eRestaurant, openHour, closeHour, 0);
+	initShop(&shop3, "Shop3", eRestaurant, openHour, closeHour, 0);
+
+	char* shopfourName = (char*)malloc(6 * sizeof(char));
+	strcpy(shopfourName, "Shop4");
+	initShop(&shop4, shopfourName, eRestaurant, openHour, closeHour, 1);
+
+	// add shops to luna park
+	assert(addShopToLunaPark(&lunaPark, shop1) == 1);
+	assert(addShopToLunaPark(&lunaPark, shop2) == 1);
+	assert(addShopToLunaPark(&lunaPark, shop3) == 1);
+	assert(addShopToLunaPark(&lunaPark, shop4) == 1);
+
+	assert(lunaPark.numOfShops == 4);
+
+	// check the added shops 
+	assert(strcmp(lunaPark.shops[0].name, "Shop1") == 0);
+	assert(lunaPark.shops[0].type == eRestaurant);
+	assert(compareTime(&lunaPark.shops[0].openHour, &openHour) == 0);
+	assert(compareTime(&lunaPark.shops[0].closeHour, &closeHour) == 0);
+
+	assert(strcmp(lunaPark.shops[1].name, "Shop2") == 0);
+	assert(lunaPark.shops[1].type == eRestaurant);
+	assert(compareTime(&lunaPark.shops[1].openHour, &openHour) == 0);
+	assert(compareTime(&lunaPark.shops[1].closeHour, &closeHour) == 0);
+
+	assert(strcmp(lunaPark.shops[2].name, "Shop3") == 0);
+	assert(lunaPark.shops[2].type == eRestaurant);
+	assert(compareTime(&lunaPark.shops[2].openHour, &openHour) == 0);
+	assert(compareTime(&lunaPark.shops[2].closeHour, &closeHour) == 0);
+
+	assert(strcmp(lunaPark.shops[3].name, "Shop4") == 0);
+	assert(lunaPark.shops[3].type == eRestaurant);
+	assert(compareTime(&lunaPark.shops[3].openHour, &openHour) == 0);
+	assert(compareTime(&lunaPark.shops[3].closeHour, &closeHour) == 0);
 
 	freeLunaPark(&lunaPark);
 }

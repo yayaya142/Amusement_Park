@@ -47,7 +47,7 @@ void initWeatherByUser(Weather* weather) {
 			printf("%d. %s\n", i + 1, WeatherTypeStr[i]);
 		}
 		scanf("%d", &condition);
-		printf("Enter temperature");
+		printf("Enter temperature: ");
 		scanf("%d", &temp);
 		flag = 1;
 	} while (!initWeather(weather, condition - 1, temp));

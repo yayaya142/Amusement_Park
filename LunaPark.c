@@ -75,7 +75,7 @@ void printLunaParkInfo(const LunaPark* lunaPark) {
 	}
 
 	printf("Number of Shops: %d\n", lunaPark->numOfShops);
-	generalArrayFunction((void*)&lunaPark->shops, lunaPark->numOfShops, sizeof(Shop), (void*)printShop); // TODO need to check
+	generalArrayFunction((void*)lunaPark->shops, lunaPark->numOfShops, sizeof(Shop), (void*)printShop); // TODO need to check
 
 	int numOfFacilities = L_count(&lunaPark->facilities);
 	printf("Number of Facilities: %d\n", numOfFacilities);
@@ -138,12 +138,9 @@ void freeLunaPark(LunaPark* lunaPark) {
 	//freeTicketMaster(lunaPark->ticketMasters);
 
 	//// free shops
-	generalArrayFunction((void*)&lunaPark->shops, lunaPark->numOfShops, sizeof(Shop), (void*)freeShop); // TODO need to check
+	generalArrayFunction((void*)lunaPark->shops, lunaPark->numOfShops, sizeof(Shop), (void*)freeShop); // TODO need to check
 
-
-
-
-
+	free(lunaPark->shops);
 
 
 
@@ -175,8 +172,44 @@ void addFacilityToLunaParkByUser(LunaPark* lunaPark) {
 
 
 
-int addShopToLunaPark(LunaPark* lunaPark, Shop* shop) {}
-void addShopToLunaParkByUser(LunaPark* lunaPark) {}
+int addShopToLunaPark(LunaPark* lunaPark, Shop shop) {
+	if (lunaPark == NULL) {
+		return 0;
+	}
+
+	// Allocate memory for new shop array
+	Shop* tempShops = (Shop*)realloc(lunaPark->shops, (lunaPark->numOfShops + 1) * sizeof(Shop));
+	if (tempShops == NULL) {
+		return 0;
+	}
+
+	Shop* newShop = &tempShops[lunaPark->numOfShops];
+	// deep copy the shop values
+	newShop->name = getDynStr(shop.name);
+	newShop->openHour = shop.openHour;
+	newShop->closeHour = shop.closeHour;
+	newShop->type = shop.type;
+	newShop->isNameDynamic = 1;
+	freeShop(&shop); // free the original shop
+
+	// Update LunaPark shops
+	lunaPark->shops = tempShops;
+	lunaPark->numOfShops++;
+
+	return 1;
+}
+
+
+
+void addShopToLunaParkByUser(LunaPark* lunaPark) {
+	if (lunaPark == NULL) {
+		return;
+	}
+
+	Shop shop;
+	initShopByUser(&shop);
+	addShopToLunaPark(lunaPark, shop);
+}
 int changeLunaParkTimeByUser(LunaPark* lunaPark) {
 	if (lunaPark == NULL) {
 		return 0;

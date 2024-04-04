@@ -49,7 +49,7 @@ int addFacilityToLunaPark(LunaPark* lunaPark, Facility* facility); // done
 void addFacilityToLunaParkByUser(LunaPark* lunaPark); // done
 int addWorkerToLunaPark(LunaPark* lunaPark, Person* worker);
 void addWorkerToLunaParkByUser(LunaPark* lunaPark);
-int addShopToLunaPark(LunaPark* lunaPark, Shop* shop); // need to do with no malloc
+int addShopToLunaPark(LunaPark* lunaPark, Shop shop);
 void addShopToLunaParkByUser(LunaPark* lunaPark);
 int changeLunaParkTimeByUser(LunaPark* lunaPark);
 int changeLunaParkWeatherByUser(LunaPark* lunaPark);

@@ -86,5 +86,6 @@ void TicketMasterSaveAndLoadBinTest();
 void LunaParkTests();
 void initLunaParkTest();
 void addFacilityToLunaParkTest();
+void addShopToLunaParkTest();
 #endif 
 

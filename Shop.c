@@ -46,6 +46,7 @@ void printShop(const void* pShop) {
 	printTime(&shop->openHour);
 	printf("\nClose hour: ");
 	printTime(&shop->closeHour);
+	printf("\n");
 }
 
 int compareShopsByName(const Shop* shop1, const Shop* shop2) {
