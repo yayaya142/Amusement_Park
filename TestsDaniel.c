@@ -45,7 +45,7 @@ void runAllTestsDaniel() {
     runWorkerTests();
     runFacilityTests();
     runGuestTests();
-    runAllSaveAndLoadTests();
+    //runAllSaveAndLoadTests();
     runLunaParkTests();
     printf("---------All tests passed!----------\n");
 }

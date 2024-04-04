@@ -35,11 +35,11 @@ void initFacilityByUser(Facility* pFacility) {
 		printf("Please enter the category:\n");
 		//print all categories
 		for (int i = 0; i < eNofTypesFacility; i++) {
-			printf("%d. %s\n", i, facilityTypeTilte[i]);
+			printf("%d. %s\n", i+1, facilityTypeTilte[i]);
 		}
 		scanf("%d", &category);
 		flag++;
-	} while (!initFacility(pFacility, name, minHeight, maxHeight, category));
+	} while (!initFacility(pFacility, name, minHeight, maxHeight, category-1));
 }
 
 int validFacility(char* name, int minHeight, int maxHeight, Category category) {

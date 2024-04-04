@@ -49,7 +49,7 @@ Person* initWorkerByUser() {
 		}
 		printf("Enter department:\n");
 		for (int i = 0; i < eNofShopTypes; i++) {
-			printf("%d. %s\n", i, ShopTypeStr[i]);
+			printf("%d. %s\n", i+1, ShopTypeStr[i]);
 		}
 		scanf("%d", &dep);
 		flag=1;
@@ -57,7 +57,7 @@ Person* initWorkerByUser() {
 		char* new_name = (char*)malloc(size + 1);
 		strcpy(new_name, tempPerson->name);
 		//init worker
-		worker = initWorker(dep,new_name, tempPerson->height, tempPerson->age);
+		worker = initWorker(dep-1,new_name, tempPerson->height, tempPerson->age);
 	} while (!worker);
 	//free the temp person
 	tempPerson->freePerson(tempPerson);
