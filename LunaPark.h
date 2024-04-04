@@ -60,12 +60,12 @@ void addGuestToLunaParkByUser(LunaPark* lunaPark, TicketMaster* ticketMaster); /
 int addGuestToLunaPark(LunaPark* lunaPark, Person* guest); // done
 void printProfit(const LunaPark* lunaPark); // done
 
-
 // save and load functions
 int saveLunaParkToTextFile(const LunaPark* lunaPark, const char* fileName);
 int loadLunaParkFromTextFile(LunaPark* lunaPark, const char* fileName);
 int saveLunaParkToBinFile(const LunaPark* lunaPark, const char* fileName);
 int loadLunaParkFromBinFile(LunaPark* lunaPark, const char* fileName);
+
 
 
 #endif 

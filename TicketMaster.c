@@ -121,7 +121,7 @@ void sortTicketsByGuestType(TicketMaster* ticketMaster) {
 
 
 
-void sortTicketsUser(TicketMaster* ticketMaster) {
+void sortTicketsByUser(TicketMaster* ticketMaster) {
 	printf("Please choose sorting type:\n");
 	for (int i = 1; i < eNofSortTypes; i++)
 	{

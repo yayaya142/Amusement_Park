@@ -31,7 +31,7 @@ void printDailyIncome(const TicketMaster* ticketMaster, Date* date);
 void sortTicketsByID(TicketMaster* ticketMaster);
 void sortTicketsByDate(TicketMaster* ticketMaster);
 void sortTicketsByGuestType(TicketMaster* ticketMaster);
-void sortTicketsUser(TicketMaster* ticketMaster);
+void sortTicketsByUser(TicketMaster* ticketMaster);
 Ticket* buyTicket(TicketMaster* ticketMaster);
 Ticket* findTicketByUser(const TicketMaster* ticketMaster);
 Ticket* findTicketByID(TicketMaster* ticketMaster, char* id);

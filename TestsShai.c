@@ -853,7 +853,7 @@ void sortTicketsUserTestManual() {
 
 	for (int i = 0; i < 5; i++)
 	{
-		sortTicketsUser(&ticketMaster);
+		sortTicketsByUser(&ticketMaster);
 		printTicketMaster(&ticketMaster);
 	}
 
@@ -913,7 +913,7 @@ void findTicketByUserTestManual() {
 	// Find tickets by user
 	for (int i = 0; i < 4; i++)
 	{
-		sortTicketsUser(&ticketMaster);
+		sortTicketsByUser(&ticketMaster);
 		printTicketMaster(&ticketMaster);
 		Ticket* foundTicket1 = findTicketByUser(&ticketMaster);
 
