@@ -1,4 +1,4 @@
-Amusement Park Manager
+## Amusement Park Manager
 
 ## Description
 This project is an Amusement Park Manager written in C.
