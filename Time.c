@@ -62,3 +62,78 @@ void initTimeByUser(Time* time) {
 		flag = 1;
 	} while (!initTime(time, hour, minute));
 }
+
+// save and load functions
+int saveTimeToTextFile(const Time* pTime, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+
+	if (writeIntToTextFile(fp, pTime->hour) == 0) {
+		return 0;
+	}
+
+	if (writeIntToTextFile(fp, pTime->minute) == 0) {
+		return 0;
+	}
+
+	return 1;
+}
+
+
+int loadTimeFromTextFile(Time* pTime, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+	int tempHour, tempMinute;
+
+	if (readIntFromTextFile(fp, &tempHour) == 0) {
+		return 0;
+	}
+
+	if (readIntFromTextFile(fp, &tempMinute) == 0) {
+		return 0;
+	}
+
+	// init the time
+	if (!initTime(pTime, tempHour, tempMinute)) {
+		return 0;
+	}
+
+	return 1;
+}
+
+int saveTimeToBinFile(const Time* pTime, FILE* fp) {
+	// save compressed time to file
+	IS_FILE_NULL(fp);
+
+
+	BYTE data[2];
+	data[0] = (pTime->hour << 3) | (pTime->minute >> 3);
+	data[1] = (pTime->minute << 5);
+
+	if (fwrite(data, sizeof(BYTE), 2, fp) != 2) {
+		return 0;
+	}
+
+	return 1;
+
+}
+
+int loadTimeFromBinFile(Time* pTime, FILE* fp) {
+	// load compressed time from file
+	IS_FILE_NULL(fp);
+
+
+	BYTE data[2];
+	if (fread(data, sizeof(BYTE), 2, fp) != 2) {
+		return 0;
+	}
+
+	int hour = data[0] >> 3;
+	int minute = ((data[0] & 0x07) << 3) | (data[1] >> 5);
+
+	if (!initTime(pTime, hour, minute)) {
+		return 0;
+	}
+
+	return 1;
+}

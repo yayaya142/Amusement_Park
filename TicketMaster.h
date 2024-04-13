@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "Ticket.h"
 #include "General.h"
+#include "fileHelper.h"
 
 typedef enum {
 	eNotSorted, eSortedByID, eSortedByDate, eSortedByGuestType, eNofSortTypes
@@ -25,12 +26,21 @@ int addTicket(TicketMaster* ticketMaster, Ticket* ticket);
 void printTicketMaster(const TicketMaster* ticketMaster);
 void freeTicketMaster(TicketMaster* ticketMaster);
 double calcDaily(const TicketMaster* ticketMaster, Date* date);
+double calcAllIncome(const TicketMaster* ticketMaster);
 void printDailyIncome(const TicketMaster* ticketMaster, Date* date);
 void sortTicketsByID(TicketMaster* ticketMaster);
 void sortTicketsByDate(TicketMaster* ticketMaster);
 void sortTicketsByGuestType(TicketMaster* ticketMaster);
-void sortTicketsUser(TicketMaster* ticketMaster);
+void sortTicketsByUser(TicketMaster* ticketMaster);
 Ticket* buyTicket(TicketMaster* ticketMaster);
 Ticket* findTicketByUser(const TicketMaster* ticketMaster);
+Ticket* findTicketByID(TicketMaster* ticketMaster, char* id);
+// save and load functions
+int saveTicketMasterToTextFile(const TicketMaster* ticketMaster, FILE* fp);
+int loadTicketMasterFromTextFile(TicketMaster* ticketMaster, FILE* fp);
+int saveTicketMasterToBinFile(const TicketMaster* ticketMaster, FILE* fp);
+int loadTicketMasterFromBinFile(TicketMaster* ticketMaster, FILE* fp);
+
+
 
 #endif 

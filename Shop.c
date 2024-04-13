@@ -32,6 +32,10 @@ int isValidShop(char* name, eShopType type, Time openHour, Time closeHour) {
 
 	return 1;
 }
+
+//printf("----------------------------\n");
+//printf("Name: %s\nCategory: %s\nHeight Limitation:\n\t-Min Height: %d\n\t-Max Height: %d\n", facility->name, facilityTypeTilte[facility->category], facility->minHeight, facility->maxHeight);
+//printf("----------------------------\n");
 void printShop(const void* pShop) {
 	const Shop* shop = (Shop*)pShop;
 
@@ -40,12 +44,15 @@ void printShop(const void* pShop) {
 		printf("Invalid shop\n");
 		return;
 	}
-	printf("Shop name: %s\n", shop->name);
-	printf("Shop type: %s\n", ShopTypeStr[shop->type]);
-	printf("Open hour: ");
+	printf("----------------------------\n");
+	printf("Name: %s\nCategory: %s\n", shop->name, ShopTypeStr[shop->type]);
+	printf("Opening hours: \n");
+	printf("\tOpen hour: ");
 	printTime(&shop->openHour);
-	printf("\nClose hour: ");
+	printf("\n\tClose hour: ");
 	printTime(&shop->closeHour);
+	printf("\n");
+	printf("----------------------------\n");
 }
 
 int compareShopsByName(const Shop* shop1, const Shop* shop2) {
@@ -54,7 +61,6 @@ int compareShopsByName(const Shop* shop1, const Shop* shop2) {
 
 void freeShop(void* pShop) {
 	Shop* shop = (Shop*)pShop;
-
 	if (shop->isNameDynamic) {
 		free(shop->name);
 	}
@@ -97,4 +103,151 @@ void initShopByUser(Shop* shop) {
 
 	} while (!initShop(shop, name, type - 1, openHour, closeHour, 1));
 
+}
+
+
+
+// save and load functions
+int saveShopToTextFile(const Shop* shop, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+
+	if (!isValidShop(shop->name, shop->type, shop->openHour, shop->closeHour)) {
+		return 0;
+	}
+	// save name to file
+	if (writeStringToTextFile(fp, shop->name) == 0) {
+		return 0;
+	}
+	// save shop type
+	if (writeIntToTextFile(fp, shop->type) == 0) {
+		return 0;
+	}
+
+	if (saveTimeToTextFile(&shop->openHour, fp) == 0) {
+		return 0;
+	}
+
+	if (saveTimeToTextFile(&shop->closeHour, fp) == 0) {
+		return 0;
+	}
+
+
+
+
+	return 1;
+
+}
+int loadShopFromTextFile(Shop* shop, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+
+	char buffer[MAX_BUFFER_SIZE];
+	// read name from file
+	char* bufferName = readStringFromTextFile(fp, buffer, MAX_BUFFER_SIZE);
+
+	if (bufferName == NULL) {
+		return 0;
+	}
+	// read shop type
+	int intTempType;
+	if (readIntFromTextFile(fp, &intTempType) == 0) {
+		return 0;
+	}
+	eShopType tempType = intTempType;
+
+
+	// read open hour and close hour
+	Time tempOpenHour;
+	if (loadTimeFromTextFile(&tempOpenHour, fp) == 0) {
+		return 0;
+	}
+	// read close hour
+	Time tempCloseHour;
+	if (loadTimeFromTextFile(&tempCloseHour, fp) == 0) {
+		return 0;
+	}
+
+	// aloocate memory for shop name
+	char* tempName = (char*)malloc(strlen(bufferName) + 1);
+	if (tempName == NULL) {
+		return 0;
+	}
+	strcpy(tempName, bufferName);
+
+	// init shop
+	if (!initShop(shop, tempName, tempType, tempOpenHour, tempCloseHour, 1)) {
+		free(tempName);
+		return 0;
+	}
+
+	return 1;
+}
+int saveShopToBinFile(const Shop* shop, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+
+	if (!isValidShop(shop->name, shop->type, shop->openHour, shop->closeHour)) {
+		return 0;
+	}
+
+	// save name to file
+	if (writeStringTobinFile(fp, shop->name) == 0) {
+		return 0;
+	}
+
+	// save shop type
+	if (writeGeneralToBinFile(fp, &shop->type, sizeof(eShopType)) == 0) {
+		return 0;
+	}
+
+	// save open hour
+	if (saveTimeToBinFile(&shop->openHour, fp) == 0) {
+		return 0;
+	}
+
+	// save close hour
+	if (saveTimeToBinFile(&shop->closeHour, fp) == 0) {
+		return 0;
+	}
+
+	return 1;
+}
+int loadShopFromBinFile(Shop* shop, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+
+	// read name from file
+	char* tempName = readStringFromBinFile(fp);
+	if (tempName == NULL) {
+		return 0;
+	}
+
+	// read shop type
+	eShopType tempType;
+	if (readGeneralFromBinFile(fp, &tempType, sizeof(eShopType)) == 0) {
+		free(tempName);
+		return 0;
+	}
+
+	// read open hour
+	Time tempOpenHour;
+	if (loadTimeFromBinFile(&tempOpenHour, fp) == 0) {
+		free(tempName);
+		return 0;
+	}
+
+	// read close hour
+	Time tempCloseHour;
+	if (loadTimeFromBinFile(&tempCloseHour, fp) == 0) {
+		free(tempName);
+		return 0;
+	}
+
+	// init shop
+	if (!initShop(shop, tempName, tempType, tempOpenHour, tempCloseHour, 1)) {
+		free(tempName);
+		return 0;
+	}
+	return 1;
 }

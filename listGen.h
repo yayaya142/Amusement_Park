@@ -7,7 +7,8 @@
 #ifndef _LIST_
 #define _LIST_
 #include <crtdbg.h> // TODO: remove before release
-
+#include <stdio.h>
+#include <stdlib.h>
 #include "def.h"
 
 
@@ -44,4 +45,5 @@ int L_print(const LIST* pList, void(*print)(const void*));					// print the list
 NODE* L_insertSorted(LIST* pList, DATA Value, int(*compare)(const void*, const void*));	// add new node in a sorted way
 
 int L_count(const LIST* pList);	// count the number of nodes in the list
+
 #endif

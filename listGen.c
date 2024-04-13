@@ -3,8 +3,7 @@
 /**************/
 
 
-#include <stdio.h>
-#include <stdlib.h>
+
 #include "listGen.h"
 
 
@@ -188,3 +187,4 @@ int L_count(const LIST* pList) {
 
 	return count;
 }
+

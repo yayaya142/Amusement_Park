@@ -6,6 +6,7 @@
 #include <string.h>
 #include "Date.h"
 #include "General.h"
+#include "fileHelper.h"
 
 #define ID_TICKET_LEN 12
 #define BASE_TICKET_PRICE 100.0
@@ -40,6 +41,10 @@ int compareTicketsByDate(const void* ticket1, const void* ticket2);
 int compareTicketsByGuestType(const void* ticket1, const void* ticket2);
 void printGuestType();
 void initTicketByUser(Ticket* ticket);
-
+// save and load functions
+int saveTicketToTextFile(const Ticket* ticket, FILE* fp);
+int loadTicketFromTextFile(Ticket* ticket, FILE* fp);
+int saveTicketToBinFile(const Ticket* ticket, FILE* fp);
+int loadTicketFromBinFile(Ticket* ticket, FILE* fp);
 
 #endif 

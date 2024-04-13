@@ -110,3 +110,156 @@ void initTicketByUser(Ticket* ticket) {
 
 	} while (!initTicket(ticket, guestType - 1, date));
 }
+
+// save and load functions
+int saveTicketToTextFile(const Ticket* ticket, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+	if (ticket == NULL || isValidTicket(ticket->guestType, ticket->dateOfVisit) == 0) {
+		return 0;
+	}
+	// write the ticket ID to the file
+	if (writeStringToTextFile(fp, ticket->id) == 0) {
+		return 0;
+	}
+	// write the guest type to the file
+	if (writeIntToTextFile(fp, ticket->guestType) == 0) {
+		return 0;
+	}
+	// write the price to the file
+	if (writeDoubleToTextFile(fp, ticket->price) == 0) {
+		return 0;
+	}
+	// write the isUsed to the file
+	if (writeIntToTextFile(fp, ticket->isUsed) == 0) {
+		return 0;
+	}
+	// write the date of visit to the file
+	if (saveDateToTextFile(&ticket->dateOfVisit, fp) == 0) {
+		return 0;
+	}
+	return 1;
+
+}
+int loadTicketFromTextFile(Ticket* ticket, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+
+	char id[ID_TICKET_LEN + 1]; // + 1 for null terminator
+	int guestType;
+	double price;
+	int isUsed;
+	Date date;
+
+	// read the ticket ID from the file
+	if (readStringFromTextFile(fp, id, ID_TICKET_LEN + 1) == NULL) {
+		return 0;
+	}
+	// read the guest type from the file
+	if (readIntFromTextFile(fp, &guestType) == 0) {
+		return 0;
+	}
+	// read the price from the file
+	if (readDoubleFromTextFile(fp, &price) == 0) {
+		return 0;
+	}
+	// read the isUsed from the file
+	if (readIntFromTextFile(fp, &isUsed) == 0) {
+		return 0;
+	}
+
+	// read the date of visit from the file
+	if (loadDateFromTextFile(&date, fp) == 0) {
+		return 0;
+	}
+
+	// create the ticket
+	ticket->guestType = guestType;
+	ticket->price = price;
+	ticket->isUsed = isUsed;
+	ticket->dateOfVisit = date;
+	strcpy(ticket->id, id);
+
+	if (isValidTicket(ticket->guestType, ticket->dateOfVisit) == 0) {
+		return 0;
+	}
+
+	return 1;
+
+}
+int saveTicketToBinFile(const Ticket* ticket, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+	if (ticket == NULL || isValidTicket(ticket->guestType, ticket->dateOfVisit) == 0) {
+		return 0;
+	}
+	// write the ticket ID to the file
+	if (writeStringTobinFile(fp, ticket->id) == 0) {
+		return 0;
+	}
+	// write the guest type to the file
+	if (writeGeneralToBinFile(fp, &ticket->guestType, sizeof(eGuestType)) == 0) {
+		return 0;
+	}
+	// write the price to the file
+	if (writeGeneralToBinFile(fp, &ticket->price, sizeof(double)) == 0) {
+		return 0;
+	}
+	// write the isUsed to the file
+	if (writeGeneralToBinFile(fp, &ticket->isUsed, sizeof(int)) == 0) {
+		return 0;
+	}
+	// write the date of visit to the file
+	if (saveDateToBinFile(&ticket->dateOfVisit, fp) == 0) {
+		return 0;
+	}
+	return 1;
+}
+int loadTicketFromBinFile(Ticket* ticket, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+
+	char id[ID_TICKET_LEN + 1]; // + 1 for null terminator
+	eGuestType guestType;
+	double price;
+	int isUsed;
+	Date date;
+
+	// read the ticket ID from the file
+	char* tempID = readStringFromBinFile(fp);
+	if (tempID == NULL) {
+		return 0;
+	}
+	strcpy(id, tempID);
+	free(tempID);
+
+	// read the guest type from the file
+	if (readGeneralFromBinFile(fp, &guestType, sizeof(eGuestType)) == 0) {
+		return 0;
+	}
+	// read the price from the file
+	if (readGeneralFromBinFile(fp, &price, sizeof(double)) == 0) {
+		return 0;
+	}
+	// read the isUsed from the file
+	if (readGeneralFromBinFile(fp, &isUsed, sizeof(int)) == 0) {
+		return 0;
+	}
+
+	// read the date of visit from the file
+	if (loadDateFromBinFile(&date, fp) == 0) {
+		return 0;
+	}
+
+	// create the ticket
+	strcpy(ticket->id, id);
+	ticket->guestType = guestType;
+	ticket->price = price;
+	ticket->isUsed = isUsed;
+	ticket->dateOfVisit = date;
+
+	return 1;
+}
+
+
+

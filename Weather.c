@@ -2,7 +2,7 @@
 
 
 
-int initWeather(Weather* weather, eWeatherType condition, float temp) {
+int initWeather(Weather* weather, eWeatherType condition, int temp) {
 	if (!isValidWeather(condition, temp)) {
 		return 0;
 	}
@@ -11,7 +11,7 @@ int initWeather(Weather* weather, eWeatherType condition, float temp) {
 	return 1;
 }
 
-int isValidWeather(eWeatherType condition, float temp) {
+int isValidWeather(eWeatherType condition, int temp) {
 	if (temp < MIN_TEMP || temp > MAX_TEMP) {
 		return 0;
 	}
@@ -27,16 +27,16 @@ void printWeather(const Weather* weather) {
 		printf("Invalid weather\n");
 		return;
 	}
-	printf("Weather condition: %s, Temperature: %.2f%s\n", WeatherTypeStr[weather->condition], weather->temp, DEFUALT_WEATHER_SYMBOL);
+	printf("Weather condition: %s, Temperature: %d%s\n", WeatherTypeStr[weather->condition], weather->temp, DEFUALT_WEATHER_SYMBOL);
 }
 int compareWeatherByTemp(const Weather* weather1, const Weather* weather2) {
-	return (int)(weather1->temp - weather2->temp);
+	return (weather1->temp - weather2->temp);
 }
 
 void initWeatherByUser(Weather* weather) {
 	int flag = 0;
 	int condition;
-	float temp;
+	int temp;
 	do
 	{
 		if (flag > 0) {
@@ -47,9 +47,102 @@ void initWeatherByUser(Weather* weather) {
 			printf("%d. %s\n", i + 1, WeatherTypeStr[i]);
 		}
 		scanf("%d", &condition);
-		printf("Enter temperature");
-		scanf("%f", &temp);
+		printf("Enter temperature: ");
+		scanf("%d", &temp);
 		flag = 1;
 	} while (!initWeather(weather, condition - 1, temp));
 }
 
+void printWeatherForcastTemp(int temp) {
+	if (temp < MIN_TEMP || temp > MAX_TEMP) {
+		printf("Invalid temperature");
+		return;
+	}
+
+	if (temp < 0) {
+		printf("the temp is %d, it's Freezing outside join the snowball fight!\n", temp);
+	}
+	if (temp >= 0 && temp <= 10) {
+		printf("the temp is %d, It's cold outside, don't forget Your coat!\n", temp);
+	}
+	if (temp > 10 && temp <= 20) {
+		printf("the temp is %d, It's chilly outside for all the adventurers\n", temp);
+	}
+	if (temp > 20 && temp <= 30) {
+		printf("the temp is %d It's a fine day, go have fun!\n", temp);
+	}
+	if (temp > 30) {
+		printf("the temp is %d, Very hot day drink alot of water", temp);
+	}
+
+}
+
+// ---- save functions ----
+int saveWeatherToTextFile(const Weather* weather, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+
+	if (weather == NULL || isValidWeather(weather->condition, weather->temp) == 0) {
+		return 0;
+	}
+
+	if (writeIntToTextFile(fp, weather->condition) == 0) {
+		return 0;
+	}
+
+	if (writeIntToTextFile(fp, weather->temp) == 0) {
+		return 0;
+	}
+
+	return 1;
+}
+
+int loadWeatherFromTextFile(Weather* weather, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+
+	int condition;
+	int temp;
+
+	if (readIntFromTextFile(fp, &condition) == 0) {
+		return 0;
+	}
+
+	if (readIntFromTextFile(fp, &temp) == 0) {
+		return 0;
+	}
+
+	if (initWeather(weather, condition, temp) == 0) {
+		return 0;
+	}
+
+	return 1;
+}
+int saveWeatherToBinFile(const Weather* weather, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+
+	if (weather == NULL || isValidWeather(weather->condition, weather->temp) == 0) {
+		return 0;
+	}
+
+	if (writeGeneralToBinFile(fp, weather, sizeof(Weather)) == 0) {
+		return 0;
+	}
+
+	return 1;
+
+}
+int loadWeatherFromBinFile(Weather* weather, FILE* fp) {
+	IS_FILE_NULL(fp);
+
+
+	if (readGeneralFromBinFile(fp, weather, sizeof(Weather)) == 0) {
+		return 0;
+	}
+
+	return 1;
+
+
+
+}

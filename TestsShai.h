@@ -7,8 +7,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include "General.h"
-
-
+#include "fileHelper.h"
+#include "Date.h"
+#include "Weather.h"
+#include "Time.h"
+#include "Shop.h"
+#include "Ticket.h"
+#include "TicketMaster.h"
+#include "LunaPark.h"
+#include "facility.h"
 void runAllTestsShai();
 
 // Date tests
@@ -43,12 +50,14 @@ void TicketMasterTests();
 void initTicketMasterTest();
 void addTicketTest();
 void calcDailyTest();
+void calcAllIncomeTest();
 void sortTicketsByIDTest();
 void sortTicketsByDateTest();
 void sortTicketsByGuestTypeTest();
 void sortTicketsUserTestManual();
 void buyTicketTestManual();
 void findTicketByUserTestManual();
+void findTicketByIDTest();
 // initializes By User Manuals Tests
 void initByUserManualsTest();
 void initDateByUserManualsTest();
@@ -60,9 +69,26 @@ void initTicketByUserManualsTest();
 void generalLibaryTests();
 void printIntArray(const void* element);
 void generalArrayFunctionTest();
-
-
-
-
+// Save and Load tests
+void SaveAndLoadTests();
+void WeatherSaveAndLoadTextTest();
+void WeatherSaveAndLoadBinTest();
+void TimeSaveAndLoadTextTest();
+void TimeSaveAndLoadBinTest();
+void ShopSaveAndLoadTextTest();
+void ShopSaveAndLoadBinTest();
+void DateSaveAndLoadTextText();
+void DateSaveAndLoadBinTest();
+void TicketSaveAndLoadTextTest();
+void TicketSaveAndLoadBinTest();
+void TicketMasterSaveAndLoadTextTest();
+void TicketMasterSaveAndLoadBinTest();
+void LunaParkSaveAndLoadTextTest();
+void LunaParkSaveAndLoadBinTest();
+// LunaPark tests
+void LunaParkTests();
+void initLunaParkTest();
+void addFacilityToLunaParkTest();
+void addShopToLunaParkTest();
 #endif 
 
