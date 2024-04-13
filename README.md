@@ -1,4 +1,5 @@
 ## Amusement Park Manager
+**UML**
 ![UML -Luna Park Manager](https://github.com/yayaya142/Amusement_Park/assets/82652251/982f6883-03db-4085-b12d-1cd7bbd58d4c)
 **Introduction:**
 
@@ -60,7 +61,7 @@ The Amusement Park Management System is a comprehensive system that allows full 
   1. Hour: `int`
   2. Minute: `int`
 
-### Shop 
+### Shop
 - **Attributes:**
   1. Name: `char*`
   2. Type: `enum`
@@ -68,25 +69,25 @@ The Amusement Park Management System is a comprehensive system that allows full 
   4. Closing Time: `time`
   5. Dynamic Allocation Flag: `int`
 
-### Person 
+### Person
 - **Attributes:**
   1. Name: `char*`
   2. Structure: `void*`
   3. Height: `double`
   4. Age: `int`
 
-### Guest 
+### Guest
 - **Attributes:**
   1. Person: `person*`
   2. Ticket: `ticket*`
 
-### Date 
+### Date
 - **Attributes:**
   1. Day: `int`
   2. Month: `int`
   3. Year: `int`
 
-### Ticket 
+### Ticket
 - **Attributes:**
   1. Ticket Number: `[12]char` (e.g., "T2754FC32SA2")
   2. Visitor Type: `enum`
@@ -94,14 +95,14 @@ The Amusement Park Management System is a comprehensive system that allows full 
   4. Utilized: `int`
   5. Visit Date: `date`
 
-### Facility 
+### Facility
 - **Attributes:**
   1. Name: `char*`
   2. Minimum Height: `int`
   3. Maximum Height: `int`
   4. Category: `enum`
 
-### Worker 
+### Worker
 - **Attributes:**
   1. Person: `person*`
   2. Department: `enum`
@@ -126,11 +127,13 @@ The Amusement Park Management System is a comprehensive system that allows full 
   10. `findTicketByUser`: Finds the desired ticket based on the chosen sorting type.
   11. `findTicketByID`: Retrieves the guest's ticket during system startup from files.
   12. `printTicketMaster`: General print function (void*).
- 
+
+
+
 ## Macros:
-# SUM
-# IS_FILE_NULL
-# CLOSE_FILE
+SUM<br>
+IS_FILE_NULL<br>
+CLOSE_FILE<br>
 
 ## Helper Libraries for Project Usage:
 
